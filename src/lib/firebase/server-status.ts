@@ -48,7 +48,9 @@ function parseFirestoreValue(value: unknown): unknown {
 function normalizeServerStatusData(data: Record<string, unknown>): Record<string, unknown> {
   return {
     ...data,
-    location: data.location ?? data.Location
+    location: data.location ?? data.Location,
+    port: data.port ?? data["port "],
+    hostingProvider: data.hostingProvider ?? "BisectHosting"
   };
 }
 
