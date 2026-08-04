@@ -3,9 +3,12 @@ import { Activity, Cable, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MotionDiv } from "@/components/motion";
-import { serverStatus, siteConfig } from "@/data/site";
+import { siteConfig } from "@/data/site";
+import { formatServerAddress, type ServerStatusDocument } from "@/lib/firebase/server-status-shared";
 
-export function Hero() {
+export function Hero({ serverStatus }: { serverStatus: ServerStatusDocument }) {
+  const address = formatServerAddress(serverStatus);
+
   return (
     <section className="relative min-h-[92vh] overflow-hidden pt-16">
       <div className="absolute inset-0">
@@ -28,7 +31,7 @@ export function Hero() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
-              <a href={siteConfig.discordInvite}>
+              <a href={serverStatus.discordUrl || siteConfig.discordInvite}>
                 <MessageCircle className="h-5 w-5" />
                 Join Discord
               </a>
@@ -42,9 +45,9 @@ export function Hero() {
           </div>
           <div className="mt-10 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
             {[
-              ["Status", serverStatus.online ? "Online" : "Offline"],
-              ["Players", `${serverStatus.players}/${serverStatus.maxPlayers}`],
-              ["Ping", `${serverStatus.ping} ms`],
+              ["Status", serverStatus.status],
+              ["Players", `${serverStatus.onlinePlayers}/${serverStatus.maxPlayers}`],
+              ["Address", address],
               ["Location", serverStatus.location]
             ].map(([label, value]) => (
               <div key={label} className="rounded-lg border border-white/10 bg-white/8 p-4 backdrop-blur-xl">

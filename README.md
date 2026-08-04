@@ -9,6 +9,7 @@ Production-oriented Next.js 15 project for an English-speaking Asia community se
 - TailwindCSS with shadcn/ui-style components
 - Framer Motion
 - Prisma + PostgreSQL
+- Firebase Firestore for live community/game data
 - NextAuth with Discord OAuth
 - Vercel-ready deployment
 
@@ -46,4 +47,84 @@ Future live systems are isolated under `src/lib/integrations`:
 
 ## Database
 
-The Prisma schema includes players, announcements, news, events, reports, bans, donations, staff, profiles, accounts, sessions, and verification tokens.
+The production architecture is:
+
+- BisectHosting runs the actual The Isle Evrima game server.
+- GitHub stores the website source code.
+- Vercel deploys the website.
+- Firebase stores website data and admin-managed server information.
+
+Do not attempt to host or run The Isle from GitHub, Vercel, or Firebase.
+
+The project is structured to use Firebase Firestore project `taku-f8db6` for live community/game data such as server status, announcements, events, staff, reports, and admin-managed data.
+
+The Prisma schema remains in the repository as an optional relational/auth persistence layer for Vercel deployments. For Firestore-backed data, configure the Firebase environment variables in `.env`.
+
+The Firestore console document currently referenced by the project is:
+
+```text
+projects/taku-f8db6/databases/(default)/documents/scores/HFN8KMCQfpaSv1vQoPUwsvpbyZe2
+```
+
+### Firestore Server Status
+
+The website reads public server information from:
+
+```text
+serverStatus/main
+```
+
+Initial document:
+
+```json
+{
+  "serverName": "TAKU's The Isle",
+  "status": "online",
+  "ip": "",
+  "port": 7777,
+  "location": "Hong Kong",
+  "onlinePlayers": 0,
+  "maxPlayers": 100,
+  "version": "Evrima",
+  "map": "Gateway",
+  "discordUrl": "",
+  "description": "An English-speaking The Isle Asia community server for players from Japan, Mongolia, Korea, Hong Kong, Taiwan, Singapore, and Southeast Asia.",
+  "hostingProvider": "BisectHosting",
+  "lastUpdated": "Firestore server timestamp"
+}
+```
+
+Create it with:
+
+```bash
+pnpm firebase:seed-server
+```
+
+Or sign into `/admin/server` with a Firebase administrator account and press **Create default document**.
+
+### Firebase Environment
+
+Configure these on Vercel:
+
+```bash
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=taku-f8db6.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=taku-f8db6
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=taku-f8db6.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+FIREBASE_PROJECT_ID=taku-f8db6
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=
+FIREBASE_ADMIN_EMAILS=your-admin-email@example.com
+```
+
+`FIREBASE_PRIVATE_KEY` must keep escaped newlines, for example `-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n`.
+
+### Security Rules
+
+Deploy `firestore.rules` to Firebase. Public users can read `serverStatus/main`. Only administrators can update server status. Administrators are users with either:
+
+- Firebase custom claim `admin: true`
+- A document at `admins/{uid}`
+- An email listed in `FIREBASE_ADMIN_EMAILS` for the server-side Admin API

@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
-import { leaderboard } from "@/data/site";
+import { getFirestoreLeaderboard } from "@/lib/firebase/firestore-data";
 
-export default function LeaderboardPage() {
+export default async function LeaderboardPage() {
+  const leaderboard = await getFirestoreLeaderboard();
+
   return (
     <main className="container min-h-screen pt-28 pb-20">
       <SectionHeading eyebrow="Leaderboard" title="Top players" description="Rankings for playtime, kills, deaths, growth, and nest success." />

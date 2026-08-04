@@ -4,13 +4,22 @@ import { Hero } from "@/components/hero";
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { announcements, features, newsCards } from "@/data/site";
+import { features, newsCards } from "@/data/site";
+import { getFirestoreAnnouncements } from "@/lib/firebase/firestore-data";
+import { getServerStatus } from "@/lib/integrations/server-status";
+import { ServerStatusSummary } from "@/components/server-status-summary";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [announcements, serverStatus] = await Promise.all([getFirestoreAnnouncements(), getServerStatus()]);
+
   return (
     <main>
-      <Hero />
+      <Hero serverStatus={serverStatus} />
       <section className="container py-20">
+        <SectionHeading eyebrow="BisectHosting server" title="Live community server information" description="The Isle runs on BisectHosting. The website reads server information from Firebase." />
+        <ServerStatusSummary status={serverStatus} />
+      </section>
+      <section className="container pb-20">
         <SectionHeading eyebrow="Operations" title="Latest announcements" description="Staff posts, community updates, and server-wide notices." />
         <div className="grid gap-4 md:grid-cols-3">
           {announcements.map((item) => (
