@@ -4,6 +4,8 @@
 
 @layer base {
   :root {
+    --font-inter: ui-sans-serif, system-ui, sans-serif;
+    --font-orbitron: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
     --background: 168 22% 96%;
     --foreground: 162 18% 8%;
     --card: 0 0% 100%;

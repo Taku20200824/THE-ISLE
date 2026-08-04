@@ -21,6 +21,18 @@ pnpm prisma:generate
 pnpm dev
 ```
 
+## GitHub Pages
+
+GitHub Pages can host the static preview in `docs/`.
+
+In repository settings, use:
+
+- Source: Deploy from a branch
+- Branch: `main`
+- Folder: `/docs`
+
+The full Next.js app should still be deployed to Vercel for NextAuth, Prisma, API routes, and server-rendered admin features.
+
 ## Integration Points
 
 Future live systems are isolated under `src/lib/integrations`:

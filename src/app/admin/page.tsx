@@ -8,6 +8,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { adminModules } from "@/data/site";
 
 export default async function AdminDashboardPage() {
+  if (process.env.GITHUB_PAGES === "true") {
+    return (
+      <main className="container min-h-screen pt-28 pb-20">
+        <SectionHeading eyebrow="Admin" title="Community operations dashboard" description="Static GitHub Pages preview. Deploy to Vercel to enable Discord OAuth, Prisma writes, and protected admin actions." />
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {adminModules.map((module) => (
+            <Card key={module}>
+              <CardHeader>
+                <Shield className="h-6 w-6 text-primary" />
+                <CardTitle>{module}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">Preview-ready module for future CRUD tables, webhooks, API sync jobs, and audit logging.</CardContent>
+            </Card>
+          ))}
+        </div>
+      </main>
+    );
+  }
+
   const session = await getServerSession(authOptions);
   const allowed = session?.user?.role === "OWNER" || session?.user?.role === "ADMIN" || session?.user?.role === "MODERATOR";
 
