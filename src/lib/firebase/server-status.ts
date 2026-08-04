@@ -1,5 +1,6 @@
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getAdminFirestore, hasFirebaseAdminCredentials } from "@/lib/firebase/admin";
+import { firebaseConfig } from "@/lib/firebase/config";
 import { initialServerStatus, serverStatusSchema, type ServerStatusDocument } from "@/lib/firebase/server-status-shared";
 export { formatServerAddress, initialServerStatus, serverStatusSchema, type ServerStatusDocument } from "@/lib/firebase/server-status-shared";
 
@@ -52,8 +53,8 @@ function normalizeServerStatusData(data: Record<string, unknown>): Record<string
 }
 
 async function getServerStatusViaRest(): Promise<ServerStatusDocument | null> {
-  const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? process.env.FIREBASE_PROJECT_ID;
-  const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+  const projectId = firebaseConfig.projectId ?? process.env.FIREBASE_PROJECT_ID;
+  const apiKey = firebaseConfig.apiKey;
 
   if (!projectId || !apiKey) {
     return null;
