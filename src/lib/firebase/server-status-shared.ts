@@ -36,5 +36,9 @@ export const initialServerStatus = {
 } satisfies z.infer<typeof serverStatusSchema>;
 
 export function formatServerAddress(status: Pick<ServerStatusDocument, "ip" | "port">) {
-  return status.ip ? `${status.ip}:${status.port}` : `IP pending:${status.port}`;
+  if (!status.ip) {
+    return `IP pending:${status.port}`;
+  }
+
+  return status.ip.includes(":") ? status.ip : `${status.ip}:${status.port}`;
 }
