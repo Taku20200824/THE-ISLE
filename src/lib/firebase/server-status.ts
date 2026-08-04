@@ -44,6 +44,13 @@ function parseFirestoreValue(value: unknown): unknown {
   return undefined;
 }
 
+function normalizeServerStatusData(data: Record<string, unknown>): Record<string, unknown> {
+  return {
+    ...data,
+    location: data.location ?? data.Location
+  };
+}
+
 async function getServerStatusViaRest(): Promise<ServerStatusDocument | null> {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? process.env.FIREBASE_PROJECT_ID;
   const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
@@ -64,7 +71,8 @@ async function getServerStatusViaRest(): Promise<ServerStatusDocument | null> {
 
     const document = (await response.json()) as { fields?: Record<string, unknown> };
     const data = Object.fromEntries(Object.entries(document.fields ?? {}).map(([key, value]) => [key, parseFirestoreValue(value)]));
-    const parsed = serverStatusSchema.safeParse(data);
+    const normalizedData = normalizeServerStatusData(data);
+    const parsed = serverStatusSchema.safeParse(normalizedData);
 
     if (!parsed.success) {
       return null;
@@ -72,7 +80,7 @@ async function getServerStatusViaRest(): Promise<ServerStatusDocument | null> {
 
     return {
       ...parsed.data,
-      lastUpdated: typeof data.lastUpdated === "string" ? data.lastUpdated : null
+      lastUpdated: typeof normalizedData.lastUpdated === "string" ? normalizedData.lastUpdated : null
     };
   } catch {
     return null;
@@ -91,7 +99,7 @@ export async function getServerStatusDocument(): Promise<ServerStatusDocument | 
       return null;
     }
 
-    const data = snapshot.data() ?? {};
+    const data = normalizeServerStatusData(snapshot.data() ?? {});
     const parsed = serverStatusSchema.safeParse(data);
 
     if (!parsed.success) {
