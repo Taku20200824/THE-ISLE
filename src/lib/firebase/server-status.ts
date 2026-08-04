@@ -62,7 +62,7 @@ async function getServerStatusViaRest(): Promise<ServerStatusDocument | null> {
   try {
     const response = await fetch(
       `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/${serverStatusCollection}/${serverStatusDocumentId}?key=${apiKey}`,
-      { next: { revalidate: 30 } }
+      { cache: "no-store" }
     );
 
     if (!response.ok) {
