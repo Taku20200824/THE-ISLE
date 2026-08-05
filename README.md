@@ -119,6 +119,8 @@ Set `SERVER_QUERY_ENABLED=false` on Vercel only if you want to disable automatic
 
 If BisectHosting gives a separate query port, set `SERVER_QUERY_PORT` on Vercel. If it is empty, the website queries the Firestore `port` value.
 
+The Isle Evrima can leave stale public query records behind for a short time. The website treats query data older than `SERVER_QUERY_MAX_AGE_SECONDS` as offline. The default is 180 seconds.
+
 ### Firebase Environment
 
 Configure these on Vercel:
@@ -136,6 +138,7 @@ FIREBASE_PRIVATE_KEY=
 FIREBASE_ADMIN_EMAILS=your-admin-email@example.com
 SERVER_QUERY_ENABLED=true
 SERVER_QUERY_PORT=
+SERVER_QUERY_MAX_AGE_SECONDS=180
 ```
 
 `FIREBASE_PRIVATE_KEY` must keep escaped newlines, for example `-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n`.

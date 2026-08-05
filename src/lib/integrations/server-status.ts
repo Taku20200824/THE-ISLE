@@ -9,10 +9,13 @@ type GameDigState = {
   players?: unknown[];
   ping?: number;
   raw?: {
+    lastUpdated?: string;
     version?: string;
     serverversion?: string;
   };
 };
+
+const defaultMaxQueryAgeSeconds = 180;
 
 type GameDigModule = {
   GameDig: {
@@ -41,7 +44,44 @@ function getQueryPort(status: ServerStatusDocument) {
   return status.port;
 }
 
+function getMaxQueryAgeMs() {
+  const configuredSeconds = Number(process.env.SERVER_QUERY_MAX_AGE_SECONDS);
+
+  if (Number.isFinite(configuredSeconds) && configuredSeconds > 0) {
+    return configuredSeconds * 1000;
+  }
+
+  return defaultMaxQueryAgeSeconds * 1000;
+}
+
+function isFreshQuery(query: GameDigState) {
+  if (!query.raw?.lastUpdated) {
+    return true;
+  }
+
+  const updatedAt = new Date(query.raw.lastUpdated).getTime();
+
+  if (Number.isNaN(updatedAt)) {
+    return true;
+  }
+
+  return Date.now() - updatedAt <= getMaxQueryAgeMs();
+}
+
+function applyOfflineStatus(status: ServerStatusDocument): ServerStatusDocument {
+  return {
+    ...status,
+    status: status.status === "maintenance" ? "maintenance" : "offline",
+    onlinePlayers: 0,
+    lastUpdated: new Date().toISOString()
+  };
+}
+
 function applyLiveQuery(status: ServerStatusDocument, query: GameDigState): ServerStatusDocument {
+  if (!isFreshQuery(query)) {
+    return applyOfflineStatus(status);
+  }
+
   const playerCount = typeof query.numplayers === "number" ? query.numplayers : query.players?.length;
 
   return {
@@ -87,12 +127,7 @@ async function queryTheIsleServer(status: ServerStatusDocument): Promise<ServerS
       return applyLiveQuery(status, await GameDig.query({ ...queryOptions, type: "theisle" }));
     }
   } catch {
-    return {
-      ...status,
-      status: status.status === "maintenance" ? "maintenance" : "offline",
-      onlinePlayers: 0,
-      lastUpdated: new Date().toISOString()
-    };
+    return applyOfflineStatus(status);
   }
 }
 
