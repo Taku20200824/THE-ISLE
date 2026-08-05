@@ -37,7 +37,7 @@ export function ServerStatusSummary({ status: initialStatus }: { status: ServerS
             <StatusBadge status={status.status} />
             <div className="mt-4 flex flex-wrap items-end gap-3">
               <h2 className="font-display text-3xl font-black text-white sm:text-4xl">{status.serverName}</h2>
-              <span className="mb-1 text-xs uppercase text-muted-foreground">{isRefreshing ? "Syncing live status" : "Live refresh every 10s"}</span>
+              <span className="mb-1 text-xs uppercase text-muted-foreground">{isRefreshing ? "Syncing live status" : "Live refresh every 5s"}</span>
             </div>
             <p className="mt-3 max-w-3xl text-sm text-muted-foreground">{status.description}</p>
           </div>

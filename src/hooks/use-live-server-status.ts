@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ServerStatusDocument } from "@/lib/firebase/server-status-shared";
 
-const refreshIntervalMs = 10000;
+const refreshIntervalMs = 5000;
 
 export function useLiveServerStatus(initialStatus: ServerStatusDocument) {
   const [status, setStatus] = useState(initialStatus);
@@ -30,6 +30,8 @@ export function useLiveServerStatus(initialStatus: ServerStatusDocument) {
   }, []);
 
   useEffect(() => {
+    void refresh();
+
     const interval = window.setInterval(refresh, refreshIntervalMs);
 
     function refreshWhenVisible() {
@@ -38,10 +40,14 @@ export function useLiveServerStatus(initialStatus: ServerStatusDocument) {
       }
     }
 
+    window.addEventListener("focus", refresh);
+    window.addEventListener("online", refresh);
     document.addEventListener("visibilitychange", refreshWhenVisible);
 
     return () => {
       window.clearInterval(interval);
+      window.removeEventListener("focus", refresh);
+      window.removeEventListener("online", refresh);
       document.removeEventListener("visibilitychange", refreshWhenVisible);
     };
   }, [refresh]);
