@@ -10,7 +10,7 @@ export default async function ServerPage() {
   const status = await getServerStatus();
 
   return (
-    <main className="container min-h-screen pt-140 pb-20">
+    <main className="container min-h-screen pt-32 pb-20 sm:pt-36">
       <SectionHeading eyebrow="Server" title="BisectHosting game server" description="The Isle Evrima runs on BisectHosting. Firebase stores public website status and admin-managed connection details." />
       <ServerStatusSummary status={status} />
       <Card className="mt-8">
