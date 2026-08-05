@@ -19,6 +19,11 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    match /siteText/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /announcements/{documentId} {
       allow read: if true;
       allow write: if isAdmin();

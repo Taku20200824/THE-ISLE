@@ -102,6 +102,45 @@ pnpm firebase:seed-server
 
 Or sign into `/admin/server` with a Firebase administrator account and press **Create default document**.
 
+### Firestore Site Text And Languages
+
+The header language selector supports:
+
+- English (`en`)
+- Japanese (`ja`)
+- Korean (`ko`)
+- Mongolian (`mn`)
+
+Built-in translations are stored in `src/lib/i18n.ts`. Firebase can override any visible website text without another code deploy.
+
+Create this Firestore document:
+
+```text
+Collection: siteText
+Document: main
+```
+
+Add one map field per language. Example:
+
+```text
+en.heroBody = A premium Hong Kong hosted community for survival, PvP, nesting, events, and regional coordination across Asia.
+ja.heroBody = 日本、モンゴル、韓国、香港、台湾、シンガポール、東南アジアのプレイヤーに向けた The Isle コミュニティサーバーです。
+ko.heroBody = 일본, 몽골, 한국, 홍콩, 대만, 싱가포르, 동남아시아 플레이어를 위한 The Isle 커뮤니티 서버입니다.
+mn.heroBody = Япон, Монгол, Солонгос, Хонконг, Тайвань, Сингапур болон Зүүн Өмнөд Азийн тоглогчдод зориулсан The Isle community server.
+```
+
+Common override keys:
+
+```text
+home, server, rules, dinosaurs, map, leaderboard, events, discord, donate
+heroBadge, heroBody
+joinDiscord, connectServer, copyIp, copied
+status, players, address, location, version, mapLabel, hosting, lastUpdated
+online, offline, maintenance, notSynced, syncing, liveRefresh
+```
+
+The website checks `/api/site-texts`, falls back to the built-in translations when Firebase text is empty, refreshes text on window focus, and polls Firebase text every 60 seconds while the page is open.
+
 ### Automatic Server Status
 
 The public website uses `serverStatus/main` as the configured server record, then attempts a server-side live query against the configured `ip` and `port`.
@@ -145,7 +184,7 @@ SERVER_QUERY_MAX_AGE_SECONDS=180
 
 ### Security Rules
 
-Deploy `firestore.rules` to Firebase. Public users can read `serverStatus/main`. Only administrators can update server status. Administrators are users with either:
+Deploy `firestore.rules` to Firebase. Public users can read `serverStatus/main` and `siteText/main`. Only administrators can update server status or site text. Administrators are users with either:
 
 - Firebase custom claim `admin: true`
 - A document at `admins/{uid}`

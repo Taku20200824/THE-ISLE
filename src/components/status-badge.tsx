@@ -1,5 +1,9 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/language-provider";
 import type { ServerStatusDocument } from "@/lib/firebase/server-status-shared";
+import type { TranslationKey } from "@/lib/i18n";
 
 const statusStyles = {
   online: "border-emerald-300/30 bg-emerald-400/15 text-emerald-200",
@@ -8,10 +12,13 @@ const statusStyles = {
 };
 
 export function StatusBadge({ status, className }: { status: ServerStatusDocument["status"]; className?: string }) {
+  const { t } = useLanguage();
+  const statusLabelKey = `status.${status}` as TranslationKey;
+
   return (
     <span className={cn("inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold uppercase", statusStyles[status], className)}>
       <span className="mr-2 h-2 w-2 rounded-full bg-current" />
-      {status}
+      {t(statusLabelKey)}
     </span>
   );
 }

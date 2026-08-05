@@ -5,18 +5,19 @@ import { CopyIpButton } from "@/components/copy-ip-button";
 import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/components/language-provider";
 import { useLiveServerStatus } from "@/hooks/use-live-server-status";
 import { formatServerAddress, type ServerStatusDocument } from "@/lib/firebase/server-status-shared";
 
-function formatDate(date: Date | string | null) {
+function formatDate(date: Date | string | null, fallback: string) {
   if (!date) {
-    return "Not synced yet";
+    return fallback;
   }
 
   const parsedDate = typeof date === "string" ? new Date(date) : date;
 
   if (Number.isNaN(parsedDate.getTime())) {
-    return "Not synced yet";
+    return fallback;
   }
 
   return new Intl.DateTimeFormat("en", {
@@ -26,6 +27,7 @@ function formatDate(date: Date | string | null) {
 }
 
 export function ServerStatusSummary({ status: initialStatus }: { status: ServerStatusDocument }) {
+  const { t } = useLanguage();
   const { status, isRefreshing } = useLiveServerStatus(initialStatus);
   const address = formatServerAddress(status);
 
@@ -37,7 +39,7 @@ export function ServerStatusSummary({ status: initialStatus }: { status: ServerS
             <StatusBadge status={status.status} />
             <div className="mt-4 flex flex-wrap items-end gap-3">
               <h2 className="font-display text-3xl font-black text-white sm:text-4xl">{status.serverName}</h2>
-              <span className="mb-1 text-xs uppercase text-muted-foreground">{isRefreshing ? "Syncing live status" : "Live refresh every 5s"}</span>
+              <span className="mb-1 text-xs uppercase text-muted-foreground">{isRefreshing ? t("status.syncing") : t("status.liveRefresh")}</span>
             </div>
             <p className="mt-3 max-w-3xl text-sm text-muted-foreground">{status.description}</p>
           </div>
@@ -45,23 +47,23 @@ export function ServerStatusSummary({ status: initialStatus }: { status: ServerS
             <CopyIpButton ip={address} />
             {status.discordUrl ? (
               <Button asChild>
-                <a href={status.discordUrl}>Join Discord</a>
+                <a href={status.discordUrl}>{t("cta.joinDiscord")}</a>
               </Button>
             ) : (
-              <Button disabled>Join Discord</Button>
+              <Button disabled>{t("cta.joinDiscord")}</Button>
             )}
           </div>
         </div>
 
         <div className="relative z-10 mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: "Address", value: address, icon: Server },
-            { label: "Players", value: `${status.onlinePlayers}/${status.maxPlayers}`, icon: Users },
-            { label: "Location", value: status.location, icon: Globe2 },
-            { label: "Version", value: status.version, icon: Gamepad2 },
-            { label: "Map", value: status.map, icon: Map },
-            { label: "Hosting", value: status.hostingProvider, icon: Server },
-            { label: "Last Updated", value: formatDate(status.lastUpdated), icon: CalendarClock }
+            { label: t("status.address"), value: address, icon: Server },
+            { label: t("status.players"), value: `${status.onlinePlayers}/${status.maxPlayers}`, icon: Users },
+            { label: t("status.location"), value: status.location, icon: Globe2 },
+            { label: t("status.version"), value: status.version, icon: Gamepad2 },
+            { label: t("status.map"), value: status.map, icon: Map },
+            { label: t("status.hosting"), value: status.hostingProvider, icon: Server },
+            { label: t("status.lastUpdated"), value: formatDate(status.lastUpdated, t("status.notSynced")), icon: CalendarClock }
           ].map((item) => (
             <div key={item.label} className="hud-card rounded-md p-4">
               <div className="flex items-center gap-2 text-xs uppercase text-muted-foreground">

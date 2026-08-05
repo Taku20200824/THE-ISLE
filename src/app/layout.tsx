@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LanguageProvider } from "@/components/language-provider";
 import { SiteHeader } from "@/components/site-header";
 import { siteConfig } from "@/data/site";
 
@@ -33,8 +34,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <SiteHeader />
-          {children}
+          <LanguageProvider>
+            <SiteHeader />
+            {children}
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

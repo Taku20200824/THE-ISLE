@@ -1,13 +1,18 @@
+"use client";
+
 import Link from "next/link";
 import { Activity, Cable, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/components/language-provider";
 import { LiveHeroStats } from "@/components/live-hero-stats";
 import { MotionDiv } from "@/components/motion";
 import { siteConfig } from "@/data/site";
 import type { ServerStatusDocument } from "@/lib/firebase/server-status-shared";
 
 export function Hero({ serverStatus }: { serverStatus: ServerStatusDocument }) {
+  const { t } = useLanguage();
+
   return (
     <section className="relative min-h-[94vh] overflow-hidden pt-16">
       <div className="absolute inset-0">
@@ -23,24 +28,24 @@ export function Hero({ serverStatus }: { serverStatus: ServerStatusDocument }) {
       </div>
       <div className="container relative z-10 flex min-h-[calc(94vh-4rem)] items-center">
         <MotionDiv initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-5xl py-20">
-          <Badge className="border-primary/30 bg-primary/10 text-primary shadow-[0_0_30px_rgba(45,212,191,.16)]">English-speaking Asia community</Badge>
+          <Badge className="border-primary/30 bg-primary/10 text-primary shadow-[0_0_30px_rgba(45,212,191,.16)]">{t("hero.badge")}</Badge>
           <h1 className="mt-6 max-w-4xl font-display text-5xl font-black leading-none text-white drop-shadow-[0_0_34px_rgba(255,255,255,.16)] sm:text-7xl lg:text-8xl">
             THE ISLE ASIA
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-zinc-200 sm:text-xl">
-            A premium Hong Kong hosted community for survival, PvP, nesting, events, and regional coordination across Japan, Mongolia, Korea, Hong Kong, Taiwan, Singapore, and Southeast Asia.
+            {t("hero.body")}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg" className="h-14 px-8 text-base">
               <a href={serverStatus.discordUrl || siteConfig.discordInvite}>
                 <MessageCircle className="h-5 w-5" />
-                Join Discord
+                {t("cta.joinDiscord")}
               </a>
             </Button>
             <Button asChild variant="outline" size="lg" className="h-14 px-8 text-base">
               <Link href="/server">
                 <Cable className="h-5 w-5" />
-                Connect Server
+                {t("cta.connectServer")}
               </Link>
             </Button>
           </div>
