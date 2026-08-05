@@ -102,6 +102,23 @@ pnpm firebase:seed-server
 
 Or sign into `/admin/server` with a Firebase administrator account and press **Create default document**.
 
+### Automatic Server Status
+
+The public website uses `serverStatus/main` as the configured server record, then attempts a server-side live query against the configured `ip` and `port`.
+
+For The Isle Evrima, set these Firestore fields to the BisectHosting query address:
+
+```text
+ip=103.70.2.164
+port=9145
+```
+
+When the live query succeeds, the site displays `online` and updates the visible player count from the game server response. When the query fails, the site displays `offline` with `onlinePlayers=0`. This only checks the BisectHosting game server; GitHub, Vercel, and Firebase do not run The Isle.
+
+Set `SERVER_QUERY_ENABLED=false` on Vercel only if you want to disable automatic game-server checks and show the manual Firebase values instead.
+
+If BisectHosting gives a separate query port, set `SERVER_QUERY_PORT` on Vercel. If it is empty, the website queries the Firestore `port` value.
+
 ### Firebase Environment
 
 Configure these on Vercel:
@@ -117,6 +134,8 @@ FIREBASE_PROJECT_ID=taku-f8db6
 FIREBASE_CLIENT_EMAIL=
 FIREBASE_PRIVATE_KEY=
 FIREBASE_ADMIN_EMAILS=your-admin-email@example.com
+SERVER_QUERY_ENABLED=true
+SERVER_QUERY_PORT=
 ```
 
 `FIREBASE_PRIVATE_KEY` must keep escaped newlines, for example `-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n`.

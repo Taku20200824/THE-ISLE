@@ -4,6 +4,7 @@ import { ServerStatusSummary } from "@/components/server-status-summary";
 import { getServerStatus } from "@/lib/integrations/server-status";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export default async function ServerPage() {
   const status = await getServerStatus();
