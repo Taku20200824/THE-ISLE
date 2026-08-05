@@ -26,12 +26,12 @@ export function ServerStatusSummary({ status }: { status: ServerStatusDocument }
   const address = formatServerAddress(status);
 
   return (
-    <Card>
+    <Card className="cinematic-panel border-primary/15 bg-[linear-gradient(135deg,rgba(6,20,18,.92),rgba(9,16,26,.78))]">
       <CardContent className="p-6">
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div>
+        <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-3xl">
             <StatusBadge status={status.status} />
-            <h2 className="mt-4 text-3xl font-bold">{status.serverName}</h2>
+            <h2 className="mt-4 font-display text-3xl font-black text-white sm:text-4xl">{status.serverName}</h2>
             <p className="mt-3 max-w-3xl text-sm text-muted-foreground">{status.description}</p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -46,7 +46,7 @@ export function ServerStatusSummary({ status }: { status: ServerStatusDocument }
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="relative z-10 mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[
             { label: "Address", value: address, icon: Server },
             { label: "Players", value: `${status.onlinePlayers}/${status.maxPlayers}`, icon: Users },
@@ -56,12 +56,12 @@ export function ServerStatusSummary({ status }: { status: ServerStatusDocument }
             { label: "Hosting", value: status.hostingProvider, icon: Server },
             { label: "Last Updated", value: formatDate(status.lastUpdated), icon: CalendarClock }
           ].map((item) => (
-            <div key={item.label} className="rounded-md border border-white/10 bg-white/[0.03] p-4">
+            <div key={item.label} className="hud-card rounded-md p-4">
               <div className="flex items-center gap-2 text-xs uppercase text-muted-foreground">
                 <item.icon className="h-4 w-4 text-primary" />
                 {item.label}
               </div>
-              <div className="mt-2 break-words font-semibold">{item.value}</div>
+              <div className="relative z-10 mt-2 break-words text-lg font-bold text-white">{item.value}</div>
             </div>
           ))}
         </div>

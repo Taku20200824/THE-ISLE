@@ -29,7 +29,7 @@
   .dark {
     --background: 168 23% 5%;
     --foreground: 160 18% 94%;
-    --card: 168 18% 8%;
+    --card: 174 26% 7%;
     --card-foreground: 160 18% 94%;
     --primary: 166 86% 48%;
     --primary-foreground: 168 28% 7%;
@@ -56,8 +56,56 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    background-image: radial-gradient(circle at top left, rgba(20, 184, 166, 0.12), transparent 26%), radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.12), transparent 24%);
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(circle at 14% 10%, rgba(34, 211, 238, 0.14), transparent 26%),
+      radial-gradient(circle at 86% 18%, rgba(245, 158, 11, 0.1), transparent 24%),
+      radial-gradient(circle at 72% 88%, rgba(220, 38, 38, 0.1), transparent 24%),
+      linear-gradient(180deg, rgba(2, 6, 23, 0.12), rgba(3, 7, 6, 0.96));
   }
+}
+
+.cinematic-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.cinematic-panel::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.12), transparent 26%),
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.18), transparent 34%);
+  opacity: .72;
+}
+
+.hud-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.12);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.025)),
+    rgba(3, 12, 11, .68);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 24px 80px rgba(0,0,0,.28);
+  backdrop-filter: blur(18px);
+}
+
+.hud-card::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size: 100% 26px;
+  opacity: .22;
+}
+
+.hero-vignette {
+  background:
+    radial-gradient(circle at 30% 48%, transparent 0, rgba(0,0,0,.18) 31%, rgba(0,0,0,.88) 78%),
+    linear-gradient(90deg, rgba(2,6,5,.98), rgba(2,10,9,.62) 46%, rgba(2,6,5,.96));
 }
 
 .particles {
@@ -70,6 +118,15 @@
   background-size: 72px 72px, 92px 92px;
   mask-image: linear-gradient(to bottom, black, transparent 88%);
   animation: drift 18s linear infinite;
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0, rgba(255,255,255,.035) 1px, transparent 1px, transparent 5px);
+  opacity: .18;
+  mix-blend-mode: screen;
 }
 
 @keyframes drift {
