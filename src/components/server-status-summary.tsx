@@ -1,8 +1,11 @@
+"use client";
+
 import { CalendarClock, Gamepad2, Globe2, Map, Server, Users } from "lucide-react";
 import { CopyIpButton } from "@/components/copy-ip-button";
 import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLiveServerStatus } from "@/hooks/use-live-server-status";
 import { formatServerAddress, type ServerStatusDocument } from "@/lib/firebase/server-status-shared";
 
 function formatDate(date: Date | string | null) {
@@ -22,7 +25,8 @@ function formatDate(date: Date | string | null) {
   }).format(parsedDate);
 }
 
-export function ServerStatusSummary({ status }: { status: ServerStatusDocument }) {
+export function ServerStatusSummary({ status: initialStatus }: { status: ServerStatusDocument }) {
+  const { status, isRefreshing } = useLiveServerStatus(initialStatus);
   const address = formatServerAddress(status);
 
   return (
@@ -31,7 +35,10 @@ export function ServerStatusSummary({ status }: { status: ServerStatusDocument }
         <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl">
             <StatusBadge status={status.status} />
-            <h2 className="mt-4 font-display text-3xl font-black text-white sm:text-4xl">{status.serverName}</h2>
+            <div className="mt-4 flex flex-wrap items-end gap-3">
+              <h2 className="font-display text-3xl font-black text-white sm:text-4xl">{status.serverName}</h2>
+              <span className="mb-1 text-xs uppercase text-muted-foreground">{isRefreshing ? "Syncing live status" : "Live refresh every 10s"}</span>
+            </div>
             <p className="mt-3 max-w-3xl text-sm text-muted-foreground">{status.description}</p>
           </div>
           <div className="flex flex-wrap gap-2">

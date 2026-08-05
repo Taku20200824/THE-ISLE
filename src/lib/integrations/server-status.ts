@@ -52,7 +52,14 @@ function applyLiveQuery(status: ServerStatusDocument, query: GameDigState): Serv
     maxPlayers: typeof query.maxplayers === "number" && query.maxplayers > 0 ? query.maxplayers : status.maxPlayers,
     map: query.map?.trim() || status.map,
     version: query.raw?.version || query.raw?.serverversion || status.version,
-    lastUpdated: new Date()
+    lastUpdated: new Date().toISOString()
+  };
+}
+
+function serializeServerStatus(status: ServerStatusDocument): ServerStatusDocument {
+  return {
+    ...status,
+    lastUpdated: status.lastUpdated instanceof Date ? status.lastUpdated.toISOString() : status.lastUpdated
   };
 }
 
@@ -84,11 +91,11 @@ async function queryTheIsleServer(status: ServerStatusDocument): Promise<ServerS
       ...status,
       status: status.status === "maintenance" ? "maintenance" : "offline",
       onlinePlayers: 0,
-      lastUpdated: new Date()
+      lastUpdated: new Date().toISOString()
     };
   }
 }
 
 export async function getServerStatus() {
-  return queryTheIsleServer(await getServerStatusOrInitial());
+  return serializeServerStatus(await queryTheIsleServer(await getServerStatusOrInitial()));
 }

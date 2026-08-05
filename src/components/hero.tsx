@@ -1,20 +1,13 @@
 import Link from "next/link";
-import { Activity, Cable, MapPin, MessageCircle, RadioTower, Users } from "lucide-react";
+import { Activity, Cable, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { LiveHeroStats } from "@/components/live-hero-stats";
 import { MotionDiv } from "@/components/motion";
 import { siteConfig } from "@/data/site";
-import { formatServerAddress, type ServerStatusDocument } from "@/lib/firebase/server-status-shared";
+import type { ServerStatusDocument } from "@/lib/firebase/server-status-shared";
 
 export function Hero({ serverStatus }: { serverStatus: ServerStatusDocument }) {
-  const address = formatServerAddress(serverStatus);
-  const stats = [
-    { label: "Status", value: serverStatus.status, icon: RadioTower },
-    { label: "Players", value: `${serverStatus.onlinePlayers}/${serverStatus.maxPlayers}`, icon: Users },
-    { label: "Address", value: address, icon: Cable },
-    { label: "Location", value: serverStatus.location, icon: MapPin }
-  ];
-
   return (
     <section className="relative min-h-[94vh] overflow-hidden pt-16">
       <div className="absolute inset-0">
@@ -51,17 +44,7 @@ export function Hero({ serverStatus }: { serverStatus: ServerStatusDocument }) {
               </Link>
             </Button>
           </div>
-          <div className="mt-12 grid max-w-5xl grid-cols-2 gap-3 lg:grid-cols-4">
-            {stats.map((item) => (
-              <div key={item.label} className="hud-card rounded-lg p-5">
-                <div className="flex items-center gap-2 text-xs uppercase text-zinc-400">
-                  <item.icon className="h-4 w-4 text-primary" />
-                  {item.label}
-                </div>
-                <div className="relative z-10 mt-3 break-words text-2xl font-black text-white">{item.value}</div>
-              </div>
-            ))}
-          </div>
+          <LiveHeroStats initialStatus={serverStatus} />
           <div className="mt-8 flex max-w-3xl flex-wrap gap-2 text-xs uppercase text-zinc-400">
             {siteConfig.regions.map((region) => (
               <span key={region} className="rounded border border-white/10 bg-black/25 px-3 py-2 backdrop-blur">
