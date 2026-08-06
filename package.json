@@ -10,7 +10,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "firebase:seed-server": "node scripts/seed-server-status.mjs"
+    "firebase:seed-server": "node scripts/seed-server-status.mjs",
+    "firebase:seed-content": "node scripts/seed-site-content.mjs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
