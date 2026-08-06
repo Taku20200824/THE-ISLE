@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { getFirestoreDinosaur, getFirestoreDinosaurs } from "@/lib/firebase/firestore-data";
 import { getDinosaurImage } from "@/lib/dinosaur-images";
+import { LocalizedText } from "@/components/localized-text";
+import type { TranslationKey } from "@/lib/i18n";
 
 export async function generateStaticParams() {
   const dinosaurs = await getFirestoreDinosaurs();
@@ -51,17 +53,17 @@ export default async function DinosaurPage({ params }: DinosaurPageProps) {
       </section>
       <section className="container grid gap-4 py-14 md:grid-cols-2 lg:grid-cols-4">
         {[
-          ["Status", dino.status ?? "Playable"],
-          ["Role", dino.role ?? dino.diet],
-          ["Difficulty", dino.difficulty ?? "Standard"],
-          ["Growth Time", dino.growth],
-          ["Strength", dino.strength],
-          ["Weakness", dino.weakness],
-          ["Recommended Playstyle", dino.playstyle]
-        ].map(([label, value]) => (
-          <Card key={label}>
+          ["dino.status", dino.status ?? "Playable"],
+          ["dino.role", dino.role ?? dino.diet],
+          ["dino.difficulty", dino.difficulty ?? "Standard"],
+          ["dino.growthTime", dino.growth],
+          ["dino.strength", dino.strength],
+          ["dino.weakness", dino.weakness],
+          ["dino.playstyle", dino.playstyle]
+        ].map(([labelKey, value]) => (
+          <Card key={labelKey}>
             <CardContent className="p-5">
-              <div className="text-sm text-muted-foreground">{label}</div>
+              <div className="text-sm text-muted-foreground"><LocalizedText tKey={labelKey as TranslationKey} /></div>
               <div className="mt-2 font-semibold">{value}</div>
             </CardContent>
           </Card>

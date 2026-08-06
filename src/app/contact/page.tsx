@@ -1,11 +1,12 @@
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { LocalizedText } from "@/components/localized-text";
 
 export default function ContactPage() {
   return (
     <main className="container min-h-screen pt-28 pb-20">
-      <SectionHeading eyebrow="Contact" title="Support, reports, and appeals" description="One route for support forms, bug reports, player reports, and ban appeals." />
+      <SectionHeading eyebrow="Contact" title="Support, reports, and appeals" description="One route for support forms, bug reports, player reports, and ban appeals." eyebrowKey="nav.contact" titleKey="page.contact.title" descriptionKey="page.contact.description" />
       <Card>
         <CardContent className="p-6">
           <form className="grid gap-4">
@@ -32,7 +33,7 @@ export default function ContactPage() {
               Details
               <textarea className="min-h-40 rounded-md border border-white/10 bg-background p-3" placeholder="Include time, players, clips, screenshots, and server context." />
             </label>
-            <Button className="w-fit" type="button">Submit Ticket</Button>
+            <Button className="w-fit" type="button"><LocalizedText tKey="cta.submitTicket" /></Button>
           </form>
         </CardContent>
       </Card>

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Crosshair, Drumstick, Info, Leaf, MapPin, RotateCcw, Route, Waves, ZoomIn, ZoomOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/language-provider";
 import { cn } from "@/lib/utils";
 
 type MarkerType = "water" | "sanctuary" | "migration" | "spawn" | "food";
@@ -51,6 +52,7 @@ function normalizeType(type: string): MarkerType {
 }
 
 export function IsleMap({ markers = fallbackMarkers }: { markers?: IsleMapMarker[] }) {
+  const { t } = useLanguage();
   const [activeTypes, setActiveTypes] = useState<MarkerType[]>(["water", "sanctuary", "migration", "spawn", "food"]);
   const [selectedMarkerId, setSelectedMarkerId] = useState(markers[0].id);
   const [zoom, setZoom] = useState(1);
@@ -159,8 +161,8 @@ export function IsleMap({ markers = fallbackMarkers }: { markers?: IsleMapMarker
             })}
 
             <div className="absolute bottom-4 left-4 rounded-md border border-white/10 bg-black/50 px-3 py-2 text-xs text-zinc-300 backdrop-blur">
-              <div className="font-bold uppercase text-white">Gateway operations map</div>
-              <div className="mt-1 text-zinc-400">Grid, routes, water, sanctuary, migration, spawn, food</div>
+              <div className="font-bold uppercase text-white">{t("map.operations")}</div>
+              <div className="mt-1 text-zinc-400">{t("map.subtitle")}</div>
             </div>
           </div>
         </div>
@@ -169,7 +171,7 @@ export function IsleMap({ markers = fallbackMarkers }: { markers?: IsleMapMarker
       <aside className="rounded-lg border border-white/10 bg-white/[.04] p-5 backdrop-blur">
         <div className="flex items-center gap-2 text-xs font-bold uppercase text-primary">
           <Info className="h-4 w-4" />
-          Selected Intel
+          {t("map.selectedIntel")}
         </div>
         <h2 className="mt-4 text-3xl font-black text-white">{selectedMarker.name}</h2>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -189,21 +191,21 @@ export function IsleMap({ markers = fallbackMarkers }: { markers?: IsleMapMarker
 
         <div className="mt-8 grid gap-3 text-sm text-zinc-300">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <span>Visible markers</span>
+            <span>{t("map.visibleMarkers")}</span>
             <span className="font-bold text-white">{visibleMarkers.length}</span>
           </div>
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <span>Active filters</span>
+            <span>{t("map.activeFilters")}</span>
             <span className="font-bold text-white">{activeTypes.length}/5</span>
           </div>
           <div className="flex items-center justify-between">
-            <span>Map version</span>
-            <span className="font-bold text-white">Gateway Community Draft</span>
+            <span>{t("map.version")}</span>
+            <span className="font-bold text-white">{t("map.versionValue")}</span>
           </div>
         </div>
 
         <div className="mt-8 rounded-lg border border-primary/20 bg-primary/10 p-4 text-sm leading-6 text-zinc-200">
-          Use this as a community overlay. Marker data can later be moved to Firebase when you want staff to edit routes without code changes.
+          {t("map.note")}
         </div>
       </aside>
     </section>

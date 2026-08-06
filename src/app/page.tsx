@@ -4,6 +4,7 @@ import { Hero } from "@/components/hero";
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { LocalizedText } from "@/components/localized-text";
 import { getFirestoreAnnouncements, getFirestoreFeatures, getFirestoreNewsCards } from "@/lib/firebase/firestore-data";
 import { getServerStatus } from "@/lib/integrations/server-status";
 import { ServerStatusSummary } from "@/components/server-status-summary";
@@ -25,11 +26,18 @@ export default async function HomePage() {
     <main>
       <Hero serverStatus={serverStatus} />
       <section className="container py-20">
-        <SectionHeading eyebrow="BisectHosting server" title="Live community server information" description="The Isle runs on BisectHosting. The website reads server information from Firebase." />
+        <SectionHeading
+          eyebrow="BisectHosting server"
+          title="Live community server information"
+          description="The Isle runs on BisectHosting. The website reads server information from Firebase."
+          eyebrowKey="page.server.eyebrow"
+          titleKey="page.server.title"
+          descriptionKey="page.server.description"
+        />
         <ServerStatusSummary status={serverStatus} />
       </section>
       <section className="container pb-20">
-        <SectionHeading eyebrow="Operations" title="Latest announcements" description="Staff posts, community updates, and server-wide notices." />
+        <SectionHeading eyebrow="Operations" title="Latest announcements" description="Staff posts, community updates, and server-wide notices." eyebrowKey="page.announcements.eyebrow" titleKey="page.announcements.title" descriptionKey="page.announcements.description" />
         <div className="grid gap-4 md:grid-cols-3">
           {announcements.map((item) => (
             <Card key={item.title} className="hud-card transition duration-300 hover:-translate-y-1 hover:border-primary/30">
@@ -47,7 +55,7 @@ export default async function HomePage() {
       </section>
       <section className="border-y border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,.035),rgba(15,23,42,.12))] py-20">
         <div className="container">
-          <SectionHeading eyebrow="News" title="Community intelligence" description="Highlights from server operations, events, balance policies, and regional play." />
+          <SectionHeading eyebrow="News" title="Community intelligence" description="Highlights from server operations, events, balance policies, and regional play." eyebrowKey="page.news.eyebrow" titleKey="page.news.title" descriptionKey="page.news.description" />
           <div className="grid gap-5 md:grid-cols-3">
             {newsCards.map((card) => (
               <Card key={card.title} className="group overflow-hidden transition duration-300 hover:-translate-y-1 hover:border-primary/30">
@@ -67,7 +75,7 @@ export default async function HomePage() {
         </div>
       </section>
       <section className="container py-20">
-        <SectionHeading eyebrow="Server features" title="Built for serious survival communities" />
+        <SectionHeading eyebrow="Server features" title="Built for serious survival communities" eyebrowKey="page.features.eyebrow" titleKey="page.features.title" />
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => (
             <Card key={feature.title} className="hud-card transition duration-300 hover:-translate-y-1 hover:border-secondary/30">
@@ -86,7 +94,7 @@ export default async function HomePage() {
         </div>
         <Button asChild variant="outline" className="mt-8">
           <Link href="/dinosaurs">
-            Explore dinosaurs
+            <LocalizedText tKey="cta.exploreDinosaurs" />
             <ArrowRight className="h-4 w-4" />
           </Link>
         </Button>

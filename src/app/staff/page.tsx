@@ -10,7 +10,7 @@ export default async function StaffPage() {
 
   return (
     <main className="container min-h-screen pt-28 pb-20">
-      <SectionHeading eyebrow="Staff" title="Operations team" description="Owner, administrators, moderators, and helpers." />
+      <SectionHeading eyebrow="Staff" title="Operations team" description="Owner, administrators, moderators, and helpers." eyebrowKey="nav.staff" titleKey="page.staff.title" descriptionKey="page.staff.description" />
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
         {staff.map((member) => (
           <Card key={member.name}>

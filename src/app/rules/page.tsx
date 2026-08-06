@@ -13,7 +13,7 @@ export default async function RulesPage() {
 
   return (
     <main className="container min-h-screen pt-28 pb-20">
-      <SectionHeading eyebrow="Rules" title="Clear rules, consistent enforcement" description="A beautiful rulebook for survival, PvP, chat, exploit policy, and punishments." />
+      <SectionHeading eyebrow="Rules" title="Clear rules, consistent enforcement" description="A beautiful rulebook for survival, PvP, chat, exploit policy, and punishments." eyebrowKey="nav.rules" titleKey="page.rules.title" descriptionKey="page.rules.description" />
       <div className="grid gap-5 lg:grid-cols-2">
         {rules.map((group) => (
           <Card key={group.title}>

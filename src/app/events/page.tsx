@@ -13,7 +13,7 @@ export default async function EventsPage() {
 
   return (
     <main className="container min-h-screen pt-28 pb-20">
-      <SectionHeading eyebrow="Events" title="Community calendar" description="Weekly events, Double Growth Weekend, and PvP Tournament scheduling." />
+      <SectionHeading eyebrow="Events" title="Community calendar" description="Weekly events, Double Growth Weekend, and PvP Tournament scheduling." eyebrowKey="nav.events" titleKey="page.events.title" descriptionKey="page.events.description" />
       <div className="grid gap-5 md:grid-cols-3">
         {events.map((event) => (
           <Card key={event.title}>

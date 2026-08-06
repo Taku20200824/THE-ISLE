@@ -14,7 +14,7 @@ export default async function DinosaursPage() {
 
   return (
     <main className="container min-h-screen pt-32 pb-20 sm:pt-36">
-      <SectionHeading eyebrow="Dinosaurs" title="Playable dinosaur field guide" description="Every profile is structured for later game balance and wiki data integration." />
+      <SectionHeading eyebrow="Dinosaurs" title="Playable dinosaur field guide" description="Every profile is structured for later game balance and wiki data integration." eyebrowKey="nav.dinosaurs" titleKey="page.dinosaurs.title" descriptionKey="page.dinosaurs.description" />
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {dinosaurs.map((dino) => (
           <Link href={`/dinosaurs/${dino.slug}`} key={dino.slug}>

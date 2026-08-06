@@ -2,20 +2,31 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
 import { getFirestoreLeaderboard } from "@/lib/firebase/firestore-data";
+import { LocalizedText } from "@/components/localized-text";
+import type { TranslationKey } from "@/lib/i18n";
 
 export default async function LeaderboardPage() {
   const leaderboard = await getFirestoreLeaderboard();
 
   return (
     <main className="container min-h-screen pt-28 pb-20">
-      <SectionHeading eyebrow="Leaderboard" title="Top players" description="Rankings for playtime, kills, deaths, growth, and nest success." />
+      <SectionHeading eyebrow="Leaderboard" title="Top players" description="Rankings for playtime, kills, deaths, growth, and nest success." eyebrowKey="nav.leaderboard" titleKey="page.leaderboard.title" descriptionKey="page.leaderboard.description" />
       <Card className="overflow-hidden">
         <CardContent className="overflow-x-auto p-0">
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="bg-white/[0.04] text-muted-foreground">
               <tr>
-                {["Rank", "Player", "Playtime", "Kills", "Deaths", "Growth", "Nest Success", "Favorite"].map((head) => (
-                  <th key={head} className="px-5 py-4 font-semibold">{head}</th>
+                {[
+                  ["Rank", "table.rank"],
+                  ["Player", "table.player"],
+                  ["Playtime", "table.playtime"],
+                  ["Kills", "table.kills"],
+                  ["Deaths", "table.deaths"],
+                  ["Growth", "table.growth"],
+                  ["Nest Success", "table.nestSuccess"],
+                  ["Favorite", "table.favorite"]
+                ].map(([head, key]) => (
+                  <th key={head} className="px-5 py-4 font-semibold"><LocalizedText tKey={key as TranslationKey} /></th>
                 ))}
               </tr>
             </thead>

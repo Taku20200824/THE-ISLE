@@ -11,7 +11,7 @@ export default async function GalleryPage() {
 
   return (
     <main className="container min-h-screen pt-28 pb-20">
-      <SectionHeading eyebrow="Gallery" title="Screenshots, videos, and creations" />
+      <SectionHeading eyebrow="Gallery" title="Screenshots, videos, and creations" eyebrowKey="nav.gallery" titleKey="page.gallery.title" />
       <div className="grid gap-5 md:grid-cols-3">
         {gallery.map((item) => (
           <Card key={item.title} className="overflow-hidden">

@@ -3,6 +3,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getFirestoreDonationGoal, getFirestoreDonationRewards } from "@/lib/firebase/firestore-data";
+import { LocalizedText } from "@/components/localized-text";
 
 const rewardIcons = { Crown, Gem, Server };
 
@@ -15,7 +16,7 @@ export default async function DonatePage() {
 
   return (
     <main className="container min-h-screen pt-28 pb-20">
-      <SectionHeading eyebrow="Donate" title="Support server operations" description="Transparent donation goals, monthly costs, supporter roles, and future Stripe/PayPal integration." />
+      <SectionHeading eyebrow="Donate" title="Support server operations" description="Transparent donation goals, monthly costs, supporter roles, and future Stripe/PayPal integration." eyebrowKey="nav.donate" titleKey="page.donate.title" descriptionKey="page.donate.description" />
       <Card className="mb-6">
         <CardContent className="p-6">
           <div className="flex items-center gap-3">
@@ -45,7 +46,7 @@ export default async function DonatePage() {
           </Card>
         ))}
       </div>
-      <Button className="mt-8" disabled>Payments coming soon</Button>
+      <Button className="mt-8" disabled><LocalizedText tKey="cta.paymentsComingSoon" /></Button>
     </main>
   );
 }
