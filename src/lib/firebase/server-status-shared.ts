@@ -11,6 +11,7 @@ export const serverStatusSchema = z.object({
   version: z.string().min(1).max(80),
   map: z.string().min(1).max(80),
   discordUrl: z.string().max(240),
+  discordServerId: z.string().max(40).default(""),
   description: z.string().min(1).max(700),
   hostingProvider: z.string().min(1).max(80)
 });
@@ -29,7 +30,8 @@ export const initialServerStatus = {
   maxPlayers: 100,
   version: "Evrima",
   map: "Gateway",
-  discordUrl: "",
+  discordUrl: "https://discord.com/channels/792269772473106452/1533741583038550106",
+  discordServerId: "792269772473106452",
   description:
     "An English-speaking The Isle Asia community server for players from Japan, Mongolia, Korea, Hong Kong, Taiwan, Singapore, and Southeast Asia.",
   hostingProvider: "BisectHosting"

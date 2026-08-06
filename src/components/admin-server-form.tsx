@@ -231,6 +231,10 @@ export function AdminServerForm({ initialStatus }: { initialStatus: ServerStatus
                 Discord invite URL
                 <input className="h-11 rounded-md border border-white/10 bg-background px-3" value={form.discordUrl} onChange={(event) => updateField("discordUrl", event.target.value)} placeholder="https://discord.gg/..." />
               </label>
+              <label className="grid gap-2 text-sm font-medium">
+                Discord server ID
+                <input className="h-11 rounded-md border border-white/10 bg-background px-3" value={form.discordServerId} onChange={(event) => updateField("discordServerId", event.target.value)} placeholder="792269772473106452" />
+              </label>
             </div>
             <label className="grid gap-2 text-sm font-medium">
               Description

@@ -17,12 +17,12 @@ export default async function DiscordPage() {
           </CardHeader>
           <CardContent>
             <div className="flex min-h-80 items-center justify-center rounded-md border border-white/10 bg-white/[0.03] text-center text-muted-foreground">
-              Embed your official Discord server widget here after enabling it in Discord server settings.
+              Discord Server ID: {discord.serverId}
             </div>
             <Button className="mt-5" asChild>
               <a href={discord.invite}>
                 <MessageCircle className="h-4 w-4" />
-                Discord Invite
+                Open Discord
               </a>
             </Button>
           </CardContent>
