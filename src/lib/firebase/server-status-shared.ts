@@ -30,7 +30,7 @@ export const initialServerStatus = {
   maxPlayers: 100,
   version: "Evrima",
   map: "Gateway",
-  discordUrl: "https://discord.gg/ApYaPSX24",
+  discordUrl: "https://discord.gg/vmn3YjCZSE",
   discordServerId: "792269772473106452",
   description:
     "An English-speaking The Isle Asia community server for players from Japan, Mongolia, Korea, Hong Kong, Taiwan, Singapore, and Southeast Asia.",
