@@ -1,19 +1,25 @@
 import Link from "next/link";
-import { ArrowRight, Megaphone } from "lucide-react";
+import { ArrowRight, Megaphone, RadioTower, Shield, Trophy, Users } from "lucide-react";
 import { Hero } from "@/components/hero";
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { features, newsCards } from "@/data/site";
-import { getFirestoreAnnouncements } from "@/lib/firebase/firestore-data";
+import { getFirestoreAnnouncements, getFirestoreFeatures, getFirestoreNewsCards } from "@/lib/firebase/firestore-data";
 import { getServerStatus } from "@/lib/integrations/server-status";
 import { ServerStatusSummary } from "@/components/server-status-summary";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+const featureIcons = { RadioTower, Shield, Trophy, Users };
+
 export default async function HomePage() {
-  const [announcements, serverStatus] = await Promise.all([getFirestoreAnnouncements(), getServerStatus()]);
+  const [announcements, serverStatus, newsCards, features] = await Promise.all([
+    getFirestoreAnnouncements(),
+    getServerStatus(),
+    getFirestoreNewsCards(),
+    getFirestoreFeatures()
+  ]);
 
   return (
     <main>
@@ -67,7 +73,10 @@ export default async function HomePage() {
             <Card key={feature.title} className="hud-card transition duration-300 hover:-translate-y-1 hover:border-secondary/30">
               <CardContent className="p-5">
                 <div className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-primary/20 bg-primary/10">
-                  <feature.icon className="h-6 w-6 text-primary" />
+                  {(() => {
+                    const Icon = typeof feature.icon === "string" ? featureIcons[feature.icon as keyof typeof featureIcons] ?? RadioTower : feature.icon;
+                    return <Icon className="h-6 w-6 text-primary" />;
+                  })()}
                 </div>
                 <h3 className="mt-5 font-semibold">{feature.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{feature.description}</p>

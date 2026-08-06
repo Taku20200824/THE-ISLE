@@ -1,8 +1,13 @@
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
-import { staff } from "@/data/site";
+import { getFirestoreStaff } from "@/lib/firebase/firestore-data";
 
-export default function StaffPage() {
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+export default async function StaffPage() {
+  const staff = await getFirestoreStaff();
+
   return (
     <main className="container min-h-screen pt-28 pb-20">
       <SectionHeading eyebrow="Staff" title="Operations team" description="Owner, administrators, moderators, and helpers." />

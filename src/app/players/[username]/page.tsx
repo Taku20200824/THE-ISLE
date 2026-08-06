@@ -3,9 +3,10 @@ import { MessageCircle } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { leaderboard } from "@/data/site";
+import { getFirestoreLeaderboard, getFirestorePlayer } from "@/lib/firebase/firestore-data";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const leaderboard = await getFirestoreLeaderboard();
   return leaderboard.map((player) => ({ username: player.username }));
 }
 
@@ -13,9 +14,12 @@ type PlayerProfilePageProps = {
   params: Promise<{ username: string }>;
 };
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 export default async function PlayerProfilePage({ params }: PlayerProfilePageProps) {
   const { username } = await params;
-  const player = leaderboard.find((item) => item.username.toLowerCase() === username.toLowerCase());
+  const player = await getFirestorePlayer(username);
 
   if (!player) {
     notFound();
@@ -26,7 +30,7 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
       <SectionHeading eyebrow="Player profile" title={player.username} description="Public profile surface for linked Discord and in-game progression." />
       <Card>
         <CardContent className="grid gap-8 p-6 md:grid-cols-[220px_1fr]">
-          <img src={`https://api.dicebear.com/9.x/shapes/svg?seed=${player.username}`} alt="" className="h-44 w-44 rounded-lg bg-white/10 p-3" />
+          <img src={player.avatar || `https://api.dicebear.com/9.x/shapes/svg?seed=${player.username}`} alt="" className="h-44 w-44 rounded-lg bg-white/10 p-3" />
           <div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {[
@@ -44,7 +48,7 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
               ))}
             </div>
             <Button className="mt-6" asChild>
-              <a href="https://discord.com" rel="noreferrer">
+              <a href={player.discord || "https://discord.com"} rel="noreferrer">
                 <MessageCircle className="h-4 w-4" />
                 Discord Link
               </a>

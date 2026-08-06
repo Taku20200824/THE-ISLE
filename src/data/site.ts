@@ -222,6 +222,133 @@ export const dinosaurs = [
     strength: "Flexible water-edge survival",
     weakness: "Outclassed by specialists",
     playstyle: "Use mixed diet options, avoid apex routes, and survive through adaptability."
+  },
+  {
+    slug: "hypsilophodon",
+    name: "Hypsilophodon",
+    diet: "Herbivore",
+    growth: "40m",
+    strength: "Tiny profile, agility, and defensive spit",
+    weakness: "Almost no direct fighting power",
+    playstyle: "Stay in dense cover, warn herds, blind pursuers, and survive through movement instead of combat.",
+    role: "Scout herbivore",
+    difficulty: "Beginner"
+  },
+  {
+    slug: "pachycephalosaurus",
+    name: "Pachycephalosaurus",
+    diet: "Herbivore",
+    growth: "2h 10m",
+    strength: "Bone-breaking headbutt pressure",
+    weakness: "Needs clean spacing and stamina control",
+    playstyle: "Use terrain and timing to punish charges, fracture careless predators, and disengage before being surrounded.",
+    role: "Disruptor",
+    difficulty: "Intermediate"
+  },
+  {
+    slug: "diabloceratops",
+    name: "Diabloceratops",
+    diet: "Herbivore",
+    growth: "3h 15m",
+    strength: "Compact bruiser with strong defensive trades",
+    weakness: "Can be kited by faster coordinated predators",
+    playstyle: "Hold herd edges, protect juveniles, and force predators into bad angles.",
+    role: "Herd defender",
+    difficulty: "Intermediate"
+  },
+  {
+    slug: "maiasaura",
+    name: "Maiasaura",
+    diet: "Herbivore",
+    growth: "3h 30m",
+    strength: "Herd speed, stamina, and group survival",
+    weakness: "Solo players are vulnerable when caught in open ground",
+    playstyle: "Move with the herd, rotate through safe feeding zones, and avoid unnecessary fights.",
+    role: "Herd runner",
+    difficulty: "Beginner"
+  },
+  {
+    slug: "troodon",
+    name: "Troodon",
+    diet: "Carnivore",
+    growth: "1h 00m",
+    strength: "Venom pounce and pack harassment",
+    weakness: "Extremely fragile when isolated",
+    playstyle: "Attack in coordinated waves, stack pressure, and leave before larger prey can pin you down.",
+    role: "Pack venom hunter",
+    difficulty: "Advanced"
+  },
+  {
+    slug: "triceratops",
+    name: "Triceratops",
+    diet: "Herbivore",
+    growth: "5h+",
+    strength: "Apex herbivore tank with devastating frontal control",
+    weakness: "Slow, loud, and a major target for organized carnivores",
+    playstyle: "Anchor the herd, face threats directly, and avoid being split from support.",
+    role: "Apex herbivore",
+    difficulty: "Advanced",
+    status: "Hordetesting / upcoming"
+  },
+  {
+    slug: "tyrannosaurus",
+    name: "Tyrannosaurus",
+    diet: "Carnivore",
+    growth: "6h+",
+    strength: "Apex bite pressure and finishing power",
+    weakness: "Slow acceleration and costly stamina mistakes",
+    playstyle: "Control territory, force prey into bad routes, and commit only when the kill is realistic.",
+    role: "Apex carnivore",
+    difficulty: "Advanced",
+    status: "Hordetesting / upcoming"
+  },
+  {
+    slug: "allosaurus",
+    name: "Allosaurus",
+    diet: "Carnivore",
+    growth: "3h+",
+    strength: "Balanced mid-tier pressure, bleed, and mobility",
+    weakness: "Can lose trades against specialists",
+    playstyle: "Track wounded prey, pressure from angles, and use mobility instead of face-tanking.",
+    role: "Mid carnivore",
+    difficulty: "Intermediate",
+    status: "Upcoming"
+  },
+  {
+    slug: "baryonyx",
+    name: "Baryonyx",
+    diet: "Carnivore",
+    growth: "3h+",
+    strength: "Riverside ambush and fish-route control",
+    weakness: "Less dominant away from water corridors",
+    playstyle: "Patrol banks, punish thirsty prey, and retreat through water-side cover.",
+    role: "Riverside predator",
+    difficulty: "Intermediate",
+    status: "Upcoming"
+  },
+  {
+    slug: "kentrosaurus",
+    name: "Kentrosaurus",
+    diet: "Herbivore",
+    growth: "2h+",
+    strength: "Spike punishment and defensive spacing",
+    weakness: "Needs careful positioning against packs",
+    playstyle: "Punish close commits, guard tight paths, and move with larger herbivores.",
+    role: "Defensive herbivore",
+    difficulty: "Intermediate",
+    status: "Upcoming"
+  },
+  {
+    slug: "austroraptor",
+    name: "Austroraptor",
+    diet: "Carnivore",
+    growth: "2h+",
+    strength: "Speed, reach, and fish specialist routes",
+    weakness: "Weak if forced into direct brawls",
+    playstyle: "Skirmish around water and cover, pick isolated prey, and avoid long trades.",
+    role: "Skirmisher",
+    difficulty: "Intermediate",
+    status: "Upcoming"
   }
 ];
 

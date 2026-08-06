@@ -34,6 +34,51 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /newsCards/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /features/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /rules/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /dinosaurs/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /mapMarkers/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /gallery/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /donationRewards/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /donationGoals/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /scores/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /staff/{documentId} {
       allow read: if true;
       allow write: if isAdmin();

@@ -141,6 +141,36 @@ online, offline, maintenance, notSynced, syncing, liveRefresh
 
 The website checks `/api/site-texts`, falls back to the built-in translations when Firebase text is empty, refreshes text on window focus, and polls Firebase text every 60 seconds while the page is open.
 
+### Firestore Content Collections
+
+Most public website content is Firebase-first. If a collection is empty, the website uses built-in fallback content so the deployment still works.
+
+Create these collections when you want Firebase to control the site:
+
+```text
+announcements: title, body, date
+newsCards: title, excerpt, image, order
+features: title, description, icon, order
+rules: title, icon, items(array), order
+dinosaurs: slug, name, diet, growth, strength, weakness, playstyle, image, tier, role, difficulty, status, order
+scores: username, playtime, kills, deaths, growth, nest, dinosaur, discord, avatar
+events: title, type, when, icon, order
+staff: name, role, discord, avatar, order
+mapMarkers: id, type, name, x, y, risk, note, order
+gallery: type, title, image, order
+donationRewards: title, icon, body, order
+donationGoals: label, current, target, currency, description
+```
+
+Supported icon names:
+
+```text
+features: RadioTower, Shield, Trophy, Users
+rules: Crown, Shield, Skull, Swords, Users
+events: CalendarDays, Sparkles, Swords
+donationRewards: Crown, Gem, Server
+```
+
 ### Automatic Server Status
 
 The public website uses `serverStatus/main` as the configured server record, then attempts a server-side live query against the configured `ip` and `port`.

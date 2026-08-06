@@ -7,13 +7,13 @@ import { cn } from "@/lib/utils";
 
 type MarkerType = "water" | "sanctuary" | "migration" | "spawn" | "food";
 
-type MapMarker = {
+export type IsleMapMarker = {
   id: string;
-  type: MarkerType;
+  type: string;
   name: string;
   x: number;
   y: number;
-  risk: "Low" | "Medium" | "High";
+  risk: string;
   note: string;
 };
 
@@ -25,7 +25,7 @@ const markerStyles: Record<MarkerType, { label: string; icon: typeof Waves; colo
   food: { label: "Food", icon: Drumstick, color: "bg-rose-300 text-rose-950", ring: "ring-rose-300/45" }
 };
 
-const markers: MapMarker[] = [
+const fallbackMarkers: IsleMapMarker[] = [
   { id: "delta-water", type: "water", name: "Delta Crossing", x: 22, y: 36, risk: "High", note: "Heavy predator traffic around shallow crossings." },
   { id: "north-water", type: "water", name: "Northern Falls", x: 67, y: 27, risk: "Medium", note: "Reliable water with cliff cover and ambush angles." },
   { id: "coast-water", type: "water", name: "Mangrove Pool", x: 82, y: 64, risk: "Low", note: "Safer drinking route for young herbivores." },
@@ -46,13 +46,17 @@ const regions = [
   { name: "Southern Jungle", className: "left-[31%] top-[78%]" }
 ];
 
-export function IsleMap() {
+function normalizeType(type: string): MarkerType {
+  return type in markerStyles ? (type as MarkerType) : "water";
+}
+
+export function IsleMap({ markers = fallbackMarkers }: { markers?: IsleMapMarker[] }) {
   const [activeTypes, setActiveTypes] = useState<MarkerType[]>(["water", "sanctuary", "migration", "spawn", "food"]);
   const [selectedMarkerId, setSelectedMarkerId] = useState(markers[0].id);
   const [zoom, setZoom] = useState(1);
 
   const selectedMarker = markers.find((marker) => marker.id === selectedMarkerId) ?? markers[0];
-  const visibleMarkers = useMemo(() => markers.filter((marker) => activeTypes.includes(marker.type)), [activeTypes]);
+  const visibleMarkers = useMemo(() => markers.filter((marker) => activeTypes.includes(normalizeType(marker.type))), [activeTypes, markers]);
 
   function toggleType(type: MarkerType) {
     setActiveTypes((current) => {
@@ -132,7 +136,7 @@ export function IsleMap() {
             ))}
 
             {visibleMarkers.map((marker) => {
-              const style = markerStyles[marker.type];
+              const style = markerStyles[normalizeType(marker.type)];
               const Icon = style.icon;
               const selected = selectedMarker.id === marker.id;
 
@@ -169,8 +173,8 @@ export function IsleMap() {
         </div>
         <h2 className="mt-4 text-3xl font-black text-white">{selectedMarker.name}</h2>
         <div className="mt-3 flex flex-wrap gap-2">
-          <span className={cn("inline-flex items-center gap-2 rounded-md px-3 py-1 text-xs font-bold uppercase", markerStyles[selectedMarker.type].color)}>
-            {markerStyles[selectedMarker.type].label}
+          <span className={cn("inline-flex items-center gap-2 rounded-md px-3 py-1 text-xs font-bold uppercase", markerStyles[normalizeType(selectedMarker.type)].color)}>
+            {markerStyles[normalizeType(selectedMarker.type)].label}
           </span>
           <span className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-black/30 px-3 py-1 text-xs font-bold uppercase text-zinc-300">
             <MapPin className="h-3.5 w-3.5 text-primary" />

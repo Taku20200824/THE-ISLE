@@ -1,14 +1,14 @@
 import { Play, Sparkles } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
+import { getFirestoreGallery } from "@/lib/firebase/firestore-data";
 
-const gallery = [
-  { type: "Screenshot", title: "Sanctuary sunrise", image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80" },
-  { type: "Video", title: "Tournament final", image: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80" },
-  { type: "Community Creation", title: "Pack emblem", image: "https://images.unsplash.com/photo-1473773508845-188df298d2d1?auto=format&fit=crop&w=1200&q=80" }
-];
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const gallery = await getFirestoreGallery();
+
   return (
     <main className="container min-h-screen pt-28 pb-20">
       <SectionHeading eyebrow="Gallery" title="Screenshots, videos, and creations" />

@@ -1,8 +1,16 @@
+import { CalendarDays, Sparkles, Swords } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { events } from "@/data/site";
+import { getFirestoreEvents } from "@/lib/firebase/firestore-data";
 
-export default function EventsPage() {
+const eventIcons = { CalendarDays, Sparkles, Swords };
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+export default async function EventsPage() {
+  const events = await getFirestoreEvents();
+
   return (
     <main className="container min-h-screen pt-28 pb-20">
       <SectionHeading eyebrow="Events" title="Community calendar" description="Weekly events, Double Growth Weekend, and PvP Tournament scheduling." />
@@ -10,7 +18,10 @@ export default function EventsPage() {
         {events.map((event) => (
           <Card key={event.title}>
             <CardHeader>
-              <event.icon className="h-7 w-7 text-primary" />
+              {(() => {
+                const Icon = typeof event.icon === "string" ? eventIcons[event.icon as keyof typeof eventIcons] ?? CalendarDays : event.icon;
+                return <Icon className="h-7 w-7 text-primary" />;
+              })()}
               <CardTitle>{event.title}</CardTitle>
             </CardHeader>
             <CardContent>

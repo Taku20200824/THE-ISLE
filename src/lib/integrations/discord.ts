@@ -1,7 +1,9 @@
-import { siteConfig, staff } from "@/data/site";
+import { siteConfig } from "@/data/site";
+import { getFirestoreStaff } from "@/lib/firebase/firestore-data";
 
 export async function getDiscordCommunity() {
-  // Replace this with Discord bot backed guild/member data.
+  const staff = await getFirestoreStaff();
+
   return {
     invite: siteConfig.discordInvite,
     staff,

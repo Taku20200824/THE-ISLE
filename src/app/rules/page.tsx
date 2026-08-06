@@ -1,8 +1,16 @@
+import { Crown, Shield, Skull, Swords, Users } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { rules } from "@/data/site";
+import { getFirestoreRules } from "@/lib/firebase/firestore-data";
 
-export default function RulesPage() {
+const ruleIcons = { Crown, Shield, Skull, Swords, Users };
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+export default async function RulesPage() {
+  const rules = await getFirestoreRules();
+
   return (
     <main className="container min-h-screen pt-28 pb-20">
       <SectionHeading eyebrow="Rules" title="Clear rules, consistent enforcement" description="A beautiful rulebook for survival, PvP, chat, exploit policy, and punishments." />
@@ -10,7 +18,10 @@ export default function RulesPage() {
         {rules.map((group) => (
           <Card key={group.title}>
             <CardHeader>
-              <group.icon className="h-7 w-7 text-primary" />
+              {(() => {
+                const Icon = typeof group.icon === "string" ? ruleIcons[group.icon as keyof typeof ruleIcons] ?? Shield : group.icon;
+                return <Icon className="h-7 w-7 text-primary" />;
+              })()}
               <CardTitle>{group.title}</CardTitle>
             </CardHeader>
             <CardContent>

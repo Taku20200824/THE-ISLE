@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
-import { dinosaurs, navItems, siteConfig } from "@/data/site";
+import { navItems, siteConfig } from "@/data/site";
+import { getFirestoreDinosaurs } from "@/lib/firebase/firestore-data";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const dinosaurs = await getFirestoreDinosaurs();
   const routes = [
     ...navItems.map((item) => item.href),
     "/gallery",
