@@ -1,6 +1,7 @@
 import { Hero } from "@/components/hero";
 import { SectionHeading } from "@/components/section-heading";
 import { HomeContentSections } from "@/components/home-content-sections";
+import { DinosaurShowcase } from "@/components/dinosaur-showcase";
 import { getFirestoreAnnouncements, getFirestoreFeatures, getFirestoreNewsCards } from "@/lib/firebase/firestore-data";
 import { getServerStatus } from "@/lib/integrations/server-status";
 import { ServerStatusSummary } from "@/components/server-status-summary";
@@ -19,6 +20,7 @@ export default async function HomePage() {
   return (
     <main>
       <Hero serverStatus={serverStatus} />
+      <DinosaurShowcase />
       <section className="container py-20">
         <SectionHeading
           eyebrow="BisectHosting server"
