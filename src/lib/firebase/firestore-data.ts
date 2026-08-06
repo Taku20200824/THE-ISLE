@@ -190,7 +190,8 @@ export async function getFirestoreAnnouncements() {
     .map((data) => ({
       title: String(data.title ?? data.id),
       body: String(data.body ?? data.description ?? ""),
-      date: String(data.date ?? data.createdAt ?? "")
+      date: String(data.date ?? data.createdAt ?? ""),
+      i18n: data.i18n && typeof data.i18n === "object" ? data.i18n : {}
     }))
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 6);
@@ -206,7 +207,8 @@ export async function getFirestoreNewsCards() {
   return sortByNumber(rows, "order").map((data) => ({
     title: String(data.title ?? data.id),
     excerpt: String(data.excerpt ?? data.body ?? ""),
-    image: String(data.image ?? data.imageUrl ?? "")
+    image: String(data.image ?? data.imageUrl ?? ""),
+    i18n: data.i18n && typeof data.i18n === "object" ? data.i18n : {}
   }));
 }
 
@@ -214,13 +216,19 @@ export async function getFirestoreFeatures() {
   const rows = await getCollection("features");
 
   if (!rows.length) {
-    return fallbackFeatures;
+    return fallbackFeatures.map((feature, index) => ({
+      title: feature.title,
+      description: feature.description,
+      icon: ["RadioTower", "Shield", "Trophy", "Users"][index] ?? "RadioTower",
+      i18n: {}
+    }));
   }
 
   return sortByNumber(rows, "order").map((data) => ({
     title: String(data.title ?? data.id),
     description: String(data.description ?? data.body ?? ""),
-    icon: String(data.icon ?? "RadioTower")
+    icon: String(data.icon ?? "RadioTower"),
+    i18n: data.i18n && typeof data.i18n === "object" ? data.i18n : {}
   }));
 }
 

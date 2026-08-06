@@ -345,20 +345,127 @@ const dinosaurs = [
 
 const content = {
   announcements: [
-    { id: "asia-routes", title: "Asia migration routes refreshed", body: "New sanctuary and migration callouts are live for weekend play.", date: "2026-08-03" },
-    { id: "double-growth", title: "Double Growth Weekend", body: "Friday 20:00 JST through Monday 02:00 JST for verified Discord members.", date: "2026-08-07" },
-    { id: "moderator-applications", title: "Moderator applications open", body: "We are recruiting English-speaking staff for JP/KR/TW/HK/SG time zones.", date: "2026-08-10" }
+    {
+      id: "asia-routes",
+      title: "Asia migration routes refreshed",
+      body: "New sanctuary and migration callouts are live for weekend play.",
+      date: "2026-08-03",
+      i18n: {
+        ja: { title: "アジア移動ルート更新", body: "週末プレイ向けに、新しい聖域と移動ルートの案内を公開しました。" },
+        ko: { title: "아시아 이동 루트 업데이트", body: "주말 플레이를 위한 새 성역과 이동 루트 안내가 적용되었습니다." },
+        mn: { title: "Азийн migration route шинэчлэгдлээ", body: "Weekend тоглолтод зориулсан sanctuary болон migration callout шинэчлэгдсэн." }
+      }
+    },
+    {
+      id: "double-growth",
+      title: "Double Growth Weekend",
+      body: "Friday 20:00 JST through Monday 02:00 JST for verified Discord members.",
+      date: "2026-08-07",
+      i18n: {
+        ja: { title: "成長2倍ウィークエンド", body: "Discord 認証済みメンバー向けに、金曜20:00 JSTから月曜02:00 JSTまで開催します。" },
+        ko: { title: "성장 2배 주말", body: "Discord 인증 멤버 대상으로 금요일 20:00 JST부터 월요일 02:00 JST까지 진행됩니다." },
+        mn: { title: "Double Growth Weekend", body: "Discord баталгаажсан гишүүдэд Баасан 20:00 JST-оос Даваа 02:00 JST хүртэл идэвхтэй." }
+      }
+    },
+    {
+      id: "moderator-applications",
+      title: "Moderator applications open",
+      body: "We are recruiting English-speaking staff for JP/KR/TW/HK/SG time zones.",
+      date: "2026-08-10",
+      i18n: {
+        ja: { title: "モデレーター募集開始", body: "日本・韓国・台湾・香港・シンガポール時間帯をカバーできる英語対応スタッフを募集しています。" },
+        ko: { title: "모더레이터 모집 시작", body: "JP/KR/TW/HK/SG 시간대를 지원할 수 있는 영어 가능 스태프를 모집합니다." },
+        mn: { title: "Moderator бүртгэл нээгдлээ", body: "JP/KR/TW/HK/SG цагийн бүсэд ажиллах англи хэлтэй staff хайж байна." }
+      }
+    }
   ],
   newsCards: [
-    { id: "host-upgrade", title: "Hong Kong host upgrade", excerpt: "Lower routing latency for Japan, Korea, Taiwan, and Singapore players.", image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80", order: 1 },
-    { id: "nest-week", title: "Nest week spotlight", excerpt: "Community nesting channels and helper groups are now available.", image: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80", order: 2 },
-    { id: "tournament-ruleset", title: "Tournament ruleset", excerpt: "Structured PvP bracket rules are ready for public testing.", image: "https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1200&q=80", order: 3 }
+    {
+      id: "host-upgrade",
+      title: "Hong Kong host upgrade",
+      excerpt: "Lower routing latency for Japan, Korea, Taiwan, and Singapore players.",
+      image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      order: 1,
+      i18n: {
+        ja: { title: "香港ホストを強化", excerpt: "日本、韓国、台湾、シンガポールのプレイヤー向けにルーティング遅延を低減します。" },
+        ko: { title: "홍콩 호스트 업그레이드", excerpt: "일본, 한국, 대만, 싱가포르 플레이어의 라우팅 지연을 줄입니다." },
+        mn: { title: "Hong Kong host upgrade", excerpt: "Япон, Солонгос, Тайвань, Сингапур тоглогчдын routing latency-г багасгана." }
+      }
+    },
+    {
+      id: "nest-week",
+      title: "Nest week spotlight",
+      excerpt: "Community nesting channels and helper groups are now available.",
+      image: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80",
+      order: 2,
+      i18n: {
+        ja: { title: "巣作り週間スポットライト", excerpt: "コミュニティの巣作りチャンネルとヘルパーグループが利用可能になりました。" },
+        ko: { title: "둥지 주간 하이라이트", excerpt: "커뮤니티 둥지 채널과 헬퍼 그룹을 사용할 수 있습니다." },
+        mn: { title: "Nest week онцлох мэдээ", excerpt: "Community nesting channel болон helper group ашиглах боломжтой боллоо." }
+      }
+    },
+    {
+      id: "tournament-ruleset",
+      title: "Tournament ruleset",
+      excerpt: "Structured PvP bracket rules are ready for public testing.",
+      image: "https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1200&q=80",
+      order: 3,
+      i18n: {
+        ja: { title: "トーナメントルールセット", excerpt: "PvP ブラケット用のルールが公開テストできる状態になりました。" },
+        ko: { title: "토너먼트 규칙 세트", excerpt: "구조화된 PvP 브라켓 규칙이 공개 테스트 준비를 마쳤습니다." },
+        mn: { title: "Tournament ruleset", excerpt: "PvP bracket-ийн дүрэм public test хийхэд бэлэн боллоо." }
+      }
+    }
   ],
   features: [
-    { id: "routing", title: "Asia-first routing", description: "Hong Kong host, low-latency target, and regional play windows.", icon: "RadioTower", order: 1 },
-    { id: "moderation", title: "Active moderation", description: "English-speaking staff coverage across major Asia time zones.", icon: "Shield", order: 2 },
-    { id: "events", title: "Competitive events", description: "PvP tournaments, pack hunts, nesting events, and seasonal ladders.", icon: "Trophy", order: 3 },
-    { id: "progression", title: "Community progression", description: "Profiles, leaderboards, supporter roles, and staff-led onboarding.", icon: "Users", order: 4 }
+    {
+      id: "routing",
+      title: "Asia-first routing",
+      description: "Hong Kong host, low-latency target, and regional play windows.",
+      icon: "RadioTower",
+      order: 1,
+      i18n: {
+        ja: { title: "アジア優先ルーティング", description: "香港ホスト、低遅延目標、地域ごとのプレイ時間帯に最適化します。" },
+        ko: { title: "아시아 우선 라우팅", description: "홍콩 호스트, 낮은 지연 목표, 지역별 플레이 시간대에 맞춥니다." },
+        mn: { title: "Asia-first routing", description: "Hong Kong host, бага latency зорилт, бүс нутгийн тоглох цагт тохируулсан." }
+      }
+    },
+    {
+      id: "moderation",
+      title: "Active moderation",
+      description: "English-speaking staff coverage across major Asia time zones.",
+      icon: "Shield",
+      order: 2,
+      i18n: {
+        ja: { title: "アクティブなモデレーション", description: "主要なアジア時間帯をカバーする英語対応スタッフがサポートします。" },
+        ko: { title: "활발한 관리", description: "주요 아시아 시간대를 커버하는 영어 가능 스태프가 지원합니다." },
+        mn: { title: "Идэвхтэй moderation", description: "Азийн гол цагийн бүсүүдэд англи хэлтэй staff ажиллана." }
+      }
+    },
+    {
+      id: "events",
+      title: "Competitive events",
+      description: "PvP tournaments, pack hunts, nesting events, and seasonal ladders.",
+      icon: "Trophy",
+      order: 3,
+      i18n: {
+        ja: { title: "競技イベント", description: "PvP トーナメント、群れ狩り、巣作りイベント、シーズンランキングを開催します。" },
+        ko: { title: "경쟁 이벤트", description: "PvP 토너먼트, 무리 사냥, 둥지 이벤트, 시즌 래더를 운영합니다." },
+        mn: { title: "Competitive event", description: "PvP tournament, pack hunt, nesting event, seasonal ladder зохион байгуулна." }
+      }
+    },
+    {
+      id: "progression",
+      title: "Community progression",
+      description: "Profiles, leaderboards, supporter roles, and staff-led onboarding.",
+      icon: "Users",
+      order: 4,
+      i18n: {
+        ja: { title: "コミュニティ進行", description: "プロフィール、ランキング、支援者ロール、スタッフによる案内を用意します。" },
+        ko: { title: "커뮤니티 성장 시스템", description: "프로필, 리더보드, 후원자 역할, 스태프 온보딩을 제공합니다." },
+        mn: { title: "Community progression", description: "Profile, leaderboard, supporter role, staff onboarding зэргийг ашиглана." }
+      }
+    }
   ],
   rules: [
     { id: "general", title: "General Rules", icon: "Shield", items: ["Respect all players and staff.", "Use English in global channels.", "No harassment, hate speech, or targeted griefing.", "Follow staff instructions during incidents."], order: 1 },
