@@ -48,6 +48,26 @@ export type ScoreRecord = {
   avatar?: string;
 };
 
+export type DinosaurRecord = {
+  slug: string;
+  name: string;
+  diet: string;
+  growth: string;
+  strength: string;
+  weakness: string;
+  playstyle: string;
+  image: string;
+  tier: string;
+  role: string;
+  difficulty: string;
+  status: string;
+  category: string;
+  scientificName: string;
+  summary: string;
+  sourceUrl: string;
+  i18n: Record<string, Partial<Omit<DinosaurRecord, "i18n">>>;
+};
+
 type FirestoreDocument = {
   name?: string;
   fields?: Record<string, unknown>;
@@ -137,6 +157,28 @@ function sortByNumber<T extends Record<string, unknown>>(items: T[], field: stri
   });
 }
 
+function toDinosaurRecord(data: Record<string, unknown>): DinosaurRecord {
+  return {
+    slug: String(data.slug ?? data.id),
+    name: String(data.name ?? data.id),
+    diet: String(data.diet ?? "Unknown"),
+    growth: String(data.growth ?? data.growthTime ?? "Unknown"),
+    strength: String(data.strength ?? ""),
+    weakness: String(data.weakness ?? ""),
+    playstyle: String(data.playstyle ?? data.recommendedPlaystyle ?? ""),
+    image: String(data.image ?? data.imageUrl ?? ""),
+    tier: String(data.tier ?? ""),
+    role: String(data.role ?? ""),
+    difficulty: String(data.difficulty ?? ""),
+    status: String(data.status ?? "Playable"),
+    category: String(data.category ?? data.tier ?? data.role ?? ""),
+    scientificName: String(data.scientificName ?? ""),
+    summary: String(data.summary ?? ""),
+    sourceUrl: String(data.sourceUrl ?? ""),
+    i18n: data.i18n && typeof data.i18n === "object" ? (data.i18n as DinosaurRecord["i18n"]) : {}
+  };
+}
+
 export async function getFirestoreAnnouncements() {
   const rows = await getCollection("announcements");
 
@@ -200,23 +242,10 @@ export async function getFirestoreDinosaurs() {
   const rows = await getCollection("dinosaurs");
 
   if (!rows.length) {
-    return fallbackDinosaurs;
+    return fallbackDinosaurs.map((dinosaur) => toDinosaurRecord(dinosaur as Record<string, unknown>));
   }
 
-  return sortByNumber(rows, "order").map((data) => ({
-    slug: String(data.slug ?? data.id),
-    name: String(data.name ?? data.id),
-    diet: String(data.diet ?? "Unknown"),
-    growth: String(data.growth ?? data.growthTime ?? "Unknown"),
-    strength: String(data.strength ?? ""),
-    weakness: String(data.weakness ?? ""),
-    playstyle: String(data.playstyle ?? data.recommendedPlaystyle ?? ""),
-    image: String(data.image ?? data.imageUrl ?? ""),
-    tier: String(data.tier ?? ""),
-    role: String(data.role ?? ""),
-    difficulty: String(data.difficulty ?? ""),
-    status: String(data.status ?? "Playable")
-  }));
+  return sortByNumber(rows, "order").map(toDinosaurRecord);
 }
 
 export async function getFirestoreDinosaur(slug: string) {

@@ -19,30 +19,281 @@ if (!getApps().length) {
 const db = getFirestore();
 
 const dinosaurImages = {
-  carnotaurus: "https://images.unsplash.com/photo-1525877442103-5ddb2089b2bb?auto=format&fit=crop&w=1600&q=85",
-  ceratosaurus: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1600&q=85",
-  deinosuchus: "https://images.unsplash.com/photo-1614065613125-17553fbc59f6?auto=format&fit=crop&w=1600&q=85",
-  dilophosaurus: "https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1600&q=85",
-  herrerasaurus: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=85",
-  omniraptor: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1600&q=85",
-  pteranodon: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=85",
-  stegosaurus: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1600&q=85",
-  tenontosaurus: "https://images.unsplash.com/photo-1473773508845-188df298d2d1?auto=format&fit=crop&w=1600&q=85",
-  dryosaurus: "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1600&q=85",
-  gallimimus: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=85",
-  beipiaosaurus: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1600&q=85",
-  hypsilophodon: "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?auto=format&fit=crop&w=1600&q=85",
-  pachycephalosaurus: "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?auto=format&fit=crop&w=1600&q=85",
-  diabloceratops: "https://images.unsplash.com/photo-1470115636492-6d2b56f9146d?auto=format&fit=crop&w=1600&q=85",
-  maiasaura: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1600&q=85",
-  troodon: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=85",
-  triceratops: "https://images.unsplash.com/photo-1525877442103-5ddb2089b2bb?auto=format&fit=crop&w=1600&q=85",
-  tyrannosaurus: "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1600&q=85",
-  allosaurus: "https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1600&q=85",
-  baryonyx: "https://images.unsplash.com/photo-1614065613125-17553fbc59f6?auto=format&fit=crop&w=1600&q=85",
-  kentrosaurus: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1600&q=85",
-  austroraptor: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=85"
+  tyrannosaurus: "https://www.theisle.info/Tyrannosaurus.webp",
+  allosaurus: "https://www.theisle.info/allo.jpg",
+  carnotaurus: "https://www.theisle.info/The_isle_carnotaurus_new_2020.webp",
+  ceratosaurus: "https://www.theisle.info/Ceratosaurus_The_Isle.webp",
+  baryonyx: "https://www.theisle.info/Baryonyx.webp",
+  dilophosaurus: "https://www.theisle.info/Dilophosaurus.webp",
+  herrerasaurus: "https://www.theisle.info/Herrerasaurus.webp",
+  austroraptor: "https://www.theisle.info/austro.webp",
+  troodon: "https://www.theisle.info/Troodon_The_Isle.webp",
+  omniraptor: "https://www.theisle.info/omniraptor.webp",
+  deinosuchus: "https://www.theisle.info/deinosucus.jpg",
+  pteranodon: "https://www.theisle.info/pteranodon.webp",
+  triceratops: "https://www.theisle.info/triceratops.png",
+  stegosaurus: "https://www.theisle.info/The_isle_stegosaurus_new_2020.webp",
+  diabloceratops: "https://www.theisle.info/diablo.png",
+  kentrosaurus: "https://www.theisle.info/The_isle_kentrosaurus.webp",
+  tenontosaurus: "https://www.theisle.info/Tenontosaurus.webp",
+  maiasaura: "https://www.theisle.info/mai.png",
+  pachycephalosaurus: "https://www.theisle.info/Pachycephalosaurus.webp",
+  dryosaurus: "https://www.theisle.info/dryosaurus.webp",
+  hypsilophodon: "https://www.theisle.info/Hypsilophodon_The_Isle.webp",
+  beipiaosaurus: "https://www.theisle.info/Beipiaosaurus.jpg",
+  gallimimus: "https://www.theisle.info/Gallimimus.webp"
 };
+
+const dinosaurSummaries = {
+  tyrannosaurus: "The Isle's headline apex: slow, heavy, and built to finish fights when the bite lands.",
+  allosaurus: "Versatile mid-tier carnivore with strong bleed pressure, fast healing, and high skill expression.",
+  carnotaurus: "Charging menace and one of the fastest land threats, built around ram-down-prey pressure.",
+  ceratosaurus: "Aggressive bully carnivore with bacterial bite pressure, corpse control, and iron-stomach survival.",
+  baryonyx: "Fast riverside carnivore that stays close to water and ambushes from banks and crossings.",
+  dilophosaurus: "Nocturnal predator with strong night pressure and a disruptive venom or bleed-focused kit.",
+  herrerasaurus: "Small, fast, tree-climbing carnivore that uses vertical routes for scouting and ambushes.",
+  austroraptor: "Tall raptor with speed, reach, fish routes, and a skirmisher style that avoids direct brawls.",
+  troodon: "Tiny pack hunter built around venom pounce pressure, harassment, and coordinated timing.",
+  omniraptor: "Agile small carnivore with pounce-and-grapple pressure, dangerous in coordinated packs.",
+  deinosuchus: "Massive crocodilian that controls rivers, swamps, shorelines, and thirsty prey routes.",
+  pteranodon: "The roster flyer: fragile on the ground but excellent for scouting, fishing, and repositioning.",
+  triceratops: "Iconic horned bruiser with elite 1v1 tank power and devastating frontal control.",
+  stegosaurus: "Heavy defensive herbivore with punishing tail pressure and strong area denial.",
+  diabloceratops: "Compact ceratopsian that fights what it cannot outrun and outruns what it cannot fight.",
+  kentrosaurus: "Spiked stegosaur cousin that punishes careless carnivores with defensive spacing.",
+  tenontosaurus: "Explosive herbivore with bite, claw, kick, tail pressure, and strong dueling tools.",
+  maiasaura: "Herd-bound speed tank that survives through movement, grouping, and coordinated routes.",
+  pachycephalosaurus: "Fracture-focused herbivore whose bone-dome ram can cripple careless attackers.",
+  dryosaurus: "Small, fast, fragile herbivore that survives by speed, cover, dodging, and never getting caught.",
+  hypsilophodon: "Tiny feathered herbivore that blinds pursuers and survives with agility and jungle routes.",
+  beipiaosaurus: "Semi-aquatic omnivore that moves well in water and fights with slashing claws on land.",
+  gallimimus: "Fast flock-based omnivore built around speed, stamina, scouting, and mobilization calls."
+};
+
+const dinosaurCategories = {
+  tyrannosaurus: "Apex Carnivore",
+  allosaurus: "Apex Carnivore",
+  carnotaurus: "Apex Carnivore",
+  ceratosaurus: "Apex Carnivore",
+  baryonyx: "Mid Carnivore",
+  dilophosaurus: "Mid Carnivore",
+  herrerasaurus: "Mid Carnivore",
+  austroraptor: "Mid Carnivore",
+  troodon: "Small Carnivore",
+  omniraptor: "Small Carnivore",
+  deinosuchus: "Aquatic Apex",
+  pteranodon: "Flyer",
+  triceratops: "Large Herbivore",
+  stegosaurus: "Large Herbivore",
+  diabloceratops: "Large Herbivore",
+  kentrosaurus: "Mid Herbivore",
+  tenontosaurus: "Mid Herbivore",
+  maiasaura: "Mid Herbivore",
+  pachycephalosaurus: "Mid Herbivore",
+  dryosaurus: "Small Herbivore",
+  hypsilophodon: "Small Herbivore",
+  beipiaosaurus: "Omnivore",
+  gallimimus: "Omnivore"
+};
+
+const scientificNames = {
+  tyrannosaurus: "Tyrannosaurus rex",
+  allosaurus: "Allosaurus fragilis",
+  carnotaurus: "Carnotaurus sastrei",
+  ceratosaurus: "Ceratosaurus nasicornis",
+  baryonyx: "Baryonyx walkeri",
+  dilophosaurus: "Dilophosaurus wetherilli",
+  herrerasaurus: "Herrerasaurus ischigualastensis",
+  austroraptor: "Austroraptor cabazai",
+  troodon: "Troodon formosus",
+  omniraptor: "Omniraptor",
+  deinosuchus: "Deinosuchus riograndensis",
+  pteranodon: "Pteranodon longiceps",
+  triceratops: "Triceratops horridus",
+  stegosaurus: "Stegosaurus stenops",
+  diabloceratops: "Diabloceratops eatoni",
+  kentrosaurus: "Kentrosaurus aethiopicus",
+  tenontosaurus: "Tenontosaurus tilletti",
+  maiasaura: "Maiasaura peeblesorum",
+  pachycephalosaurus: "Pachycephalosaurus wyomingensis",
+  dryosaurus: "Dryosaurus altus",
+  hypsilophodon: "Hypsilophodon foxii",
+  beipiaosaurus: "Beipiaosaurus inexpectus",
+  gallimimus: "Gallimimus bullatus"
+};
+
+const categoryLabels = {
+  ja: {
+    "Apex Carnivore": "頂点肉食",
+    "Mid Carnivore": "中型肉食",
+    "Small Carnivore": "小型肉食",
+    "Aquatic Apex": "水中の頂点捕食者",
+    Flyer: "飛行生物",
+    "Large Herbivore": "大型草食",
+    "Mid Herbivore": "中型草食",
+    "Small Herbivore": "小型草食",
+    Omnivore: "雑食"
+  },
+  ko: {
+    "Apex Carnivore": "최상위 육식",
+    "Mid Carnivore": "중형 육식",
+    "Small Carnivore": "소형 육식",
+    "Aquatic Apex": "수중 최상위 포식자",
+    Flyer: "비행 생물",
+    "Large Herbivore": "대형 초식",
+    "Mid Herbivore": "중형 초식",
+    "Small Herbivore": "소형 초식",
+    Omnivore: "잡식"
+  },
+  mn: {
+    "Apex Carnivore": "Apex махчин",
+    "Mid Carnivore": "Дунд махчин",
+    "Small Carnivore": "Жижиг махчин",
+    "Aquatic Apex": "Усны apex махчин",
+    Flyer: "Нисдэг амьтан",
+    "Large Herbivore": "Том өвсөн тэжээлтэн",
+    "Mid Herbivore": "Дунд өвсөн тэжээлтэн",
+    "Small Herbivore": "Жижиг өвсөн тэжээлтэн",
+    Omnivore: "Холимог тэжээлтэн"
+  }
+};
+
+const dietLabels = {
+  ja: { Carnivore: "肉食", Herbivore: "草食", Omnivore: "雑食" },
+  ko: { Carnivore: "육식", Herbivore: "초식", Omnivore: "잡식" },
+  mn: { Carnivore: "Махчин", Herbivore: "Өвсөн тэжээлтэн", Omnivore: "Холимог тэжээлтэн" }
+};
+
+const difficultyLabels = {
+  ja: { Beginner: "初心者向け", Intermediate: "中級者向け", Advanced: "上級者向け" },
+  ko: { Beginner: "초보자용", Intermediate: "중급자용", Advanced: "상급자용" },
+  mn: { Beginner: "Анхан шат", Intermediate: "Дунд шат", Advanced: "Ахисан шат" }
+};
+
+const statusLabels = {
+  ja: { Playable: "プレイ可能", Upcoming: "今後追加予定", "Hordetesting / upcoming": "Hordetesting / 今後追加予定" },
+  ko: { Playable: "플레이 가능", Upcoming: "추가 예정", "Hordetesting / upcoming": "Hordetesting / 추가 예정" },
+  mn: { Playable: "Тоглох боломжтой", Upcoming: "Удахгүй нэмэгдэнэ", "Hordetesting / upcoming": "Hordetesting / удахгүй" }
+};
+
+const roleLabels = {
+  ja: {
+    "Speed ambusher": "高速奇襲型",
+    "Corpse controller": "死体・エリア制圧型",
+    "Aquatic apex": "水中の頂点捕食者",
+    "Nocturnal hunter": "夜間ハンター",
+    "Tree ambusher": "高所奇襲型",
+    "Pack hunter": "群れハンター",
+    "Aerial scout": "空中偵察型",
+    "Herd anchor": "群れの防衛軸",
+    "Duelist herbivore": "近接防衛型草食",
+    "Starter survivor": "初心者向け生存型",
+    "Flock runner": "高速偵察型",
+    "Water-edge omnivore": "水辺の雑食型",
+    "Scout herbivore": "小型偵察草食",
+    Disruptor: "妨害型",
+    "Herd defender": "群れの守護役",
+    "Herd runner": "群れ移動型",
+    "Pack venom hunter": "毒を使う群れハンター",
+    "Apex herbivore": "頂点草食",
+    "Apex carnivore": "頂点肉食",
+    "Mid carnivore": "中型肉食",
+    "Riverside predator": "川沿い捕食者",
+    "Defensive herbivore": "防衛型草食",
+    Skirmisher: "遊撃型"
+  },
+  ko: {
+    "Speed ambusher": "고속 기습형",
+    "Corpse controller": "시체와 구역 장악형",
+    "Aquatic apex": "수중 최상위 포식자",
+    "Nocturnal hunter": "야간 사냥꾼",
+    "Tree ambusher": "고지대 기습형",
+    "Pack hunter": "무리 사냥꾼",
+    "Aerial scout": "공중 정찰형",
+    "Herd anchor": "무리 방어 핵심",
+    "Duelist herbivore": "근접 방어 초식",
+    "Starter survivor": "초보 생존형",
+    "Flock runner": "고속 정찰형",
+    "Water-edge omnivore": "물가 잡식형",
+    "Scout herbivore": "소형 정찰 초식",
+    Disruptor: "교란형",
+    "Herd defender": "무리 수비수",
+    "Herd runner": "무리 이동형",
+    "Pack venom hunter": "독 무리 사냥꾼",
+    "Apex herbivore": "최상위 초식",
+    "Apex carnivore": "최상위 육식",
+    "Mid carnivore": "중형 육식",
+    "Riverside predator": "강가 포식자",
+    "Defensive herbivore": "방어형 초식",
+    Skirmisher: "교전 기동형"
+  },
+  mn: {
+    "Speed ambusher": "Хурдтай отогч",
+    "Corpse controller": "Сэг болон бүс хянагч",
+    "Aquatic apex": "Усны apex махчин",
+    "Nocturnal hunter": "Шөнийн анчин",
+    "Tree ambusher": "Өндрөөс отогч",
+    "Pack hunter": "Багийн анчин",
+    "Aerial scout": "Агаарын тагнуул",
+    "Herd anchor": "Сүргийн хамгаалалтын тулгуур",
+    "Duelist herbivore": "Тулаанч өвсөн тэжээлтэн",
+    "Starter survivor": "Эхлэгчийн амьд үлдэх төрөл",
+    "Flock runner": "Хурдан тагнуул",
+    "Water-edge omnivore": "Усны эргийн холимог тэжээлтэн",
+    "Scout herbivore": "Жижиг тагнуул өвсөн тэжээлтэн",
+    Disruptor: "Саатуулагч",
+    "Herd defender": "Сүргийн хамгаалагч",
+    "Herd runner": "Сүргээр нүүдэллэгч",
+    "Pack venom hunter": "Хортой багийн анчин",
+    "Apex herbivore": "Apex өвсөн тэжээлтэн",
+    "Apex carnivore": "Apex махчин",
+    "Mid carnivore": "Дунд махчин",
+    "Riverside predator": "Голын эргийн махчин",
+    "Defensive herbivore": "Хамгаалалтын өвсөн тэжээлтэн",
+    Skirmisher: "Түргэн довтлогч"
+  }
+};
+
+function localizedDinosaurFields({ name, diet, growth, role, difficulty, status, category }) {
+  return {
+    ja: {
+      diet: dietLabels.ja[diet] ?? diet,
+      growth,
+      role: roleLabels.ja[role] ?? role,
+      difficulty: difficultyLabels.ja[difficulty] ?? difficulty,
+      status: statusLabels.ja[status] ?? status,
+      category: categoryLabels.ja[category] ?? category,
+      summary: `${name} は ${categoryLabels.ja[category] ?? category} のプレイアブル恐竜です。役割は ${roleLabels.ja[role] ?? role} で、成長時間は ${growth} です。`,
+      strength: `${name} の強みは、${roleLabels.ja[role] ?? role} として試合の流れを作れる点です。`,
+      weakness: "位置取り、スタミナ管理、群れとの距離を誤ると一気に不利になります。",
+      playstyle: "無理に正面から戦わず、地形・視界・味方との連携を使って安全に圧力をかけましょう。"
+    },
+    ko: {
+      diet: dietLabels.ko[diet] ?? diet,
+      growth,
+      role: roleLabels.ko[role] ?? role,
+      difficulty: difficultyLabels.ko[difficulty] ?? difficulty,
+      status: statusLabels.ko[status] ?? status,
+      category: categoryLabels.ko[category] ?? category,
+      summary: `${name}는 ${categoryLabels.ko[category] ?? category} 플레이 가능 공룡입니다. 역할은 ${roleLabels.ko[role] ?? role}이며 성장 시간은 ${growth}입니다.`,
+      strength: `${name}의 강점은 ${roleLabels.ko[role] ?? role} 역할로 전투 흐름을 만들 수 있다는 점입니다.`,
+      weakness: "위치 선정, 스태미나 관리, 무리와의 거리 조절을 실패하면 빠르게 불리해집니다.",
+      playstyle: "정면 싸움만 고집하지 말고 지형, 시야, 팀 연계를 활용해 안전하게 압박하세요."
+    },
+    mn: {
+      diet: dietLabels.mn[diet] ?? diet,
+      growth,
+      role: roleLabels.mn[role] ?? role,
+      difficulty: difficultyLabels.mn[difficulty] ?? difficulty,
+      status: statusLabels.mn[status] ?? status,
+      category: categoryLabels.mn[category] ?? category,
+      summary: `${name} бол ${categoryLabels.mn[category] ?? category} ангиллын тоглох боломжтой динозавр. Үүрэг нь ${roleLabels.mn[role] ?? role}, өсөх хугацаа ${growth}.`,
+      strength: `${name}-ийн давуу тал нь ${roleLabels.mn[role] ?? role} байдлаар тулааны хэмнэлийг удирдаж чаддаг.`,
+      weakness: "Байрлал, stamina, сүргээсээ холдох зайгаа буруу тооцвол хурдан сул талтай болно.",
+      playstyle: "Шууд нүүр тулж зодолдохоос илүү газар нутаг, харагдах орчин, багийн холбоог ашиглан аюулгүй дарамт үзүүл."
+    }
+  };
+}
 
 const dinosaurs = [
   ["carnotaurus", "Carnotaurus", "Carnivore", "2h 15m", "Fastest land carnivore with explosive charge pressure.", "Poor turning and fragile in long fights.", "Scout open ground, isolate wounded targets, then disengage before packs surround you.", "Speed ambusher", "Intermediate", "Playable"],
@@ -68,20 +319,29 @@ const dinosaurs = [
   ["baryonyx", "Baryonyx", "Carnivore", "3h+", "Riverside ambush and fish-route control.", "Less dominant away from water corridors.", "Patrol banks, punish thirsty prey, and retreat through water-side cover.", "Riverside predator", "Intermediate", "Upcoming"],
   ["kentrosaurus", "Kentrosaurus", "Herbivore", "2h+", "Spike punishment and defensive spacing.", "Needs careful positioning against packs.", "Punish close commits, guard tight paths, and move with larger herbivores.", "Defensive herbivore", "Intermediate", "Upcoming"],
   ["austroraptor", "Austroraptor", "Carnivore", "2h+", "Speed, reach, and fish specialist routes.", "Weak if forced into direct brawls.", "Skirmish around water and cover, pick isolated prey, and avoid long trades.", "Skirmisher", "Intermediate", "Upcoming"]
-].map(([slug, name, diet, growth, strength, weakness, playstyle, role, difficulty, status], order) => ({
-  slug,
-  name,
-  diet,
-  growth,
-  strength,
-  weakness,
-  playstyle,
-  role,
-  difficulty,
-  status,
-  image: dinosaurImages[slug],
-  order
-}));
+].map(([slug, name, diet, growth, strength, weakness, playstyle, role, difficulty, status], order) => {
+  const category = dinosaurCategories[slug] ?? role;
+
+  return {
+    slug,
+    name,
+    diet,
+    growth,
+    strength,
+    weakness,
+    playstyle,
+    role,
+    difficulty,
+    status,
+    category,
+    scientificName: scientificNames[slug] ?? "",
+    summary: dinosaurSummaries[slug] ?? `${name} is a ${category} profile for The Isle Evrima community planning.`,
+    sourceUrl: `https://www.theisle.info/dinosaurs/${slug}`,
+    image: dinosaurImages[slug],
+    i18n: localizedDinosaurFields({ name, diet, growth, role, difficulty, status, category }),
+    order
+  };
+});
 
 const content = {
   announcements: [
