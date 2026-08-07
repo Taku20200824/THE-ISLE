@@ -1,12 +1,15 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { navItems, siteConfig } from "@/data/site";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useLanguage } from "@/components/language-provider";
+import { cn } from "@/lib/utils";
 import type { TranslationKey } from "@/lib/i18n";
 
 const navTranslationKeys: Record<string, TranslationKey> = {
@@ -24,20 +27,46 @@ const navTranslationKeys: Record<string, TranslationKey> = {
 export function SiteHeader() {
   const { theme, setTheme } = useTheme();
   const { t } = useLanguage();
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/35 backdrop-blur-2xl">
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 border-b transition-all duration-300",
+        scrolled
+          ? "border-white/10 bg-black/70 shadow-[0_10px_40px_rgba(0,0,0,.5)] backdrop-blur-2xl"
+          : "border-transparent bg-black/20 backdrop-blur-md"
+      )}
+    >
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="group flex items-center gap-3 font-display text-lg font-black tracking-normal text-primary">
           <span className="h-3 w-3 rounded-sm border border-primary/80 bg-primary shadow-[0_0_22px_rgba(45,212,191,.75)] transition group-hover:rotate-45" />
           <span className="drop-shadow-[0_0_18px_rgba(45,212,191,.35)]">{siteConfig.name}</span>
         </Link>
         <nav className="hidden items-center gap-5 text-sm text-muted-foreground lg:flex">
-          {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className="relative transition hover:text-foreground after:absolute after:-bottom-2 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all hover:after:w-full">
-              {t(navTranslationKeys[item.href])}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "relative transition after:absolute after:-bottom-2 after:left-0 after:h-px after:bg-primary after:transition-all hover:text-foreground",
+                  isActive ? "text-foreground after:w-full" : "after:w-0 hover:after:w-full"
+                )}
+              >
+                {t(navTranslationKeys[item.href])}
+              </Link>
+            );
+          })}
         </nav>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />

@@ -35,9 +35,12 @@ export function Hero({ serverStatus }: { serverStatus: ServerStatusDocument }) {
       </div>
       <div className="container relative z-10 flex min-h-[calc(94vh-4rem)] items-center">
         <MotionDiv initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-5xl py-20">
-          <Badge className="border-primary/30 bg-primary/10 text-primary shadow-[0_0_30px_rgba(45,212,191,.16)]">{t("hero.badge")}</Badge>
-          <h1 className="mt-6 max-w-4xl font-display text-5xl font-black leading-none text-white drop-shadow-[0_0_34px_rgba(255,255,255,.16)] sm:text-7xl lg:text-8xl">
-            THE ISLE ASIA
+          <Badge className="gap-2 border-primary/30 bg-primary/10 text-primary shadow-[0_0_30px_rgba(45,212,191,.16)]">
+            <span className="live-dot text-primary" />
+            {t("hero.badge")}
+          </Badge>
+          <h1 className="text-gradient mt-6 max-w-4xl font-display text-5xl font-black leading-none drop-shadow-[0_0_44px_rgba(45,212,191,.28)] sm:text-7xl lg:text-8xl">
+            THE ISLE <span className="text-gradient-warm">ASIA</span>
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-zinc-200 sm:text-xl">
             {t("hero.body")}

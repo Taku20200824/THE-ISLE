@@ -16,8 +16,8 @@ export function StatusBadge({ status, className }: { status: ServerStatusDocumen
   const statusLabelKey = `status.${status}` as TranslationKey;
 
   return (
-    <span className={cn("inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold uppercase", statusStyles[status], className)}>
-      <span className="mr-2 h-2 w-2 rounded-full bg-current" />
+    <span className={cn("inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide", statusStyles[status], className)}>
+      <span className={cn("mr-2", status === "online" ? "live-dot" : "h-2 w-2 rounded-full bg-current")} />
       {t(statusLabelKey)}
     </span>
   );

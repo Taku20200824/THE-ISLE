@@ -27,16 +27,17 @@ export function SectionHeading({
 
   return (
     <div className="mb-8 max-w-3xl">
-      <Badge>{renderedEyebrow}</Badge>
+      <Badge className="border-primary/25 bg-primary/10 text-primary">{renderedEyebrow}</Badge>
       <h2
         className={cn(
-          "mt-4 max-w-full break-words text-3xl font-bold leading-tight tracking-normal text-foreground sm:text-4xl",
+          "mt-4 max-w-full break-words text-3xl font-black leading-tight tracking-tight text-foreground sm:text-4xl",
           locale === "mn" && "text-2xl sm:text-3xl"
         )}
       >
         {renderedTitle}
       </h2>
-      {renderedDescription ? <p className="mt-3 max-w-full break-words leading-7 text-muted-foreground">{renderedDescription}</p> : null}
+      <div className="accent-rule mt-5" />
+      {renderedDescription ? <p className="mt-4 max-w-full break-words leading-7 text-muted-foreground">{renderedDescription}</p> : null}
     </div>
   );
 }
