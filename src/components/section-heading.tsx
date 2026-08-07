@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
 import type { TranslationKey } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 export function SectionHeading({
   eyebrow,
@@ -19,7 +20,7 @@ export function SectionHeading({
   titleKey?: TranslationKey;
   descriptionKey?: TranslationKey;
 }) {
-  const { t } = useLanguage();
+  const { locale, t } = useLanguage();
   const renderedEyebrow = eyebrowKey ? t(eyebrowKey) : eyebrow;
   const renderedTitle = titleKey ? t(titleKey) : title;
   const renderedDescription = descriptionKey ? t(descriptionKey) : description;
@@ -27,8 +28,15 @@ export function SectionHeading({
   return (
     <div className="mb-8 max-w-3xl">
       <Badge>{renderedEyebrow}</Badge>
-      <h2 className="mt-4 text-3xl font-bold tracking-normal text-foreground sm:text-4xl">{renderedTitle}</h2>
-      {renderedDescription ? <p className="mt-3 text-muted-foreground">{renderedDescription}</p> : null}
+      <h2
+        className={cn(
+          "mt-4 max-w-full break-words text-3xl font-bold leading-tight tracking-normal text-foreground sm:text-4xl",
+          locale === "mn" && "text-2xl sm:text-3xl"
+        )}
+      >
+        {renderedTitle}
+      </h2>
+      {renderedDescription ? <p className="mt-3 max-w-full break-words leading-7 text-muted-foreground">{renderedDescription}</p> : null}
     </div>
   );
 }

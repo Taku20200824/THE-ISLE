@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Eye, Footprints, ShieldAlert, UsersRound } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
+import { cn } from "@/lib/utils";
 
 const showcaseImages = {
   rex: "/images/dinosaurs/trex.png"
@@ -11,7 +12,7 @@ const showcaseImages = {
 
 export function DinosaurShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
-  const { t } = useLanguage();
+  const { locale, t } = useLanguage();
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"]
@@ -39,16 +40,21 @@ export function DinosaurShowcase() {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.035)_1px,transparent_1px)] bg-[size:72px_72px]" />
       <div className="scanlines" />
 
-      <div className="container relative z-10">
+      <div className="container relative z-10 max-w-full">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-bold uppercase text-primary backdrop-blur">
+          <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-bold uppercase text-primary backdrop-blur">
             <Eye className="h-4 w-4" />
-            {t("showcase.eyebrow")}
+            <span className="break-words">{t("showcase.eyebrow")}</span>
           </div>
-          <h2 className="mt-6 max-w-2xl font-display text-4xl font-black leading-none text-white drop-shadow-[0_0_34px_rgba(20,184,166,.2)] sm:text-6xl">
+          <h2
+            className={cn(
+              "mt-6 max-w-2xl break-words font-display text-4xl font-black leading-tight text-white drop-shadow-[0_0_34px_rgba(20,184,166,.2)] sm:text-6xl",
+              locale === "mn" && "font-sans text-3xl leading-tight sm:text-5xl"
+            )}
+          >
             {t("showcase.title")}
           </h2>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-200">
+          <p className="mt-6 max-w-2xl break-words text-lg leading-8 text-zinc-200">
             {t("showcase.body")}
           </p>
         </div>
