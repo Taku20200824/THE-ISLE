@@ -6,10 +6,7 @@ import { Eye, Footprints, ShieldAlert, UsersRound } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 
 const showcaseImages = {
-  jungle: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/376210/extras/7391d561e59518f462ff4a31bb922bc0.avif?t=1653237914",
-  rex: "https://www.theisle.info/Tyrannosaurus.webp",
-  deino: "https://www.theisle.info/deinosucus.jpg",
-  stego: "https://www.theisle.info/The_isle_stegosaurus_new_2020.webp"
+  rex: "/images/dinosaurs/trex.png"
 };
 
 export function DinosaurShowcase() {
@@ -20,10 +17,8 @@ export function DinosaurShowcase() {
     offset: ["start end", "end start"]
   });
 
-  const rexY = useTransform(scrollYProgress, [0, 1], [90, -70]);
-  const rexScale = useTransform(scrollYProgress, [0, 0.48, 1], [0.92, 1.1, 1.24]);
-  const deinoX = useTransform(scrollYProgress, [0, 1], [-80, 40]);
-  const stegoY = useTransform(scrollYProgress, [0, 1], [44, -22]);
+  const rexY = useTransform(scrollYProgress, [0, 1], [54, -54]);
+  const rexScale = useTransform(scrollYProgress, [0, 0.48, 1], [1.05, 1.15, 1.25]);
 
   const moments = [
     { icon: Footprints, title: t("showcase.trackTitle"), body: t("showcase.trackBody") },
@@ -33,34 +28,15 @@ export function DinosaurShowcase() {
 
   return (
     <section ref={sectionRef} className="relative isolate overflow-hidden border-y border-white/10 bg-black py-24 sm:py-28">
-      <img
-        src={showcaseImages.jungle}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 h-full w-full scale-110 object-cover opacity-35 saturate-125 blur-[1px]"
-      />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_24%,rgba(20,184,166,.24),transparent_30%),linear-gradient(180deg,rgba(3,7,6,.96),rgba(4,13,12,.84)_45%,rgba(2,6,5,.98))]" />
       <motion.img
         src={showcaseImages.rex}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute -right-28 top-0 z-0 h-[58rem] max-h-none w-auto origin-center opacity-80 saturate-125 drop-shadow-[0_60px_80px_rgba(0,0,0,.8)] md:-right-16"
-        style={{ y: rexY, scale: rexScale, rotateY: -10 }}
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full origin-center object-cover object-[64%_48%] opacity-72 saturate-125"
+        style={{ y: rexY, scale: rexScale }}
       />
-      <motion.img
-        src={showcaseImages.deino}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 left-0 z-0 h-64 w-[34rem] rounded-none object-cover opacity-45 blur-[1px] saturate-125 [mask-image:linear-gradient(90deg,black,transparent)] sm:h-80"
-        style={{ x: deinoX }}
-      />
-      <motion.img
-        src={showcaseImages.stego}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-8 right-[18%] z-0 hidden h-44 w-80 object-contain opacity-55 drop-shadow-[0_30px_50px_rgba(0,0,0,.7)] lg:block"
-        style={{ y: stegoY }}
-      />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_30%,rgba(20,184,166,.24),transparent_31%),radial-gradient(circle_at_24%_78%,rgba(245,158,11,.12),transparent_26%),linear-gradient(90deg,rgba(0,0,0,.9),rgba(0,0,0,.55)_52%,rgba(0,0,0,.74)),linear-gradient(180deg,rgba(2,6,5,.76),rgba(2,6,5,.42)_48%,rgba(2,6,5,.92))]" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.035)_1px,transparent_1px)] bg-[size:72px_72px]" />
       <div className="scanlines" />
 
       <div className="container relative z-10">

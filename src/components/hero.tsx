@@ -22,11 +22,12 @@ export function Hero({ serverStatus }: { serverStatus: ServerStatusDocument }) {
     <section className="relative min-h-[94vh] overflow-hidden pt-16">
       <div className="absolute inset-0">
         <img
-          src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/376210/extras/7391d561e59518f462ff4a31bb922bc0.avif?t=1653237914"
+          src="/images/dinosaurs/trex.png"
           alt=""
-          className="h-full w-full scale-105 object-cover object-center opacity-85 saturate-125"
+          className="h-full w-full scale-110 object-cover object-[72%_45%] opacity-70 saturate-125"
         />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_28%,rgba(20,184,166,.18),transparent_30%),linear-gradient(90deg,rgba(0,0,0,.94),rgba(0,0,0,.64)_45%,rgba(0,0,0,.82))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_34%,rgba(20,184,166,.22),transparent_28%),radial-gradient(circle_at_80%_58%,rgba(245,158,11,.16),transparent_24%),linear-gradient(90deg,rgba(0,0,0,.96),rgba(0,0,0,.72)_46%,rgba(0,0,0,.86))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,5,.22),rgba(2,6,5,.76)),repeating-linear-gradient(90deg,rgba(20,184,166,.05)_0,rgba(20,184,166,.05)_1px,transparent_1px,transparent_92px)]" />
         <div className="hero-vignette absolute inset-0" />
         <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-background to-transparent" />
         <div className="particles" />
