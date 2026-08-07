@@ -22,11 +22,11 @@ export function Hero({ serverStatus }: { serverStatus: ServerStatusDocument }) {
     <section className="relative min-h-[94vh] overflow-hidden pt-16">
       <div className="absolute inset-0">
         <img
-          src="https://www.theisle.info/Tyrannosaurus.webp"
+          src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/376210/extras/7391d561e59518f462ff4a31bb922bc0.avif?t=1653237914"
           alt=""
-          className="h-full w-full scale-105 object-cover object-center opacity-75"
+          className="h-full w-full scale-105 object-cover object-center opacity-85 saturate-125"
         />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_74%_38%,rgba(20,184,166,.2),transparent_28%),linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,0,0,.58)_45%,rgba(0,0,0,.86))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_28%,rgba(20,184,166,.18),transparent_30%),linear-gradient(90deg,rgba(0,0,0,.94),rgba(0,0,0,.64)_45%,rgba(0,0,0,.82))]" />
         <div className="hero-vignette absolute inset-0" />
         <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-background to-transparent" />
         <div className="particles" />

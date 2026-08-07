@@ -6,6 +6,7 @@ import { Eye, Footprints, ShieldAlert, UsersRound } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 
 const showcaseImages = {
+  jungle: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/376210/extras/7391d561e59518f462ff4a31bb922bc0.avif?t=1653237914",
   rex: "https://www.theisle.info/Tyrannosaurus.webp",
   deino: "https://www.theisle.info/deinosucus.jpg",
   stego: "https://www.theisle.info/The_isle_stegosaurus_new_2020.webp"
@@ -32,6 +33,12 @@ export function DinosaurShowcase() {
 
   return (
     <section ref={sectionRef} className="relative isolate overflow-hidden border-y border-white/10 bg-black py-24 sm:py-28">
+      <img
+        src={showcaseImages.jungle}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full scale-110 object-cover opacity-35 saturate-125 blur-[1px]"
+      />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_24%,rgba(20,184,166,.24),transparent_30%),linear-gradient(180deg,rgba(3,7,6,.96),rgba(4,13,12,.84)_45%,rgba(2,6,5,.98))]" />
       <motion.img
         src={showcaseImages.rex}
