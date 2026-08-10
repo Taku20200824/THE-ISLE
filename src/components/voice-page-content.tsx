@@ -28,28 +28,28 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
       steamFailed: "Steam verification failed. Please try again."
     },
     ja: {
-      steamTitle: "Steam 閾ｪ蜍戊ｪ崎ｨｼ",
-      steamBody: "Steam縺ｧ荳蠎ｦ繝ｭ繧ｰ繧､繝ｳ縺吶ｋ縺ｨ縲ヾteamID縺檎ｽｲ蜷堺ｻ倥″縺ｧMumble謗･邯壹↓貂｡縺輔ｌ縺ｾ縺吶ゅご繝ｼ繝蜷阪・蜈･蜉帙ｄ !verify 縺ｯ荳崎ｦ√〒縺吶・,
-      steamLogin: "Steam縺ｧ繝ｭ繧ｰ繧､繝ｳ",
-      steamReady: "Steam隱崎ｨｼ貂医∩",
-      steamConnect: "隱崎ｨｼ貂医∩Steam縺ｧ謗･邯・,
-      steamFailed: "Steam隱崎ｨｼ縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲ゅｂ縺・ｸ蠎ｦ縺願ｩｦ縺励￥縺縺輔＞縲・
+      steamTitle: "Steam 自動認証",
+      steamBody: "Steamで一度ログインすると、SteamIDが署名付きでMumble接続に渡されます。ゲーム名の入力や !verify は不要です。",
+      steamLogin: "Steamでログイン",
+      steamReady: "Steam認証済み",
+      steamConnect: "認証済みSteamで接続",
+      steamFailed: "Steam認証に失敗しました。もう一度お試しください。"
     },
     ko: {
-      steamTitle: "Steam ・尖徐 ・ｸ・・,
-      steamBody: "Steam・・﨑・・・・懋ｷｸ・ｸ﨑俯ｩｴ ・罹ｪ・頗 SteamID・ Mumble ・ｰ・ｰ・・・・峡・ｩ・壱共. ・護桷 ・ｴ・・・・･・ｼ !verify ・・ｹ・ 﨑・囈 ・・慣・壱共.",
-      steamLogin: "Steam・ｼ・・・懋ｷｸ・ｸ",
-      steamReady: "Steam ・ｸ・・・・｣・,
-      steamConnect: "・ｸ・晤頗 Steam・ｼ・・・ｰ・ｰ",
-      steamFailed: "Steam ・ｸ・晧乱 ・､甯ｨ嵂溢慣・壱共. ・､・・・罹巡﨑ｴ ・ｼ・ｸ・・"
+      steamTitle: "Steam 자동 인증",
+      steamBody: "Steam에 한 번 로그인하면 서명된 SteamID가 Mumble 연결에 전달됩니다. 게임 이름 입력과 !verify 명령은 필요 없습니다.",
+      steamLogin: "Steam으로 로그인",
+      steamReady: "Steam 인증 완료",
+      steamConnect: "인증된 Steam으로 연결",
+      steamFailed: "Steam 인증에 실패했습니다. 다시 시도해 주세요."
     },
     mn: {
-      steamTitle: "Steam ﾐｰﾐｲﾑひｾﾐｼﾐｰﾑ・ﾐｱﾐｰﾑひｰﾐｻﾐｳﾐｰﾐｰﾐｶﾑτσｻﾐｰﾐｻﾑ・,
-      steamBody: "Steam-ﾑ采采 ﾐｽﾑ災ｳ ﾑσｴﾐｰﾐｰ ﾐｽﾑ災ｲﾑび采ﾐｽﾑ・ SteamID ﾐｽﾑ・ﾐｳﾐｰﾑﾑ巾ｽ ﾒｯﾑ・災ｳﾑび災ｹﾐｳﾑ采采 Mumble ﾑ・ｾﾐｻﾐｱﾐｾﾐｻﾑひｾﾐｴ ﾐｾﾑﾐｴﾐｾﾐｳ ﾑびσｻ ﾑひｾﾐｳﾐｻﾐｾﾐｾﾐｼﾑ巾ｽ ﾐｽﾑ采 ﾐｱﾐｸﾑ・ｸﾑ・ﾐｱﾐｾﾐｻﾐｾﾐｽ !verify ﾐｺﾐｾﾐｼﾐｰﾐｽﾐｴ ﾑ・采ﾑ災ｳﾐｳﾒｯﾐｹ.",
-      steamLogin: "Steam-ﾑ采采 ﾐｽﾑ災ｲﾑびﾑ采・,
-      steamReady: "Steam ﾐｱﾐｰﾑひｰﾐｻﾐｳﾐｰﾐｰﾐｶﾑ・ｰﾐｽ",
-      steamConnect: "ﾐ岱ｰﾑひｰﾐｻﾐｳﾐｰﾐｰﾐｶﾑ・ｰﾐｽ Steam-ﾑ采采 ﾑ・ｾﾐｻﾐｱﾐｾﾐｳﾐｴﾐｾﾑ・,
-      steamFailed: "Steam ﾐｱﾐｰﾑひｰﾐｻﾐｳﾐｰﾐｰﾐｶﾑτσｻﾐｰﾐｻﾑ・ﾐｰﾐｼﾐｶﾐｸﾐｻﾑひｳﾒｯﾐｹ. ﾐ頒ｰﾑ・ｸﾐｽ ﾐｾﾑﾐｾﾐｻﾐｴﾐｾﾐｽﾐｾ ﾑτ・"
+      steamTitle: "Steam автомат баталгаажуулалт",
+      steamBody: "Steam-ээр нэг удаа нэвтэрнэ. SteamID нь гарын үсэгтэйгээр Mumble холболтод ордог тул тоглоомын нэр бичих болон !verify команд хэрэггүй.",
+      steamLogin: "Steam-ээр нэвтрэх",
+      steamReady: "Steam баталгаажсан",
+      steamConnect: "Баталгаажсан Steam-ээр холбогдох",
+      steamFailed: "Steam баталгаажуулалт амжилтгүй. Дахин оролдоно уу."
     }
   }[locale];
   const steps = [
@@ -157,7 +157,7 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
           <div className="mt-5 rounded-md border border-white/10 bg-white/[.04] p-4 text-sm">
             <p className="font-bold text-white">{labels.steamTitle}</p>
             {steamSession.state === "signedIn" ? (
-              <p className="mt-2 text-emerald-300">{labels.steamReady} ﾂｷ {steamSession.steamId}</p>
+              <p className="mt-2 text-emerald-300">{labels.steamReady} · {steamSession.steamId}</p>
             ) : (
               <p className="mt-2 leading-6 text-zinc-400">
                 {typeof window !== "undefined" && new URLSearchParams(window.location.search).get("steam") === "failed"
@@ -179,3 +179,4 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
     </main>
   );
 }
+
