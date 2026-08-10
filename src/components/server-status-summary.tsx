@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarClock, Gamepad2, Globe2, Map, Server, Users } from "lucide-react";
+import { CalendarClock, Gamepad2, Globe2, Headphones, Map, Server, Users } from "lucide-react";
 import { CopyIpButton } from "@/components/copy-ip-button";
 import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ export function ServerStatusSummary({ status: initialStatus }: { status: ServerS
   const { t } = useLanguage();
   const { status, isRefreshing } = useLiveServerStatus(initialStatus);
   const address = formatServerAddress(status);
+  const voiceAddress = status.voiceHost ? `${status.voiceHost}:${status.voicePort}` : t("status.notSynced");
 
   return (
     <Card className="cinematic-panel border-primary/15 bg-[linear-gradient(135deg,rgba(6,20,18,.92),rgba(9,16,26,.78))]">
@@ -45,6 +46,11 @@ export function ServerStatusSummary({ status: initialStatus }: { status: ServerS
           </div>
           <div className="flex flex-wrap gap-2">
             <CopyIpButton ip={address} />
+            {status.voiceHost ? (
+              <Button asChild variant="outline">
+                <a href="/voice">{t("cta.voiceChat")}</a>
+              </Button>
+            ) : null}
             {status.discordUrl ? (
               <Button asChild>
                 <a href={status.discordUrl}>{t("cta.joinDiscord")}</a>
@@ -63,6 +69,7 @@ export function ServerStatusSummary({ status: initialStatus }: { status: ServerS
             { label: t("status.version"), value: status.version, icon: Gamepad2 },
             { label: t("status.map"), value: status.map, icon: Map },
             { label: t("status.hosting"), value: status.hostingProvider, icon: Server },
+            { label: t("status.voice"), value: voiceAddress, icon: Headphones },
             { label: t("status.lastUpdated"), value: formatDate(status.lastUpdated, t("status.notSynced")), icon: CalendarClock }
           ].map((item) => (
             <div key={item.label} className="hud-card rounded-md p-4">
@@ -78,3 +85,4 @@ export function ServerStatusSummary({ status: initialStatus }: { status: ServerS
     </Card>
   );
 }
+

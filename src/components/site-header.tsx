@@ -18,6 +18,7 @@ const navTranslationKeys: Record<string, TranslationKey> = {
   "/rules": "nav.rules",
   "/dinosaurs": "nav.dinosaurs",
   "/map": "nav.map",
+  "/voice": "nav.voice",
   "/leaderboard": "nav.leaderboard",
   "/events": "nav.events",
   "/discord": "nav.discord",
@@ -54,6 +55,7 @@ export function SiteHeader() {
         <nav className="hidden items-center gap-5 text-sm text-muted-foreground lg:flex">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
+            const translationKey = navTranslationKeys[item.href];
             return (
               <Link
                 key={item.href}
@@ -63,7 +65,7 @@ export function SiteHeader() {
                   isActive ? "text-foreground after:w-full" : "after:w-0 hover:after:w-full"
                 )}
               >
-                {t(navTranslationKeys[item.href])}
+                {translationKey ? t(translationKey) : item.label}
               </Link>
             );
           })}
@@ -85,3 +87,4 @@ export function SiteHeader() {
     </header>
   );
 }
+
