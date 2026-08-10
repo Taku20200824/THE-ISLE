@@ -26,6 +26,7 @@ export const navItems = [
   { href: "/rules", label: "Rules" },
   { href: "/dinosaurs", label: "Dinosaurs" },
   { href: "/map", label: "Map" },
+  { href: "/voice", label: "Voice" },
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/events", label: "Events" },
   { href: "/discord", label: "Discord" },

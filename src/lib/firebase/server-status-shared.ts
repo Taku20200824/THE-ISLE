@@ -12,6 +12,13 @@ export const serverStatusSchema = z.object({
   map: z.string().min(1).max(80),
   discordUrl: z.string().max(240),
   discordServerId: z.string().max(40).default(""),
+  voiceProvider: z.string().min(1).max(80).default("TAKU Voice (Mumble)"),
+  voiceUrl: z.string().max(240).default("https://www.mumble.info/downloads/"),
+  voiceHost: z.string().max(120).default("157.230.40.149"),
+  voicePort: z.coerce.number().int().min(1).max(65535).default(64738),
+  voiceChannel: z.string().min(1).max(120).default("Root"),
+  voicePluginUrl: z.string().max(240).default("https://157-230-40-149.nip.io/downloads/TAKU-Voice-Proximity-v0.1.zip"),
+  voiceStatus: z.enum(["pending", "active", "offline"]).default("active"),
   description: z.string().min(1).max(700),
   hostingProvider: z.string().min(1).max(80)
 });
@@ -32,6 +39,13 @@ export const initialServerStatus = {
   map: "Gateway",
   discordUrl: "https://discord.gg/vmn3YjCZSE",
   discordServerId: "792269772473106452",
+  voiceProvider: "TAKU Voice (Mumble)",
+  voiceUrl: "https://www.mumble.info/downloads/",
+  voiceHost: "157.230.40.149",
+  voicePort: 64738,
+  voiceChannel: "Root",
+  voicePluginUrl: "https://157-230-40-149.nip.io/downloads/TAKU-Voice-Proximity-v0.1.zip",
+  voiceStatus: "active",
   description:
     "An English-speaking The Isle Asia community server for players from Japan, Mongolia, Korea, Hong Kong, Taiwan, Singapore, and Southeast Asia.",
   hostingProvider: "BisectHosting"
