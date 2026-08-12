@@ -26,11 +26,16 @@ function formatDate(date: Date | string | null, fallback: string) {
   }).format(parsedDate);
 }
 
+function formatLiveRefreshLabel(label: string) {
+  return label.replace("5s", "15s").replace("5秒", "15秒").replace("5초", "15초").replace("5 секунд", "15 секунд");
+}
+
 export function ServerStatusSummary({ status: initialStatus }: { status: ServerStatusDocument }) {
   const { t } = useLanguage();
   const { status, isRefreshing } = useLiveServerStatus(initialStatus);
   const address = formatServerAddress(status);
   const voiceAddress = status.voiceHost ? `${status.voiceHost}:${status.voicePort}` : t("status.notSynced");
+  const liveRefreshLabel = formatLiveRefreshLabel(t("status.liveRefresh"));
 
   return (
     <Card className="cinematic-panel border-primary/20 bg-white/82 shadow-xl shadow-emerald-900/10 backdrop-blur-xl dark:border-primary/15 dark:bg-[linear-gradient(135deg,rgba(6,20,18,.92),rgba(9,16,26,.78))] dark:shadow-black/30">
@@ -40,7 +45,7 @@ export function ServerStatusSummary({ status: initialStatus }: { status: ServerS
             <StatusBadge status={status.status} />
             <div className="mt-4 flex flex-wrap items-end gap-3">
               <h2 className="font-display text-3xl font-black text-foreground sm:text-4xl dark:text-white">{status.serverName}</h2>
-              <span className="mb-1 text-xs uppercase text-muted-foreground">{isRefreshing ? t("status.syncing") : t("status.liveRefresh")}</span>
+              <span className="mb-1 text-xs uppercase text-muted-foreground">{isRefreshing ? t("status.syncing") : liveRefreshLabel}</span>
             </div>
             <p className="mt-3 max-w-3xl text-sm text-muted-foreground">{status.description}</p>
           </div>
