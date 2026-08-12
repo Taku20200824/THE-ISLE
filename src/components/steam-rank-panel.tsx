@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ExternalLink, LogIn, Timer, Trophy, UserRound } from "lucide-react";
+import { ExternalLink, LogIn, LogOut, Timer, Trophy, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { PlayerProfile } from "@/lib/firebase/player-profiles";
 
@@ -75,7 +75,7 @@ export function SteamRankPanel() {
             <p className="mt-1 text-xs text-zinc-500">SteamID {session.steamId}</p>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:min-w-[260px]">
+        <div className="grid grid-cols-3 gap-2 sm:min-w-[360px]">
           <div className="rounded-md border border-white/10 bg-black/25 p-3">
             <Timer className="h-4 w-4 text-cyan-300" />
             <div className="mt-2 text-lg font-black text-white">{playtimeHours}h</div>
@@ -85,6 +85,11 @@ export function SteamRankPanel() {
             <ExternalLink className="h-4 w-4 text-primary" />
             <div className="mt-2 text-sm font-bold text-white">Steam</div>
             <div className="text-xs text-zinc-500">Open profile</div>
+          </a>
+          <a href="/api/steam/logout" className="rounded-md border border-white/10 bg-black/25 p-3 transition hover:bg-white/[.06]">
+            <LogOut className="h-4 w-4 text-zinc-300" />
+            <div className="mt-2 text-sm font-bold text-white">Logout</div>
+            <div className="text-xs text-zinc-500">Switch user</div>
           </a>
         </div>
       </div>
