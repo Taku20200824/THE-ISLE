@@ -83,7 +83,7 @@ function applyLiveQuery(status: ServerStatusDocument, query: GameDigState): Serv
     serverName: query.name?.trim() || status.serverName,
     status: "online",
     onlinePlayers: typeof playerCount === "number" ? playerCount : status.onlinePlayers,
-    maxPlayers: status.maxPlayers,
+    maxPlayers: typeof query.maxplayers === "number" ? query.maxplayers : status.maxPlayers,
     map: query.map?.trim() || status.map,
     version: query.raw?.version || query.raw?.serverversion || status.version,
     lastUpdated: new Date().toISOString()
