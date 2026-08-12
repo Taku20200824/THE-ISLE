@@ -27,7 +27,7 @@ function formatDate(date: Date | string | null, fallback: string) {
 }
 
 function formatLiveRefreshLabel(label: string) {
-  return label.replace("5s", "15s").replace("5秒", "15秒").replace("5초", "15초").replace("5 секунд", "15 секунд");
+  return label.replace(/5s/gi, "15s").replace(/5秒/g, "15秒").replace(/5초/g, "15초").replace(/5 секунд/gi, "15 секунд");
 }
 
 export function ServerStatusSummary({ status: initialStatus }: { status: ServerStatusDocument }) {
