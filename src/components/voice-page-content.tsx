@@ -13,6 +13,7 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
   const serverName = status.serverName || "ASIA JP,MNG,KR Test";
   const voiceName = `${serverName} Voice`;
   const voiceProviderName = `${voiceName} (Mumble)`;
+  const pluginDownloadUrl = "/api/downloads/voice-plugin";
   const [steamSession, setSteamSession] = useState<
     | { state: "loading" }
     | { state: "signedOut" }
@@ -168,7 +169,7 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
             ) : null}
             {hasPlugin ? (
               <Button asChild variant="outline" className="w-full">
-                <a href={status.voicePluginUrl} download>{t("page.voice.downloadPlugin")}</a>
+                <a href={pluginDownloadUrl} download="ASIA-JP-MNG-KR-Test-Voice-Proximity-v0.1.zip">{t("page.voice.downloadPlugin")}</a>
               </Button>
             ) : null}
           </div>
