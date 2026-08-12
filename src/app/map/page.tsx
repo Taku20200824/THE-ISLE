@@ -2,14 +2,14 @@ import { ExternalLink, MapPinned } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 
-const gatewayMapUrl = "https://theisle.ru/en/maps?map=evrima";
+const gatewayMapUrl = "https://theisle.ru/en/maps?map=evrima&lat=0.0&lng=0.0&zoom=-1&hide_header=1";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export default async function MapPage() {
   return (
-    <main className="container min-h-screen pt-32 pb-20 sm:pt-36">
+    <main className="container min-h-screen pt-28 pb-16 sm:pt-32">
       <SectionHeading
         eyebrow="Map"
         title="Gateway interactive map"
@@ -35,7 +35,7 @@ export default async function MapPage() {
           </Button>
         </div>
 
-        <div className="h-[72vh] min-h-[560px] bg-black">
+        <div className="h-[78vh] min-h-[620px] bg-black">
           <iframe
             src={gatewayMapUrl}
             title="TheIsle.ru Evrima Gateway interactive map"
