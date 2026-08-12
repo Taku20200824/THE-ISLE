@@ -3,7 +3,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { HomeContentSections } from "@/components/home-content-sections";
 import { DinosaurShowcase } from "@/components/dinosaur-showcase";
 import { getFirestoreAnnouncements, getFirestoreFeatures, getFirestoreNewsCards } from "@/lib/firebase/firestore-data";
-import { getServerStatus } from "@/lib/integrations/server-status";
+import { getServerStatusOrInitial } from "@/lib/firebase/server-status";
 import { ServerStatusSummary } from "@/components/server-status-summary";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +12,7 @@ export const runtime = "nodejs";
 export default async function HomePage() {
   const [announcements, serverStatus, newsCards, features] = await Promise.all([
     getFirestoreAnnouncements(),
-    getServerStatus(),
+    getServerStatusOrInitial(),
     getFirestoreNewsCards(),
     getFirestoreFeatures()
   ]);
