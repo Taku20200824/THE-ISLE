@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { fetchSteamPublicProfile, getPlayerProfile, touchSteamPlayerSession, upsertSteamPlayerProfile } from "@/lib/firebase/player-profiles";
 import { getServerStatusOrInitial } from "@/lib/firebase/server-status";
 import { createSignedMumbleName, readSteamVoiceCookie, steamVoiceCookieName } from "@/lib/steam-voice";
 
@@ -19,5 +20,21 @@ export async function GET() {
     ? `mumble://${encodeURIComponent(createSignedMumbleName(steamId))}@${status.voiceHost}:${status.voicePort}`
     : null;
 
-  return NextResponse.json({ authenticated: true, steamId, mumbleUrl });
+  let profile = await getPlayerProfile(steamId);
+
+  if (!profile) {
+    try {
+      profile = await upsertSteamPlayerProfile(await fetchSteamPublicProfile(steamId));
+    } catch {
+      profile = null;
+    }
+  }
+
+  try {
+    await touchSteamPlayerSession(steamId, "website-session");
+  } catch {
+    // Session reads should remain fast even if Firebase Admin is not configured.
+  }
+
+  return NextResponse.json({ authenticated: true, steamId, mumbleUrl, profile });
 }
