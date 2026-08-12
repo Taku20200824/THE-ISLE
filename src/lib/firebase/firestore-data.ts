@@ -11,6 +11,7 @@ import {
 } from "@/data/site";
 import { firebaseConfig } from "@/lib/firebase/config";
 import { getAdminFirestore, hasFirebaseAdminCredentials } from "@/lib/firebase/admin";
+import { getPlayerProfiles } from "@/lib/firebase/player-profiles";
 
 const fallbackGallery = [
   { type: "Screenshot", title: "Sanctuary sunrise", image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80" },
@@ -157,6 +158,10 @@ function sortByNumber<T extends Record<string, unknown>>(items: T[], field: stri
   });
 }
 
+function scoreRank(player: { playtime: number; kills: number; deaths: number; growth: number; nest: number }) {
+  return player.playtime * 10 + player.kills * 25 + player.nest * 15 + player.growth - player.deaths * 5;
+}
+
 function toDinosaurRecord(data: Record<string, unknown>): DinosaurRecord {
   return {
     slug: String(data.slug ?? data.id),
@@ -263,30 +268,53 @@ export async function getFirestoreDinosaur(slug: string) {
 
 export async function getFirestoreLeaderboard() {
   const rows = await getCollection("scores");
+  const scorePlayers = rows.length
+    ? rows.map((data) => ({
+        username: String(data.username ?? data.name ?? data.id),
+        playtime: Number(data.playtime ?? data.playtimeHours ?? 0),
+        kills: Number(data.kills ?? 0),
+        deaths: Number(data.deaths ?? 0),
+        growth: Number(data.growth ?? data.growthPercent ?? 0),
+        nest: Number(data.nest ?? data.nestSuccess ?? 0),
+        dinosaur: String(data.dinosaur ?? data.favoriteDinosaur ?? "Unknown"),
+        discord: String(data.discord ?? ""),
+        avatar: String(data.avatar ?? ""),
+        steamId: String(data.steamId ?? "")
+      }))
+    : fallbackLeaderboard.map((player) => ({ ...player, discord: "", avatar: "", steamId: "" }));
 
-  if (!rows.length) {
-    return fallbackLeaderboard.map((player) => ({ ...player, discord: "", avatar: "" }));
+  const steamPlayers = (await getPlayerProfiles()).map((profile) => ({
+    username: profile.username || profile.personaName,
+    playtime: Math.round(profile.playtimeMinutes / 60),
+    kills: profile.kills,
+    deaths: profile.deaths,
+    growth: profile.growth,
+    nest: profile.nest,
+    dinosaur: profile.favoriteDinosaur,
+    discord: profile.profileUrl,
+    avatar: profile.avatarUrl,
+    steamId: profile.steamId
+  }));
+
+  const merged = new Map<string, (typeof scorePlayers)[number]>();
+
+  for (const player of [...scorePlayers, ...steamPlayers]) {
+    const key = player.steamId || player.username.toLowerCase();
+    const existing = merged.get(key);
+
+    if (!existing || scoreRank(player) > scoreRank(existing)) {
+      merged.set(key, player);
+    }
   }
 
-  return rows
-    .map((data) => ({
-      username: String(data.username ?? data.name ?? data.id),
-      playtime: Number(data.playtime ?? data.playtimeHours ?? 0),
-      kills: Number(data.kills ?? 0),
-      deaths: Number(data.deaths ?? 0),
-      growth: Number(data.growth ?? data.growthPercent ?? 0),
-      nest: Number(data.nest ?? data.nestSuccess ?? 0),
-      dinosaur: String(data.dinosaur ?? data.favoriteDinosaur ?? "Unknown"),
-      discord: String(data.discord ?? ""),
-      avatar: String(data.avatar ?? "")
-    }))
-    .sort((a, b) => b.playtime - a.playtime)
+  return [...merged.values()]
+    .sort((a, b) => scoreRank(b) - scoreRank(a))
     .slice(0, 25);
 }
 
 export async function getFirestorePlayer(username: string) {
   const players = await getFirestoreLeaderboard();
-  return players.find((item) => item.username.toLowerCase() === username.toLowerCase());
+  return players.find((item) => item.username.toLowerCase() === username.toLowerCase() || item.steamId === username);
 }
 
 export async function getFirestoreEvents() {
