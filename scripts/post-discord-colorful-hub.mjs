@@ -57,20 +57,35 @@ const messages = [
     ]
   },
   {
-    content: "📜⚠️ **READ FIRST / ЭХЛЭЭД УНШ / 最初に読んで / 먼저 읽기** ⚠️📜",
+    content:
+      "╭── 📜🛡 **THE ISLE ASIA RULES** 🛡📜 ──╮\n" +
+      "🇬🇧 Read first • 🇲🇳 Эхлээд унш • 🇯🇵 最初に読んで • 🇰🇷 먼저 읽기\n" +
+      "✨ Friendly server. 🎮 Fair play. 🚫 No drama. 🦖 Have fun.\n" +
+      "╰──────────────────────────────╯",
     embeds: [
       {
-        title: "📜🛡 Server Rules / ルール / Дүрэм / 규칙",
+        title: "🇬🇧 English Rules",
         description:
-          "✅ Simple. 🎯 Clear. 🌈 Friendly.\nRules keep the server fun, readable, and playable for everyone.",
-        color: 0xf43f5e,
-        fields: [
-          { name: "1️⃣🤝 Respect everyone", value: "No harassment, hate speech, personal attacks, spam, or drama farming. Keep it chill.", inline: false },
-          { name: "2️⃣🛡 Staff decision is final", value: "If staff asks you to stop, stop first. Appeals/questions go to support or admin contact.", inline: false },
-          { name: "3️⃣🚫 Keep content clean", value: "No NSFW, shock content, scams, suspicious links, or ear-breaking audio. Your speakers deserve peace.", inline: false },
-          { name: "4️⃣🎮 Fair play", value: "No combat logging, exploit abuse, cheating, impersonation, or bending rules for advantage.", inline: false },
-          { name: "5️⃣📌 Use the right room", value: "🌏 Language chat for language talk • 🛟 support for problems • 📸 media for clips • 🟢 status for info.", inline: false }
-        ]
+          "1️⃣🤝 Respect all players and staff. No harassment, racism, hate speech, or personal attacks.\n2️⃣🎮 No cheating, exploits, macro abuse, combat logging, or modified clients.\n3️⃣🚫 No spam, scams, NSFW, suspicious links, or advertising.\n4️⃣📸 Reports need screenshots/clips, Steam name, time, and clear details.\n5️⃣🎙 Do not abuse voice chat or disturb other players.\n6️⃣🛡 Staff decisions can be appealed calmly in the right channel.",
+        color: 0x22d3ee
+      },
+      {
+        title: "🇲🇳 Монгол дүрэм",
+        description:
+          "1️⃣🤝 Бүх тоглогч, staff-ыг хүндэл. Доромжлол, racism, hate speech, personal attack хориотой.\n2️⃣🎮 Cheat, exploit, macro, combat log, modified client ашиглахгүй.\n3️⃣🚫 Spam, scam, NSFW, сэжигтэй link, зөвшөөрөлгүй advertise хийхгүй.\n4️⃣📸 Report хийхдээ screenshot/clip, Steam name, цаг, тайлбараа тодорхой өг.\n5️⃣🎙 Voice chat-аа зөв ашигла, бусдад саад болохгүй.\n6️⃣🛡 Staff шийдвэрийг тайван appeal хийж болно.",
+        color: 0xfacc15
+      },
+      {
+        title: "🇯🇵 日本語ルール",
+        description:
+          "1️⃣🤝 全プレイヤーとスタッフを尊重してください。暴言、差別、ヘイト、個人攻撃は禁止です。\n2️⃣🎮 チート、悪用、マクロ、combat log、改造クライアントは禁止です。\n3️⃣🚫 スパム、詐欺、NSFW、不審なリンク、無許可の宣伝は禁止です。\n4️⃣📸 通報にはスクショ/動画、Steam名、時間、説明を入れてください。\n5️⃣🎙 ボイスチャットの迷惑行為は禁止です。\n6️⃣🛡 スタッフ判断への異議申し立ては落ち着いて専用チャンネルで行ってください。",
+        color: 0xf472b6
+      },
+      {
+        title: "🇰🇷 한국어 규칙",
+        description:
+          "1️⃣🤝 모든 플레이어와 스태프를 존중하세요. 괴롭힘, 차별, 혐오 발언, 인신공격은 금지입니다.\n2️⃣🎮 치트, 악용, 매크로, combat log, 변조 클라이언트는 금지입니다.\n3️⃣🚫 스팸, 사기, NSFW, 수상한 링크, 무단 광고는 금지입니다.\n4️⃣📸 신고에는 스크린샷/영상, Steam 이름, 시간, 설명을 포함하세요.\n5️⃣🎙 보이스 채팅을 악용하거나 다른 플레이어를 방해하지 마세요.\n6️⃣🛡 스태프 결정은 전용 채널에서 차분하게 이의제기할 수 있습니다.",
+        color: 0xa78bfa
       }
     ]
   },
@@ -149,4 +164,4 @@ for (const message of messages) {
   await send(message);
 }
 
-console.log(`Posted ${messages.length} emoji-rich Discord hub messages to channel ${channelId}.`);
+console.log(`Posted ${messages.length} four-language emoji Discord messages to channel ${channelId}.`);
