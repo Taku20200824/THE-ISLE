@@ -7,6 +7,8 @@ export { formatServerAddress, initialServerStatus, serverStatusSchema, type Serv
 export const serverStatusCollection = "serverStatus";
 export const serverStatusDocumentId = "main";
 
+const initialStatusFallbackDelayMs = 700;
+
 function parseTimestamp(value: unknown) {
   if (value instanceof Timestamp) {
     return value.toDate();
@@ -51,6 +53,13 @@ function normalizeServerStatusData(data: Record<string, unknown>): Record<string
     location: data.location ?? data.Location,
     port: data.port ?? data["port "],
     hostingProvider: data.hostingProvider ?? "BisectHosting"
+  };
+}
+
+function getInitialServerStatus(): ServerStatusDocument {
+  return {
+    ...initialServerStatus,
+    lastUpdated: null
   };
 }
 
@@ -119,12 +128,16 @@ export async function getServerStatusDocument(): Promise<ServerStatusDocument | 
 }
 
 export async function getServerStatusOrInitial(): Promise<ServerStatusDocument> {
-  return (
-    (await getServerStatusDocument()) ?? {
-      ...initialServerStatus,
-      lastUpdated: null
-    }
-  );
+  return (await getServerStatusDocument()) ?? getInitialServerStatus();
+}
+
+export async function getFastServerStatusOrInitial(): Promise<ServerStatusDocument> {
+  return Promise.race([
+    getServerStatusOrInitial(),
+    new Promise<ServerStatusDocument>((resolve) => {
+      setTimeout(() => resolve(getInitialServerStatus()), initialStatusFallbackDelayMs);
+    })
+  ]);
 }
 
 export async function seedServerStatusDocument() {
