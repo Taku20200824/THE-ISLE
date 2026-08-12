@@ -79,6 +79,15 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /playerProfiles/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /playerSessions/{documentId} {
+      allow read, write: if isAdmin();
+    }
+
     match /staff/{documentId} {
       allow read: if true;
       allow write: if isAdmin();
