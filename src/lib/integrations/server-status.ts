@@ -16,6 +16,9 @@ type GameDigState = {
 };
 
 const defaultMaxQueryAgeSeconds = 180;
+const liveQueryCacheMs = 15000;
+
+let cachedLiveStatus: { value: ServerStatusDocument; expiresAt: number } | null = null;
 
 type GameDigModule = {
   GameDig: {
@@ -68,18 +71,9 @@ function isFreshQuery(query: GameDigState) {
   return Date.now() - updatedAt <= getMaxQueryAgeMs();
 }
 
-function applyOfflineStatus(status: ServerStatusDocument): ServerStatusDocument {
-  return {
-    ...status,
-    status: status.status === "maintenance" ? "maintenance" : "offline",
-    onlinePlayers: 0,
-    lastUpdated: new Date().toISOString()
-  };
-}
-
 function applyLiveQuery(status: ServerStatusDocument, query: GameDigState): ServerStatusDocument {
   if (!isFreshQuery(query)) {
-    return applyOfflineStatus(status);
+    return status;
   }
 
   const playerCount = typeof query.numplayers === "number" ? query.numplayers : query.players?.length;
@@ -108,6 +102,10 @@ async function queryTheIsleServer(status: ServerStatusDocument): Promise<ServerS
     return status;
   }
 
+  if (cachedLiveStatus && cachedLiveStatus.expiresAt > Date.now()) {
+    return cachedLiveStatus.value;
+  }
+
   const host = normalizeHost(status.ip);
   const port = getQueryPort(status);
 
@@ -116,18 +114,21 @@ async function queryTheIsleServer(status: ServerStatusDocument): Promise<ServerS
     const queryOptions = {
       host,
       port,
-      socketTimeout: 2500,
-      attemptTimeout: 3500,
+      socketTimeout: 900,
+      attemptTimeout: 1400,
       maxRetries: 0
     };
 
-    try {
-      return applyLiveQuery(status, await GameDig.query({ ...queryOptions, type: "tie" }));
-    } catch {
-      return applyLiveQuery(status, await GameDig.query({ ...queryOptions, type: "theisle" }));
-    }
+    const query = await Promise.any([
+      GameDig.query({ ...queryOptions, type: "tie" }),
+      GameDig.query({ ...queryOptions, type: "theisle" })
+    ]);
+    const liveStatus = applyLiveQuery(status, query);
+    cachedLiveStatus = { value: liveStatus, expiresAt: Date.now() + liveQueryCacheMs };
+
+    return liveStatus;
   } catch {
-    return applyOfflineStatus(status);
+    return status;
   }
 }
 
