@@ -7,9 +7,8 @@ export const runtime = "nodejs";
 
 const legacyPluginUrl = "https://157-230-40-149.nip.io/downloads/TAKU-Voice-Proximity-v0.1.zip";
 const downloadFilename = "ASIA-JP-MNG-KR-Test-Voice-Proximity-v0.1.zip";
-const renamedFiles = new Map([
-  ["TAKUVoiceSetup.exe", "ASIA-JP-MNG-KR-Test-Voice-Setup.exe"]
-]);
+const oldSetupFilename = "TAKUVoiceSetup.exe";
+const newSetupFilename = "ASIA-JP-MNG-KR-Test-Voice-Setup.exe";
 
 async function fetchPackage(url: string) {
   try {
@@ -23,6 +22,22 @@ async function fetchPackage(url: string) {
   } catch {
     return null;
   }
+}
+
+function getRenamedEntryName(name: string) {
+  if (name === oldSetupFilename) {
+    return newSetupFilename;
+  }
+
+  if (name.endsWith(`/${oldSetupFilename}`)) {
+    return `${name.slice(0, -oldSetupFilename.length)}${newSetupFilename}`;
+  }
+
+  if (name.endsWith(`\\${oldSetupFilename}`)) {
+    return `${name.slice(0, -oldSetupFilename.length)}${newSetupFilename}`;
+  }
+
+  return name;
 }
 
 function findEndOfCentralDirectory(zip: Buffer) {
@@ -39,7 +54,7 @@ function renameZipEntries(zip: Buffer) {
   const eocdOffset = findEndOfCentralDirectory(zip);
 
   if (eocdOffset === -1) {
-    return zip;
+    return { zip, renamed: false };
   }
 
   const entryCount = zip.readUInt16LE(eocdOffset + 10);
@@ -57,7 +72,7 @@ function renameZipEntries(zip: Buffer) {
 
   for (let index = 0; index < entryCount; index += 1) {
     if (zip.readUInt32LE(pointer) !== 0x02014b50) {
-      return zip;
+      return { zip, renamed: false };
     }
 
     const nameLength = zip.readUInt16LE(pointer + 28);
@@ -70,7 +85,7 @@ function renameZipEntries(zip: Buffer) {
       centralOffset: pointer,
       localOffset,
       name,
-      nextName: renamedFiles.get(name) ?? name,
+      nextName: getRenamedEntryName(name),
       extraLength,
       commentLength
     });
@@ -79,7 +94,7 @@ function renameZipEntries(zip: Buffer) {
   }
 
   if (!entries.some((entry) => entry.name !== entry.nextName)) {
-    return zip;
+    return { zip, renamed: false };
   }
 
   const chunks: Buffer[] = [];
@@ -99,7 +114,7 @@ function renameZipEntries(zip: Buffer) {
     }
 
     if (zip.readUInt32LE(entry.localOffset) !== 0x04034b50) {
-      return zip;
+      return { zip, renamed: false };
     }
 
     const localNameLength = zip.readUInt16LE(entry.localOffset + 26);
@@ -144,7 +159,7 @@ function renameZipEntries(zip: Buffer) {
   eocd.writeUInt32LE(newCentralDirectoryOffset, 16);
   chunks.push(eocd);
 
-  return Buffer.concat(chunks);
+  return { zip: Buffer.concat(chunks), renamed: true };
 }
 
 export async function GET() {
@@ -157,7 +172,7 @@ export async function GET() {
   }
 
   const sourceZip = Buffer.from(await response.arrayBuffer());
-  const zip = renameZipEntries(sourceZip);
+  const { zip, renamed } = renameZipEntries(sourceZip);
 
   return new Response(zip, {
     status: 200,
@@ -165,7 +180,8 @@ export async function GET() {
       "Content-Type": "application/zip",
       "Content-Disposition": `attachment; filename="${downloadFilename}"`,
       "Content-Length": String(zip.byteLength),
-      "Cache-Control": "no-store"
+      "Cache-Control": "no-store",
+      "X-Voice-Setup-Renamed": renamed ? "true" : "false"
     }
   });
 }
