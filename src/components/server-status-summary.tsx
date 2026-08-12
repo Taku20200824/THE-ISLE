@@ -33,13 +33,13 @@ export function ServerStatusSummary({ status: initialStatus }: { status: ServerS
   const voiceAddress = status.voiceHost ? `${status.voiceHost}:${status.voicePort}` : t("status.notSynced");
 
   return (
-    <Card className="cinematic-panel border-primary/15 bg-[linear-gradient(135deg,rgba(6,20,18,.92),rgba(9,16,26,.78))]">
+    <Card className="cinematic-panel border-primary/20 bg-white/82 shadow-xl shadow-emerald-900/10 backdrop-blur-xl dark:border-primary/15 dark:bg-[linear-gradient(135deg,rgba(6,20,18,.92),rgba(9,16,26,.78))] dark:shadow-black/30">
       <CardContent className="p-6">
         <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl">
             <StatusBadge status={status.status} />
             <div className="mt-4 flex flex-wrap items-end gap-3">
-              <h2 className="font-display text-3xl font-black text-white sm:text-4xl">{status.serverName}</h2>
+              <h2 className="font-display text-3xl font-black text-foreground sm:text-4xl dark:text-white">{status.serverName}</h2>
               <span className="mb-1 text-xs uppercase text-muted-foreground">{isRefreshing ? t("status.syncing") : t("status.liveRefresh")}</span>
             </div>
             <p className="mt-3 max-w-3xl text-sm text-muted-foreground">{status.description}</p>
@@ -77,7 +77,7 @@ export function ServerStatusSummary({ status: initialStatus }: { status: ServerS
                 <item.icon className="h-4 w-4 text-primary" />
                 {item.label}
               </div>
-              <div className="relative z-10 mt-2 break-words text-lg font-bold text-white">{item.value}</div>
+              <div className="relative z-10 mt-2 break-words text-lg font-bold text-foreground dark:text-white">{item.value}</div>
             </div>
           ))}
         </div>
@@ -85,4 +85,3 @@ export function ServerStatusSummary({ status: initialStatus }: { status: ServerS
     </Card>
   );
 }
-
