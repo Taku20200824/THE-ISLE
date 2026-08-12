@@ -1,4 +1,4 @@
-import { getServerStatusOrInitial } from "@/lib/firebase/server-status";
+import { getServerStatusOrInitial, updateServerStatusDocument } from "@/lib/firebase/server-status";
 import type { ServerStatusDocument } from "@/lib/firebase/server-status-shared";
 
 type GameDigState = {
@@ -132,6 +132,17 @@ async function queryTheIsleServer(status: ServerStatusDocument): Promise<ServerS
   }
 }
 
-export async function getServerStatus() {
+export async function getLiveServerStatus() {
   return serializeServerStatus(await queryTheIsleServer(await getServerStatusOrInitial()));
+}
+
+export async function getServerStatus() {
+  return getLiveServerStatus();
+}
+
+export async function syncServerStatusToFirebase() {
+  const liveStatus = await getLiveServerStatus();
+  const syncedStatus = await updateServerStatusDocument(liveStatus);
+
+  return serializeServerStatus(syncedStatus);
 }
