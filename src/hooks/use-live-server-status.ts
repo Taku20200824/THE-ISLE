@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ServerStatusDocument } from "@/lib/firebase/server-status-shared";
 
-const refreshIntervalMs = 5000;
+const refreshIntervalMs = 15000;
 
 export function useLiveServerStatus(initialStatus: ServerStatusDocument) {
   const [status, setStatus] = useState(initialStatus);
@@ -30,8 +30,6 @@ export function useLiveServerStatus(initialStatus: ServerStatusDocument) {
   }, []);
 
   useEffect(() => {
-    void refresh();
-
     const interval = window.setInterval(refresh, refreshIntervalMs);
 
     function refreshWhenVisible() {
