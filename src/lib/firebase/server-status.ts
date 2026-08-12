@@ -8,6 +8,7 @@ export const serverStatusCollection = "serverStatus";
 export const serverStatusDocumentId = "main";
 
 const initialStatusFallbackDelayMs = 700;
+const staleServerNames = new Set(["TAKU's The Isle"]);
 
 function parseTimestamp(value: unknown) {
   if (value instanceof Timestamp) {
@@ -48,8 +49,11 @@ function parseFirestoreValue(value: unknown): unknown {
 }
 
 function normalizeServerStatusData(data: Record<string, unknown>): Record<string, unknown> {
+  const serverName = typeof data.serverName === "string" && staleServerNames.has(data.serverName) ? initialServerStatus.serverName : data.serverName;
+
   return {
     ...data,
+    serverName,
     location: data.location ?? data.Location,
     port: data.port ?? data["port "],
     hostingProvider: data.hostingProvider ?? "BisectHosting"
