@@ -55,6 +55,8 @@ const textChannels = new Map([
   ["japanese-chat", { name: "🇯🇵・japanese-chat", topic: "日本語チャット、質問、参加案内、イベント連絡" }],
   ["korean-chat", { name: "🇰🇷・korean-chat", topic: "한국어 채팅, 파티 모집, 질문, 서버 정보" }],
   ["general-chat", { name: "💬・general-chat", topic: "🇬🇧 General / 🇲🇳 Ерөнхий / 🇯🇵 雑談 / 🇰🇷 일반 채팅" }],
+  ["jp-mng-kr-chat", { name: "🌏・jp-mng-kr-chat", topic: "🇲🇳 Монгол / 🇯🇵 日本語 / 🇰🇷 한국어 / 🇬🇧 English OK" }],
+  ["screenshots", { name: "📷・screenshots", topic: "Screenshots / Зураг / スクショ / 스크린샷" }],
   ["clips-media", { name: "📸・clips-media", topic: "Screenshots, clips, wins, fails, and funny island moments" }],
   ["pack-recruitment", { name: "🤝・pack-recruitment", topic: "Find pack members / Баг хайх / 仲間募集 / 파티 모집" }],
   ["bug-report", { name: "🐞・bug-report", topic: "Bug report with screenshot/clip, Steam name, time, details" }],
