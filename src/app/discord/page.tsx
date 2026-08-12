@@ -6,13 +6,44 @@ import { siteConfig } from "@/data/site";
 import { getDiscordCommunity } from "@/lib/integrations/discord";
 
 const languageRooms = [
-  { flag: "🇬🇧", name: "English", channel: "#english-chat", note: "Global chat, quick help, event calls", style: "from-sky-300/25 via-cyan-300/10 to-white/5" },
-  { flag: "🇲🇳", name: "Монгол", channel: "#mongolian-chat", note: "Монгол тоглогчдын яриа, pack хайх", style: "from-blue-400/25 via-red-400/10 to-yellow-300/10" },
-  { flag: "🇯🇵", name: "日本語", channel: "#japanese-chat", note: "日本語の質問、参加案内、雑談", style: "from-rose-300/25 via-pink-300/10 to-white/5" },
-  { flag: "🇰🇷", name: "한국어", channel: "#korean-chat", note: "한국어 안내, 파티 모집, 질문", style: "from-indigo-300/25 via-fuchsia-300/10 to-cyan-300/10" }
+  { flag: "🇬🇧", name: "English", channel: "#english-chat", note: "🎮 Global chat, quick help, event calls, pack finder", style: "from-sky-300/25 via-cyan-300/10 to-white/5" },
+  { flag: "🇲🇳", name: "Монгол", channel: "#mongolian-chat", note: "🦖 Монгол тоглогчдын яриа, pack хайх, тусламж авах", style: "from-blue-400/25 via-red-400/10 to-yellow-300/10" },
+  { flag: "🇯🇵", name: "日本語", channel: "#japanese-chat", note: "🌸 日本語の質問、参加案内、雑談、イベント連絡", style: "from-rose-300/25 via-pink-300/10 to-white/5" },
+  { flag: "🇰🇷", name: "한국어", channel: "#korean-chat", note: "⚡ 한국어 안내, 파티 모집, 질문, 서버 정보", style: "from-indigo-300/25 via-fuchsia-300/10 to-cyan-300/10" }
 ];
 
-const partyChips = ["🦖 Pack hunt", "🎙 Voice lobby", "📸 Screenshots", "🌏 4 languages", "🏁 Events", "🟢 Live status", "✨ Bright vibes"];
+const multilingualGuides = [
+  {
+    flag: "🇬🇧",
+    lang: "English",
+    title: "🎮 Join, read rules, find a pack",
+    body: "Use Discord for server status, rules, reports, clips, voice rooms, and event calls. Keep chat friendly and useful.",
+    style: "from-sky-400/25 via-cyan-300/10 to-white/5"
+  },
+  {
+    flag: "🇲🇳",
+    lang: "Монгол",
+    title: "🦖 Дүрмээ уншаад pack-аа олоорой",
+    body: "Discord дээр server status, дүрэм, report, clip, voice room, event мэдээлэл бүгд байна. Найрсаг, хөгжилтэй байцгаая.",
+    style: "from-blue-500/25 via-red-400/10 to-yellow-300/10"
+  },
+  {
+    flag: "🇯🇵",
+    lang: "日本語",
+    title: "🌸 ルール確認、参加案内、仲間探し",
+    body: "Discordではサーバー情報、ルール、通報、クリップ、ボイス、イベント案内を確認できます。明るく楽しく参加してください。",
+    style: "from-rose-400/25 via-pink-300/10 to-white/5"
+  },
+  {
+    flag: "🇰🇷",
+    lang: "한국어",
+    title: "⚡ 규칙 확인, 서버 정보, 파티 모집",
+    body: "Discord에서 서버 상태, 규칙, 신고, 클립, 보이스, 이벤트 안내를 확인할 수 있습니다. 밝고 친절하게 플레이해요.",
+    style: "from-indigo-400/25 via-fuchsia-300/10 to-cyan-300/10"
+  }
+];
+
+const partyChips = ["🦖 Pack hunt", "🎙 Voice lobby", "📸 Screenshots", "🇬🇧 🇲🇳 🇯🇵 🇰🇷 4 languages", "🏁 Events", "🟢 Live status", "✨ Bright vibes", "😂 Funny moments"];
 
 const channelGroups = [
   {
@@ -39,20 +70,20 @@ const channelGroups = [
 
 const pinnedMessages = [
   {
-    title: "👋 #welcome",
-    body: "Welcome to THE ISLE ASIA. Pick your language room, read the rules, check server status, then jump into the island. 明るく、楽しく、でもルールはしっかり。"
+    title: "👋🌈 #welcome",
+    body: "🇬🇧 Welcome to THE ISLE ASIA. Pick your language room, read rules, check status, then jump in. 🇲🇳 Тавтай морил, хэлний өрөөгөө сонгоод server-т орцгооё."
   },
   {
-    title: "🟢 #server-status",
-    body: "ASIA JP,MNG,KR Test | 209.102.250.73:9075 | Singapore | Server page: https://the-isle.vercel.app/server"
+    title: "📜🛡 #rules",
+    body: "🇯🇵 ルールを読んで、楽しく安全にプレイしましょう。 🇰🇷 규칙을 확인하고 친절하게 플레이해요. No drama, no exploit, no spam."
   },
   {
-    title: "🎙 #voice-info",
-    body: "Use TAKU Voice for proximity voice, then join Discord voice rooms for packs, events, support, and quick coordination."
+    title: "🟢📡 #server-status",
+    body: "ASIA JP,MNG,KR Test | 209.102.250.73:9075 | Singapore | 🎮 Server page: https://the-isle.vercel.app/server"
   },
   {
-    title: "🎉 #events",
-    body: "Weekend growth, pack nights, screenshot drops, and silly survival moments go here. Keep it bright, friendly, and fun."
+    title: "🎉🦖 #events",
+    body: "Weekend growth, pack nights, screenshots, clips, and funny survival moments go here. Keep it bright, friendly, and fun."
   }
 ];
 
@@ -78,19 +109,19 @@ export default async function DiscordPage() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-[linear-gradient(90deg,rgba(45,212,191,.18),rgba(244,114,182,.14),rgba(251,191,36,.14))] px-4 py-2 text-xs font-bold uppercase text-primary shadow-[0_0_36px_rgba(45,212,191,.22)]">
               <Sparkles className="h-4 w-4" />
-              Discord x Website x Server
+              🌈 Discord x Website x Server
             </div>
             <h1 className="text-gradient mt-6 max-w-4xl font-display text-5xl font-black leading-none sm:text-7xl">
-              Bright Discord hub for JP, MNG, KR, and EN players
+              🦖 Bright Discord hub for JP, MNG, KR, and EN players
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-zinc-200">
-              THE ISLE ASIA Discord is the fun room for language chat, server status, reports, clips, pack recruitment, voice coordination, and website links.
+              🇬🇧 🇲🇳 🇯🇵 🇰🇷 THE ISLE ASIA Discord is the fun room for language chat, server status, rules, reports, clips, pack recruitment, voice coordination, and website links.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="h-14 px-7 text-base shadow-[0_0_44px_rgba(45,212,191,.38)]">
                 <a href={discord.invite}>
                   <MessageCircle className="h-5 w-5" />
-                  Join Discord
+                  🌈 Join Discord
                 </a>
               </Button>
               <Button asChild variant="outline" size="lg" className="h-14 px-7 border-cyan-300/30 bg-cyan-300/10 text-base hover:bg-cyan-300/15">
@@ -99,7 +130,7 @@ export default async function DiscordPage() {
               <Button asChild variant="outline" size="lg" className="h-14 px-7 border-amber-300/30 bg-amber-300/10 text-base hover:bg-amber-300/15">
                 <Link href="/server">
                   <Gamepad2 className="h-5 w-5" />
-                  Server Page
+                  🎮 Server Page
                 </Link>
               </Button>
             </div>
@@ -109,7 +140,7 @@ export default async function DiscordPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-2xl">
                 <RadioTower className="h-6 w-6 text-primary" />
-                ASIA JP,MNG,KR Test
+                🟢 ASIA JP,MNG,KR Test
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -134,7 +165,26 @@ export default async function DiscordPage() {
       <section className="container py-10">
         <div className="mb-5 flex items-center gap-3">
           <Languages className="h-6 w-6 text-primary" />
-          <h2 className="font-display text-3xl font-black">Language rooms</h2>
+          <h2 className="font-display text-3xl font-black">🇬🇧 🇲🇳 🇯🇵 🇰🇷 4-language Discord guide</h2>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {multilingualGuides.map((guide) => (
+            <Card key={guide.lang} className={`border-white/10 bg-gradient-to-br ${guide.style} shadow-2xl shadow-black/25 transition duration-300 hover:-translate-y-1 hover:border-primary/40`}>
+              <CardContent className="p-5">
+                <div className="text-5xl">{guide.flag}</div>
+                <div className="mt-4 text-xs font-black uppercase text-primary">{guide.lang}</div>
+                <h3 className="mt-2 text-lg font-black text-white">{guide.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-zinc-300">{guide.body}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section className="container py-10">
+        <div className="mb-5 flex items-center gap-3">
+          <Languages className="h-6 w-6 text-primary" />
+          <h2 className="font-display text-3xl font-black">🌏 Language rooms</h2>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {languageRooms.map((room) => (
@@ -153,7 +203,7 @@ export default async function DiscordPage() {
       <section className="container py-10">
         <div className="mb-5 flex items-center gap-3">
           <Users className="h-6 w-6 text-secondary" />
-          <h2 className="font-display text-3xl font-black">Discord room plan</h2>
+          <h2 className="font-display text-3xl font-black">🧩 Discord room plan</h2>
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {channelGroups.map((group) => (
@@ -179,12 +229,12 @@ export default async function DiscordPage() {
             <div>
               <div className="flex items-center gap-2 text-sm font-bold uppercase text-primary">
                 <Zap className="h-4 w-4" />
-                Community mood
+                🌈 Community mood
               </div>
-              <p className="mt-2 text-xl font-black text-white">明るい感じで、でも server info はすぐ見えるように。</p>
+              <p className="mt-2 text-xl font-black text-white">🇬🇧 Friendly / 🇲🇳 Найрсаг / 🇯🇵 明るい / 🇰🇷 친절하게</p>
             </div>
             <div className="flex flex-wrap gap-2 text-sm font-bold">
-              {['🦕 friendly', '🎮 useful', '🌈 colorful', '📌 easy to pin'].map((item) => (
+              {['🦕 friendly', '🎮 useful', '🌈 colorful', '📌 easy to pin', '😂 funny'].map((item) => (
                 <span key={item} className="rounded-full bg-black/25 px-3 py-2 text-zinc-100">{item}</span>
               ))}
             </div>
@@ -197,7 +247,7 @@ export default async function DiscordPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <ShieldCheck className="h-6 w-6 text-primary" />
-              Staff online view
+              🛡 Staff online view
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -223,7 +273,7 @@ export default async function DiscordPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Volume2 className="h-6 w-6 text-secondary" />
-              Page links to pin in Discord
+              📌 Page links to pin in Discord
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -249,7 +299,7 @@ export default async function DiscordPage() {
       <section className="container py-10">
         <div className="mb-5 flex items-center gap-3">
           <MessageCircle className="h-6 w-6 text-primary" />
-          <h2 className="font-display text-3xl font-black">Pinned message style</h2>
+          <h2 className="font-display text-3xl font-black">📌 Pinned message style</h2>
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {pinnedMessages.map((message) => (
