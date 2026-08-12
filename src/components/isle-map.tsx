@@ -6,7 +6,6 @@ import {
   Crosshair,
   Droplets,
   Fish,
-  Footprints,
   Info,
   Leaf,
   MapPin,
@@ -462,7 +461,7 @@ export function IsleMap({ markers }: { markers?: IsleMapMarker[] }) {
             <div className="absolute inset-0 rounded-lg bg-[linear-gradient(90deg,rgba(0,0,0,.14),transparent_24%,transparent_72%,rgba(0,0,0,.14))]" />
             <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1000 1000" aria-hidden="true">
               <path d="M285 535 C360 510 423 520 492 575 C570 638 642 622 736 584" fill="none" stroke="rgba(250,204,21,.7)" strokeWidth="7" strokeDasharray="22 18" strokeLinecap="round" />
-              <path d="M338 330 C410 370 475 360 548 405 C620 448 680 422 748 382" fill="none" stroke="rgba(250,204,21,.55)" strokeWidth="6" strokeDasharray="18 15" strokeLinecap="round" />
+              <path d="M338 330 C410 370 475 360 548 405 C620 448 680 422 748 382" fill="none" stroke="rgba(250,204,21(.55)" strokeWidth="6" strokeDasharray="18 15" strokeLinecap="round" />
               <path d="M424 765 C484 703 550 704 615 746" fill="none" stroke="rgba(250,204,21,.55)" strokeWidth="6" strokeDasharray="18 15" strokeLinecap="round" />
             </svg>
 
