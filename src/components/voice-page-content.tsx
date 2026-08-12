@@ -10,6 +10,9 @@ import type { ServerStatusDocument } from "@/lib/firebase/server-status-shared";
 
 export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
   const { locale, t } = useLanguage();
+  const serverName = status.serverName || "ASIA JP,MNG,KR Test";
+  const voiceName = `${serverName} Voice`;
+  const voiceProviderName = `${voiceName} (Mumble)`;
   const [steamSession, setSteamSession] = useState<
     | { state: "loading" }
     | { state: "signedOut" }
@@ -20,6 +23,10 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
   const address = status.voiceHost ? `${status.voiceHost}:${status.voicePort}` : t("page.voice.hostPending");
   const labels = {
     en: {
+      pageTitle: `${serverName} voice chat`,
+      pageDescription: `${serverName}'s Mumble service provides automatic server-side Evrima proximity voice.`,
+      connectTitle: `Connect to ${voiceName}`,
+      connectBody: "Use the host and port shown here. Keep Mumble open while you play Evrima.",
       steamTitle: "Automatic Steam verification",
       steamBody: "Sign in with Steam once. Your SteamID is signed into the Mumble connection, so no game name or !verify command is needed.",
       steamLogin: "Sign in with Steam",
@@ -28,6 +35,10 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
       steamFailed: "Steam verification failed. Please try again."
     },
     ja: {
+      pageTitle: `${serverName} ボイスチャット`,
+      pageDescription: `${serverName} の Mumble サービスで、Evrima のサーバー側近接ボイスチャットを自動提供します。`,
+      connectTitle: `${voiceName} に接続`,
+      connectBody: "ここに表示されたホストとポートを使用します。Evrima のプレイ中は Mumble を起動したままにしてください。",
       steamTitle: "Steam 自動認証",
       steamBody: "Steamで一度ログインすると、SteamIDが署名付きでMumble接続に渡されます。ゲーム名の入力や !verify は不要です。",
       steamLogin: "Steamでログイン",
@@ -36,6 +47,10 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
       steamFailed: "Steam認証に失敗しました。もう一度お試しください。"
     },
     ko: {
+      pageTitle: `${serverName} 음성 채팅`,
+      pageDescription: `${serverName} Mumble 서비스가 Evrima 서버 기반 근접 음성 채팅을 자동으로 제공합니다.`,
+      connectTitle: `${voiceName} 연결`,
+      connectBody: "여기에 표시된 호스트와 포트를 사용하세요. Evrima를 플레이하는 동안 Mumble을 실행해 두세요.",
       steamTitle: "Steam 자동 인증",
       steamBody: "Steam에 한 번 로그인하면 서명된 SteamID가 Mumble 연결에 전달됩니다. 게임 이름 입력과 !verify 명령은 필요 없습니다.",
       steamLogin: "Steam으로 로그인",
@@ -44,6 +59,10 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
       steamFailed: "Steam 인증에 실패했습니다. 다시 시도해 주세요."
     },
     mn: {
+      pageTitle: `${serverName}-ийн дуут чат`,
+      pageDescription: `${serverName}-ийн Mumble үйлчилгээ нь Evrima-д сервер талаас автоматаар ойрын зайн дуут чат ажиллуулна.`,
+      connectTitle: `${voiceName}-д холбогдох`,
+      connectBody: "Энд байгаа host болон port-ыг ашиглана. Evrima тоглож байхдаа Mumble-ийг нээлттэй байлгана уу.",
       steamTitle: "Steam автомат баталгаажуулалт",
       steamBody: "Steam-ээр нэг удаа нэвтэрнэ. SteamID нь гарын үсэгтэйгээр Mumble холболтод ордог тул тоглоомын нэр бичих болон !verify команд хэрэггүй.",
       steamLogin: "Steam-ээр нэвтрэх",
@@ -54,7 +73,7 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
   }[locale];
   const steps = [
     { icon: Download, title: t("page.voice.installTitle"), body: t("page.voice.installBody") },
-    { icon: Headphones, title: t("page.voice.connectTitle"), body: t("page.voice.connectBody") },
+    { icon: Headphones, title: labels.connectTitle, body: labels.connectBody },
     { icon: Mic2, title: t("page.voice.pluginTitle"), body: labels.steamBody }
   ];
 
@@ -82,9 +101,9 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
   return (
     <main className="container min-h-screen pt-32 pb-20 sm:pt-36">
       <SectionHeading
-        eyebrow={t("page.voice.eyebrow")}
-        title={t("page.voice.title")}
-        description={t("page.voice.description")}
+        eyebrow={voiceName}
+        title={labels.pageTitle}
+        description={labels.pageDescription}
       />
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
@@ -113,7 +132,7 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
             <Radio className="h-4 w-4" />
             {t("page.voice.service")}
           </div>
-          <h2 className="mt-4 font-display text-2xl font-black text-white">{status.voiceProvider}</h2>
+          <h2 className="mt-4 font-display text-2xl font-black text-white">{voiceProviderName}</h2>
           <div className="mt-4 flex items-center gap-2 rounded-md border border-white/10 bg-white/[.04] px-3 py-2 text-sm">
             <span className={`h-2.5 w-2.5 rounded-full ${isActive ? "bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,.8)]" : "bg-amber-400"}`} />
             <span className="font-bold text-white">{isActive ? t("page.voice.online") : t("page.voice.pending")}</span>
@@ -179,4 +198,3 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
     </main>
   );
 }
-
