@@ -38,10 +38,17 @@ type Copy = {
 };
 
 const channelGroups = [
-  { title: "START HERE", icon: "🌈", channels: ["👋 #welcome", "📜 #rules", "📢 #announcements", "🟢 #server-status", "🎮 #how-to-join"] },
-  { title: "COMMUNITY", icon: "🦖", channels: ["💬 #general-chat", "🌏 #jp-mng-kr-chat", "📷 #screenshots", "🎬 #clips-media", "🤝 #pack-recruitment"] },
-  { title: "SUPPORT", icon: "🛟", channels: ["🐞 #bug-report", "🚨 #player-report", "📝 #ban-appeal", "📩 #admin-contact"] },
-  { title: "THE ISLE VOICE", icon: "🎙", channels: ["🔊 Lobby", "🦕 Pack Room 1", "🦖 Pack Room 2", "🏁 Event Voice", "🛡 Staff Voice"] }
+  { title: "START HERE", icon: "🌈", tone: "from-amber-300/30 via-orange-400/15 to-pink-400/15", channels: ["👋 #welcome", "📜 #rules", "📢 #announcements", "🟢 #server-status", "🎮 #how-to-join"] },
+  { title: "COMMUNITY", icon: "🦖", tone: "from-emerald-300/30 via-teal-300/15 to-cyan-400/15", channels: ["💬 #general-chat", "🌏 #jp-mng-kr-chat", "📷 #screenshots", "🎬 #clips-media", "🤝 #pack-recruitment"] },
+  { title: "SUPPORT", icon: "🛟", tone: "from-sky-300/30 via-blue-400/15 to-indigo-400/15", channels: ["🐞 #bug-report", "🚨 #player-report", "📝 #ban-appeal", "📩 #admin-contact"] },
+  { title: "THE ISLE VOICE", icon: "🎙", tone: "from-violet-300/30 via-fuchsia-400/15 to-rose-400/15", channels: ["🔊 Lobby", "🦕 Pack Room 1", "🦖 Pack Room 2", "🏁 Event Voice", "🛡 Staff Voice"] }
+];
+
+const cardTones = [
+  "from-cyan-300/25 via-sky-300/10 to-white/5",
+  "from-amber-300/25 via-orange-300/10 to-white/5",
+  "from-emerald-300/25 via-lime-300/10 to-white/5",
+  "from-fuchsia-300/25 via-pink-300/10 to-white/5"
 ];
 
 const copies: Record<Locale, Copy> = {
@@ -195,8 +202,9 @@ const copies: Record<Locale, Copy> = {
   }
 };
 
-const panelClass = "border-white/10 bg-white/[.035] shadow-xl shadow-black/20";
-const tileClass = "rounded-md border border-white/10 bg-black/25 px-3 py-2 text-sm font-semibold text-zinc-100";
+const statValues = ["209.102.250.73:9075", "Singapore", "the-isle.vercel.app"];
+const panelClass = "border-white/10 bg-gradient-to-br from-white/[.08] via-primary/[.05] to-secondary/[.08] shadow-2xl shadow-black/25 backdrop-blur-xl";
+const tileClass = "rounded-md border border-white/10 bg-black/25 px-3 py-2 text-sm font-semibold text-zinc-100 shadow-inner shadow-white/5";
 
 export function DiscordPageContent({ discord }: { discord: DiscordCommunity }) {
   const { locale } = useLanguage();
@@ -204,44 +212,52 @@ export function DiscordPageContent({ discord }: { discord: DiscordCommunity }) {
 
   return (
     <main className="min-h-screen overflow-hidden pt-24 pb-20">
-      <section className="container py-12 sm:py-16">
+      <section className="container relative py-12 sm:py-16">
+        <div className="pointer-events-none absolute left-4 top-8 -z-10 h-64 w-64 rounded-full bg-cyan-300/20 blur-3xl" />
+        <div className="pointer-events-none absolute right-8 top-24 -z-10 h-72 w-72 rounded-full bg-fuchsia-400/20 blur-3xl" />
+        <div className="pointer-events-none absolute left-1/2 top-64 -z-10 h-64 w-64 rounded-full bg-amber-300/15 blur-3xl" />
+
+        <div className="mb-6 flex flex-wrap gap-2">
+          {["🦖", "🎙", "📸", "🏁", "🟢", "✨"].map((chip) => <span key={chip} className="rounded-full border border-white/10 bg-white/[.07] px-3 py-2 text-sm shadow-lg shadow-black/20 backdrop-blur">{chip}</span>)}
+        </div>
+
         <div className="grid gap-8 lg:grid-cols-[1.05fr_.95fr] lg:items-center">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/[.04] px-4 py-2 text-xs font-bold uppercase text-primary"><MessageCircle className="h-4 w-4" />Discord</div>
-            <h1 className="mt-6 max-w-4xl font-display text-4xl font-black leading-tight text-foreground sm:text-6xl">{copy.title}</h1>
-            <p className="mt-6 max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">{copy.body}</p>
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-[linear-gradient(90deg,rgba(45,212,191,.18),rgba(244,114,182,.14),rgba(251,191,36,.14))] px-4 py-2 text-xs font-bold uppercase text-primary shadow-[0_0_36px_rgba(45,212,191,.22)]"><MessageCircle className="h-4 w-4" />Discord</div>
+            <h1 className="text-gradient mt-6 max-w-4xl font-display text-5xl font-black leading-none sm:text-7xl">{copy.title}</h1>
+            <p className="mt-6 max-w-3xl text-base leading-8 text-zinc-200 sm:text-lg">{copy.body}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="h-14 px-7 text-base"><a href={discord.invite}><MessageCircle className="h-5 w-5" />{copy.join}</a></Button>
-              <Button asChild variant="outline" size="lg" className="h-14 px-7 bg-white/[.03] text-base"><a href={siteConfig.discordGeneralChannel}>{copy.general}</a></Button>
-              <Button asChild variant="outline" size="lg" className="h-14 px-7 bg-white/[.03] text-base"><Link href="/server"><Gamepad2 className="h-5 w-5" />{copy.server}</Link></Button>
+              <Button asChild size="lg" className="h-14 px-7 text-base shadow-[0_0_44px_rgba(45,212,191,.38)]"><a href={discord.invite}><MessageCircle className="h-5 w-5" />{copy.join}</a></Button>
+              <Button asChild variant="outline" size="lg" className="h-14 border-cyan-300/30 bg-cyan-300/10 px-7 text-base hover:bg-cyan-300/15"><a href={siteConfig.discordGeneralChannel}>{copy.general}</a></Button>
+              <Button asChild variant="outline" size="lg" className="h-14 border-amber-300/30 bg-amber-300/10 px-7 text-base hover:bg-amber-300/15"><Link href="/server"><Gamepad2 className="h-5 w-5" />{copy.server}</Link></Button>
             </div>
           </div>
 
           <Card className={panelClass}>
-            <CardHeader><CardTitle className="flex items-center gap-2 text-2xl"><RadioTower className="h-6 w-6 text-primary" />{copy.serverTitle}</CardTitle></CardHeader>
-            <CardContent><div className="grid gap-3 sm:grid-cols-2">{[[copy.labels[0], "209.102.250.73:9075"], [copy.labels[1], "Singapore"], [copy.labels[2], "the-isle.vercel.app"], [copy.labels[3], discord.serverId]].map(([label, value]) => <div key={label} className="rounded-md border border-white/10 bg-black/25 p-4"><div className="text-xs uppercase text-muted-foreground">{label}</div><div className="mt-1 break-words font-bold text-white">{value}</div></div>)}</div></CardContent>
+            <CardHeader><CardTitle className="flex items-center gap-2 text-2xl"><RadioTower className="h-6 w-6 text-primary" />🟢 {copy.serverTitle}</CardTitle></CardHeader>
+            <CardContent><div className="grid gap-3 sm:grid-cols-2">{[...statValues, discord.serverId].map((value, index) => <div key={copy.labels[index]} className="rounded-md border border-white/10 bg-black/25 p-4 shadow-inner shadow-white/5"><div className="text-xs uppercase text-muted-foreground">{copy.labels[index]}</div><div className="mt-1 break-words font-bold text-white">{value}</div></div>)}</div></CardContent>
           </Card>
         </div>
       </section>
 
       <CardGrid title={copy.guideTitle} items={copy.guides} />
-      <CardGrid title={copy.roomsTitle} items={copy.rooms} />
+      <CardGrid title={copy.roomsTitle} items={copy.rooms} offset={1} />
 
       <section className="container py-10">
         <SectionTitle icon={<Users className="h-5 w-5 text-primary" />} title={copy.planTitle} />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {channelGroups.map((group) => <Card key={group.title} className={panelClass}><CardContent className="p-5"><h3 className="font-display text-lg font-black text-white">{group.icon} {group.title}</h3><div className="mt-4 space-y-2">{group.channels.map((channel) => <div key={channel} className={tileClass}>{channel}</div>)}</div></CardContent></Card>)}
+          {channelGroups.map((group) => <Card key={group.title} className={`border-white/10 bg-gradient-to-br ${group.tone} shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-white/25`}><CardContent className="p-5"><h3 className="font-display text-lg font-black text-white">{group.icon} {group.title}</h3><div className="mt-4 space-y-2">{group.channels.map((channel) => <div key={channel} className={tileClass}>{channel}</div>)}</div></CardContent></Card>)}
         </div>
       </section>
 
-      <section className="container py-10"><Card className={panelClass}><CardContent className="flex flex-wrap items-center justify-between gap-4 p-5"><div><div className="flex items-center gap-2 text-sm font-bold uppercase text-primary"><ShieldCheck className="h-4 w-4" />{copy.moodTitle}</div><p className="mt-2 text-xl font-black text-white">{copy.moodBody}</p></div></CardContent></Card></section>
+      <section className="container py-10"><Card className="border-white/10 bg-[linear-gradient(90deg,rgba(34,211,238,.16),rgba(244,114,182,.14),rgba(251,191,36,.16),rgba(52,211,153,.14))] shadow-2xl shadow-black/20"><CardContent className="flex flex-wrap items-center justify-between gap-4 p-5"><div><div className="flex items-center gap-2 text-sm font-bold uppercase text-primary"><ShieldCheck className="h-4 w-4" />{copy.moodTitle}</div><p className="mt-2 text-xl font-black text-white">{copy.moodBody}</p></div></CardContent></Card></section>
 
       <section className="container grid gap-5 py-10 lg:grid-cols-[.85fr_1.15fr]">
-        <Card className={panelClass}><CardHeader><CardTitle className="flex items-center gap-2"><ShieldCheck className="h-6 w-6 text-primary" />{copy.staffTitle}</CardTitle></CardHeader><CardContent><div className="mb-5 flex items-end gap-3"><div className="text-5xl font-black text-white">{discord.onlineModerators}</div><div className="pb-2 text-sm font-bold text-muted-foreground">{copy.modsReady}</div></div><div className="space-y-3">{discord.staff.map((member) => <div key={member.name} className="flex items-center gap-3 rounded-md border border-white/10 bg-black/25 p-3"><img src={member.avatar} alt="" className="h-10 w-10 rounded-md" /><div><div className="font-semibold text-white">{member.name}</div><div className="text-xs text-muted-foreground">{member.role} · {member.discord}</div></div></div>)}</div></CardContent></Card>
-        <Card className={panelClass}><CardHeader><CardTitle className="flex items-center gap-2"><Volume2 className="h-6 w-6 text-primary" />{copy.linksTitle}</CardTitle></CardHeader><CardContent><div className="grid gap-3 md:grid-cols-3">{copy.links.map(([title, href, note]) => <Link key={href} href={href} className="rounded-md border border-white/10 bg-black/25 p-4 transition hover:border-primary/40 hover:bg-primary/5"><div className="font-bold text-white">{title}</div><div className="mt-2 text-xs leading-5 text-muted-foreground">{note}</div></Link>)}</div></CardContent></Card>
+        <Card className={panelClass}><CardHeader><CardTitle className="flex items-center gap-2"><ShieldCheck className="h-6 w-6 text-primary" />{copy.staffTitle}</CardTitle></CardHeader><CardContent><div className="mb-5 flex items-end gap-3"><div className="text-5xl font-black text-white">{discord.onlineModerators}</div><div className="pb-2 text-sm font-bold text-muted-foreground">{copy.modsReady}</div></div><div className="space-y-3">{discord.staff.map((member) => <div key={member.name} className="flex items-center gap-3 rounded-md border border-white/10 bg-black/25 p-3 transition hover:border-primary/30 hover:bg-primary/5"><img src={member.avatar} alt="" className="h-10 w-10 rounded-md" /><div><div className="font-semibold text-white">{member.name}</div><div className="text-xs text-muted-foreground">{member.role} · {member.discord}</div></div></div>)}</div></CardContent></Card>
+        <Card className={panelClass}><CardHeader><CardTitle className="flex items-center gap-2"><Volume2 className="h-6 w-6 text-primary" />{copy.linksTitle}</CardTitle></CardHeader><CardContent><div className="grid gap-3 md:grid-cols-3">{copy.links.map(([title, href, note]) => <Link key={href} href={href} className="rounded-md border border-white/10 bg-black/25 p-4 transition hover:-translate-y-1 hover:border-primary/40 hover:bg-primary/5"><div className="font-bold text-white">{title}</div><div className="mt-2 text-xs leading-5 text-muted-foreground">{note}</div></Link>)}</div></CardContent></Card>
       </section>
 
-      <CardGrid title={copy.pinnedTitle} items={copy.pins} star />
+      <CardGrid title={copy.pinnedTitle} items={copy.pins} star offset={2} />
     </main>
   );
 }
@@ -250,12 +266,12 @@ function SectionTitle({ icon, title }: { icon: ReactNode; title: string }) {
   return <div className="mb-5 flex items-center gap-3">{icon}<h2 className="font-display text-3xl font-black text-foreground">{title}</h2></div>;
 }
 
-function CardGrid({ title, items, star = false }: { title: string; items: MiniCard[]; star?: boolean }) {
+function CardGrid({ title, items, star = false, offset = 0 }: { title: string; items: MiniCard[]; star?: boolean; offset?: number }) {
   return (
     <section className="container py-10">
       <SectionTitle icon={star ? <Star className="h-5 w-5 text-primary" /> : <MessageCircle className="h-5 w-5 text-primary" />} title={title} />
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {items.map((item) => <Card key={`${title}-${item.title}`} className={panelClass}><CardContent className="p-5">{star ? <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md border border-primary/20 bg-primary/10"><Star className="h-5 w-5 text-primary" /></div> : <div className="text-4xl">{item.icon}</div>}<h3 className="mt-4 text-lg font-black text-white">{item.title}</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">{item.body}</p></CardContent></Card>)}
+        {items.map((item, index) => <Card key={`${title}-${item.title}`} className={`border-white/10 bg-gradient-to-br ${cardTones[(index + offset) % cardTones.length]} shadow-2xl shadow-black/25 transition duration-300 hover:-translate-y-1 hover:border-primary/40`}><CardContent className="p-5">{star ? <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md border border-primary/20 bg-primary/10"><Star className="h-5 w-5 text-primary" /></div> : <div className="text-5xl drop-shadow-[0_0_24px_rgba(255,255,255,.18)]">{item.icon}</div>}<h3 className="mt-4 text-lg font-black text-white">{item.title}</h3><p className="mt-3 text-sm leading-6 text-zinc-300">{item.body}</p></CardContent></Card>)}
       </div>
     </section>
   );
