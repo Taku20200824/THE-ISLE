@@ -1,5 +1,5 @@
 const token = process.env.DISCORD_BOT_TOKEN;
-const channelId = process.env.DISCORD_CHANNEL_ID ?? "1536955772548681818";
+const channelId = process.env.DISCORD_CHANNEL_ID ?? "1536955046162333699";
 
 if (!token) {
   throw new Error("Set DISCORD_BOT_TOKEN before running this script.");
@@ -38,21 +38,21 @@ const messages = [
   {
     content:
       "╭── 🌈🦖 **THE ISLE ASIA HUB** 🦖🌈 ──╮\n" +
-      "✨ JP 🇯🇵 / MNG 🇲🇳 / KR 🇰🇷 / EN 🇬🇧 players welcome! ✨\n" +
-      "🎮 Server info • 📜 Rules • 🎙 Voice • 🤝 Packs • 📸 Clips • 😂 Funny island moments\n" +
+      "🇬🇧 EN • 🇲🇳 MNG • 🇯🇵 JP • 🇰🇷 KR players welcome ✨\n" +
+      "🎮 Server info • 📜 Rules • 🎙 Voice • 🤝 Packs • 📸 Clips • 😂 Funny moments\n" +
       "╰──────────────────────────────╯",
     embeds: [
       {
-        title: "🟢🦕 ASIA JP,MNG,KR Test is the main island",
+        title: "🟢🦕 ASIA JP,MNG,KR Test",
         description:
-          "🌟 Bright Asia community for The Isle players.\n🤝 Be friendly. 📌 Read info. 🎮 Join the island. 😂 Enjoy the chaos.\n\n🛰 **Server:** `209.102.250.73:9075`\n🌏 **Region:** Singapore\n🌐 **Website:** https://the-isle.vercel.app/discord\n💬 **Open channel:** https://discord.com/channels/1536921178931859476/1536955772548681818",
+          "🇬🇧 Bright Asia community for The Isle players. Be friendly, read info, join the island, enjoy the chaos.\n\n🇲🇳 The Isle Asia community server. Найрсаг байж, дүрмээ уншаад, server-т орцгооё.\n\n🇯🇵 The Isle Asia コミュニティです。ルールを読んで、明るく楽しく参加してください。\n\n🇰🇷 The Isle Asia 커뮤니티 서버입니다. 규칙을 읽고, 친절하게 즐겨 주세요。\n\n🛰 **Server:** `209.102.250.73:9075`\n🌏 **Region:** Singapore\n🌐 **Website:** https://the-isle.vercel.app/discord\n💬 **Channel:** https://discord.com/channels/1536921178931859476/1536955046162333699",
         color: 0x22d3ee,
         fields: [
-          { name: "🦖🤝 Pack hunt", value: "Solo? No problem. Find friends and survive together.", inline: true },
-          { name: "🎙⚡ Voice lobby", value: "Fast calls for hunts, events, support, and panic moments.", inline: true },
-          { name: "📸🎬 Media drops", value: "Screenshots, clips, wins, fails, and funny island proof.", inline: true }
+          { name: "🦖🤝 Pack / Баг / 仲間 / 파티", value: "Find friends, join events, and survive together.", inline: true },
+          { name: "🎙⚡ Voice / Дуу / ボイス / 보이스", value: "Use voice rooms for hunts, events, and support.", inline: true },
+          { name: "📸🎬 Media / Clip / クリップ / 영상", value: "Share screenshots, clips, wins, fails, and funny moments.", inline: true }
         ],
-        footer: { text: "THE ISLE ASIA • 明るく楽しく • Дүрмээ баримталъя • 재밌게 플레이" }
+        footer: { text: "THE ISLE ASIA • EN/MNG/JP/KR • colorful, useful, friendly" }
       }
     ]
   },
@@ -90,12 +90,12 @@ const messages = [
     ]
   },
   {
-    content: "🌏💬 **LANGUAGE ROOMS - choose your home corner** 💬🌏",
+    content: "🌏💬 **LANGUAGE ROOMS / ХЭЛНИЙ ӨРӨӨ / 言語チャンネル / 언어 채널** 💬🌏",
     embeds: [
       {
-        title: "🇬🇧 🇲🇳 🇯🇵 🇰🇷 Language Rooms",
+        title: "🇬🇧 🇲🇳 🇯🇵 🇰🇷 Choose your language room",
         description:
-          "Pick your room and say hi. New players, solo players, quiet players, loud players — all welcome.\n\n🇬🇧 **English** — global chat, help, event calls\n🇲🇳 **Монгол** — Монгол тоглогчдын чат, pack хайх\n🇯🇵 **日本語** — 日本語の案内、質問、雑談\n🇰🇷 **한국어** — 한국어 안내, 파티 모집, 질문",
+          "🇬🇧 **English** — global chat, help, event calls, pack finder.\n🇲🇳 **Монгол** — Монгол тоглогчдын чат, pack хайх, тусламж авах.\n🇯🇵 **日本語** — 日本語の案内、質問、雑談、イベント連絡。\n🇰🇷 **한국어** — 한국어 안내, 파티 모집, 질문, 서버 정보.\n\n✨ New players, solo players, quiet players, loud players — all welcome.",
         color: 0xa78bfa,
         fields: [
           { name: "✨🌈 Mood", value: "Friendly • colorful • useful • funny • no heavy drama", inline: true },
@@ -106,12 +106,12 @@ const messages = [
     ]
   },
   {
-    content: "🟢📡 **SERVER STATUS BOARD** 📡🟢",
+    content: "🟢📡 **SERVER STATUS / SERVER МЭДЭЭ / サーバー情報 / 서버 정보** 📡🟢",
     embeds: [
       {
         title: "🎮🦖 Jump Into The Island",
         description:
-          "Pin this if players keep asking: 'server name?', 'IP?', 'where join?'\n\n🏷 **Name:** ASIA JP,MNG,KR Test\n🛰 **Address:** `209.102.250.73:9075`\n📍 **Location:** Singapore\n📊 **Live status page:** https://the-isle.vercel.app/server",
+          "🇬🇧 Pin this if players ask: server name, IP, where to join.\n🇲🇳 Server name/IP асуувал энэ post-г харуул.\n🇯🇵 サーバー名、IP、参加方法はここで確認できます。\n🇰🇷 서버 이름, IP, 접속 방법은 여기서 확인하세요.\n\n🏷 **Name:** ASIA JP,MNG,KR Test\n🛰 **Address:** `209.102.250.73:9075`\n📍 **Location:** Singapore\n📊 **Live status:** https://the-isle.vercel.app/server",
         color: 0x34d399,
         fields: [
           { name: "🎮🔎 How to join", value: "Open The Isle Evrima → search server name → join → survive.", inline: false },
@@ -122,12 +122,12 @@ const messages = [
     ]
   },
   {
-    content: "🛟👑 **HELP + STAFF INFO** 👑🛟",
+    content: "🛟👑 **HELP + STAFF / ТУСЛАМЖ / サポート / 지원** 👑🛟",
     embeds: [
       {
         title: "🚨 Need help? Use the right support room",
         description:
-          "Screenshots/clips help staff understand fast. Calm report = faster support.",
+          "🇬🇧 Screenshots/clips help staff understand fast. Calm report = faster support.\n🇲🇳 Screenshot/clip байвал staff хурдан ойлгоно. Тайван report = хурдан support.\n🇯🇵 スクショ/動画があるとスタッフが確認しやすいです。落ち着いて報告してください。\n🇰🇷 스크린샷/영상이 있으면 스태프가 빠르게 확인할 수 있습니다. 차분하게 신고해 주세요.",
         color: 0x60a5fa,
         fields: [
           { name: "🐞🛠 Bug report", value: "Game/server issue, connection problem, weird behavior.", inline: true },
@@ -140,11 +140,12 @@ const messages = [
     ]
   },
   {
-    content: "📌🔗 **QUICK LINKS - pin this if useful** 🔗📌",
+    content: "📌🔗 **QUICK LINKS / ХОЛБООС / リンク / 링크** 🔗📌",
     embeds: [
       {
         title: "🎮🌐 Website x Discord x Server",
-        description: "Everything important in one place. Fast for new players, clean for staff.",
+        description:
+          "🇬🇧 Everything important in one place.\n🇲🇳 Чухал бүх link нэг дор.\n🇯🇵 重要リンクをまとめています。\n🇰🇷 중요한 링크를 한곳에 모았습니다。",
         color: 0xfacc15,
         fields: [
           { name: "🎮🟢 Server", value: "https://the-isle.vercel.app/server", inline: true },
@@ -164,4 +165,4 @@ for (const message of messages) {
   await send(message);
 }
 
-console.log(`Posted ${messages.length} four-language emoji Discord messages to channel ${channelId}.`);
+console.log(`Posted ${messages.length} full four-language Discord messages to channel ${channelId}.`);
