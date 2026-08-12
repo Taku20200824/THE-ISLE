@@ -78,16 +78,16 @@ Initial document:
 
 ```json
 {
-  "serverName": "TAKU's The Isle",
+  "serverName": "ASIA JP,MNG,KR Test",
   "status": "online",
-  "ip": "",
-  "port": 7777,
-  "location": "Hong Kong",
+  "ip": "209.102.250.73",
+  "port": 9075,
+  "location": "Singapore",
   "onlinePlayers": 0,
-  "maxPlayers": 100,
+  "maxPlayers": 32,
   "version": "Evrima",
   "map": "Gateway",
-  "discordUrl": "",
+  "discordUrl": "https://discord.gg/vmn3YjCZSE",
   "description": "An English-speaking The Isle Asia community server for players from Japan, Mongolia, Korea, Hong Kong, Taiwan, Singapore, and Southeast Asia.",
   "hostingProvider": "BisectHosting",
   "lastUpdated": "Firestore server timestamp"
@@ -101,6 +101,46 @@ pnpm firebase:seed-server
 ```
 
 Or sign into `/admin/server` with a Firebase administrator account and press **Create default document**.
+
+### Steam Rank And Playtime Tracking
+
+Steam login is handled by these routes:
+
+```text
+/api/steam/login
+/api/steam/callback
+/api/steam/session
+/api/steam/logout
+```
+
+When a user signs in with Steam, the website stores a public profile document:
+
+```text
+playerProfiles/{steamId}
+```
+
+Fields include `steamId`, `username`, `personaName`, `avatarUrl`, `profileUrl`, `playtimeMinutes`, `kills`, `deaths`, `growth`, `nest`, `favoriteDinosaur`, and timestamps. The leaderboard merges legacy `scores` documents with Steam-linked `playerProfiles`.
+
+For playtime sync from the server/bridge, call:
+
+```bash
+curl -X POST https://the-isle.vercel.app/api/server-tracker/playtime \
+  -H "Authorization: Bearer $SERVER_TRACKER_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{"steamId":"76561190000000000","minutes":5,"source":"mumble-bridge"}'
+```
+
+The website does not get per-server playtime directly from Steam. Accurate playtime must come from the game server, RCON, Mumble bridge, or another server-side tracker that knows when the linked SteamID is active.
+
+Required Vercel variables for Steam rank tracking:
+
+```bash
+STEAM_VOICE_SECRET=
+STEAM_WEB_API_KEY=
+SERVER_TRACKER_SECRET=
+```
+
+`STEAM_VOICE_SECRET` must contain at least 32 characters. `STEAM_WEB_API_KEY` is optional but improves public Steam avatar/name fetching.
 
 ### Firestore Site Text And Languages
 
@@ -160,6 +200,7 @@ mapMarkers: id, type, name, x, y, risk, note, order
 gallery: type, title, image, order
 donationRewards: title, icon, body, order
 donationGoals: label, current, target, currency, description
+playerProfiles: steamId, username, avatarUrl, profileUrl, playtimeMinutes, kills, deaths, growth, nest, favoriteDinosaur
 ```
 
 Supported icon names:
@@ -178,8 +219,8 @@ The public website uses `serverStatus/main` as the configured server record, the
 For The Isle Evrima, set these Firestore fields to the BisectHosting query address:
 
 ```text
-ip=103.70.2.164
-port=9145
+ip=209.102.250.73
+port=9075
 ```
 
 When the live query succeeds, the site displays `online` and updates the visible player count from the game server response. When the query fails, the site displays `offline` with `onlinePlayers=0`. This only checks the BisectHosting game server; GitHub, Vercel, and Firebase do not run The Isle.
@@ -208,13 +249,18 @@ FIREBASE_ADMIN_EMAILS=your-admin-email@example.com
 SERVER_QUERY_ENABLED=true
 SERVER_QUERY_PORT=
 SERVER_QUERY_MAX_AGE_SECONDS=180
+STEAM_VOICE_SECRET=
+STEAM_WEB_API_KEY=
+SERVER_TRACKER_SECRET=
 ```
 
 `FIREBASE_PRIVATE_KEY` must keep escaped newlines, for example `-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n`.
 
 ### Security Rules
 
-Deploy `firestore.rules` to Firebase. Public users can read `serverStatus/main` and `siteText/main`. Only administrators can update server status or site text. Administrators are users with either:
+Deploy `firestore.rules` to Firebase. Public users can read public website collections, including `serverStatus/main`, `siteText/main`, `scores`, and `playerProfiles`. Only administrators can update admin-managed content from the client. Server-side API routes use Firebase Admin credentials for Steam rank/profile writes.
+
+Administrators are users with either:
 
 - Firebase custom claim `admin: true`
 - A document at `admins/{uid}`
