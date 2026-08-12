@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { Activity, Cable, Footprints, MessageCircle, Shield, Swords } from "lucide-react";
+import { Activity, Footprints, MessageCircle, Shield, Swords } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/language-provider";
@@ -64,12 +63,6 @@ export function Hero({ serverStatus }: { serverStatus: ServerStatusDocument }) {
                 <MessageCircle className="h-5 w-5" />
                 {t("cta.joinDiscord")}
               </a>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="h-14 px-8 text-base">
-              <Link href="/server">
-                <Cable className="h-5 w-5" />
-                {t("cta.connectServer")}
-              </Link>
             </Button>
           </div>
           <LiveHeroStats initialStatus={serverStatus} />
