@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Crown, Skull, Timer, Trophy, UserRound } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
+import { SteamRankPanel } from "@/components/steam-rank-panel";
 import { Card, CardContent } from "@/components/ui/card";
 import { getFirestoreLeaderboard } from "@/lib/firebase/firestore-data";
 import { LocalizedText } from "@/components/localized-text";
@@ -39,7 +40,7 @@ export default async function LeaderboardPage() {
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/10 bg-black/35 font-display text-lg font-black text-primary">#{index + 1}</span>
                 {index === 0 ? <Crown className="h-6 w-6 text-amber-300" /> : <Trophy className="h-6 w-6 text-primary" />}
               </div>
-              <Link href={`/players/${player.username}`} className="mt-4 block break-words font-display text-2xl font-black text-white hover:text-primary">
+              <Link href={`/players/${encodeURIComponent(player.steamId || player.username)}`} className="mt-4 block break-words font-display text-2xl font-black text-white hover:text-primary">
                 {player.username}
               </Link>
               <div className="mt-4 grid grid-cols-3 gap-2 text-xs text-zinc-300">
@@ -51,6 +52,10 @@ export default async function LeaderboardPage() {
           ))}
         </div>
       </section>
+
+      <div className="mt-8">
+        <SteamRankPanel />
+      </div>
 
       <Card className="mt-8 overflow-hidden border-white/10 bg-black/35 shadow-[0_24px_80px_rgba(0,0,0,.35)]">
         <CardContent className="overflow-x-auto p-0">
@@ -67,7 +72,7 @@ export default async function LeaderboardPage() {
                 <tr key={`${player.username}-${index}`} className="border-t border-white/10 transition hover:bg-white/[.04]">
                   <td className="px-5 py-4 font-bold text-primary">#{index + 1}</td>
                   <td className="px-5 py-4">
-                    <Link href={`/players/${player.username}`} className="font-semibold text-white hover:text-primary">{player.username}</Link>
+                    <Link href={`/players/${encodeURIComponent(player.steamId || player.username)}`} className="font-semibold text-white hover:text-primary">{player.username}</Link>
                   </td>
                   <td className="px-5 py-4 text-zinc-300">{player.playtime}h</td>
                   <td className="px-5 py-4 text-zinc-300">{player.kills}</td>
