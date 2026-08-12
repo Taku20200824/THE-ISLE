@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { fetchSteamPublicProfile, upsertSteamPlayerProfile } from "@/lib/firebase/player-profiles";
 import {
   createSteamVoiceCookie,
   getPublicOrigin,
@@ -44,6 +45,13 @@ export async function GET(request: Request) {
 
   if (!verification.ok || !/(^|\n)is_valid:true(\n|$)/.test(verificationBody)) {
     return NextResponse.redirect(failureUrl);
+  }
+
+  try {
+    const profile = await fetchSteamPublicProfile(steamId);
+    await upsertSteamPlayerProfile(profile);
+  } catch {
+    // Login still succeeds if Firebase Admin or Steam profile fetch is unavailable.
   }
 
   const response = NextResponse.redirect(new URL("/voice?steam=connected", origin));
