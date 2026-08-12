@@ -173,13 +173,14 @@ export async function GET() {
 
   const sourceZip = Buffer.from(await response.arrayBuffer());
   const { zip, renamed } = renameZipEntries(sourceZip);
+  const body = new Uint8Array(zip);
 
-  return new Response(zip, {
+  return new Response(body, {
     status: 200,
     headers: {
       "Content-Type": "application/zip",
       "Content-Disposition": `attachment; filename="${downloadFilename}"`,
-      "Content-Length": String(zip.byteLength),
+      "Content-Length": String(body.byteLength),
       "Cache-Control": "no-store",
       "X-Voice-Setup-Renamed": renamed ? "true" : "false"
     }
