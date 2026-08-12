@@ -1,13 +1,13 @@
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
 import { ServerStatusSummary } from "@/components/server-status-summary";
-import { getServerStatusOrInitial } from "@/lib/firebase/server-status";
+import { getFastServerStatusOrInitial } from "@/lib/firebase/server-status";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export default async function ServerPage() {
-  const status = await getServerStatusOrInitial();
+  const status = await getFastServerStatusOrInitial();
 
   return (
     <main className="container min-h-screen pt-32 pb-20 sm:pt-36">
