@@ -95,14 +95,48 @@ async function getCollectionViaRest(collection: string): Promise<PlayerProfile[]
   });
 }
 
-export async function fetchSteamPublicProfile(steamId: string): Promise<SteamPublicProfile> {
-  const fallback = {
+function createFallbackSteamProfile(steamId: string): SteamPublicProfile {
+  return {
     steamId,
     personaName: `Steam ${steamId.slice(-6)}`,
     avatarUrl: `https://api.dicebear.com/9.x/shapes/svg?seed=${steamId}`,
     profileUrl: `https://steamcommunity.com/profiles/${steamId}`
   };
+}
 
+function decodeXmlValue(xml: string, tag: string) {
+  const match = xml.match(new RegExp(`<${tag}><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\\/${tag}>|<${tag}>([\\s\\S]*?)<\\/${tag}>`, "i"));
+  const value = match?.[1] ?? match?.[2];
+
+  return value
+    ?.replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .trim();
+}
+
+async function fetchSteamProfileViaXml(steamId: string, fallback: SteamPublicProfile) {
+  const response = await fetch(`https://steamcommunity.com/profiles/${steamId}?xml=1`, { cache: "no-store" });
+
+  if (!response.ok) return fallback;
+
+  const xml = await response.text();
+  const personaName = decodeXmlValue(xml, "steamID");
+  const avatarUrl = decodeXmlValue(xml, "avatarFull");
+  const profileUrl = decodeXmlValue(xml, "steamID64") ? `https://steamcommunity.com/profiles/${steamId}` : fallback.profileUrl;
+
+  return {
+    steamId,
+    personaName: personaName || fallback.personaName,
+    avatarUrl: avatarUrl || fallback.avatarUrl,
+    profileUrl
+  };
+}
+
+export async function fetchSteamPublicProfile(steamId: string): Promise<SteamPublicProfile> {
+  const fallback = createFallbackSteamProfile(steamId);
   const apiKey = process.env.STEAM_WEB_API_KEY;
 
   if (apiKey) {
@@ -111,25 +145,32 @@ export async function fetchSteamPublicProfile(steamId: string): Promise<SteamPub
         `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=${steamId}`,
         { cache: "no-store" }
       );
-      const payload = (await response.json()) as {
-        response?: { players?: Array<{ personaname?: string; avatarfull?: string; profileurl?: string }> };
-      };
-      const player = payload.response?.players?.[0];
 
-      if (response.ok && player) {
-        return {
-          steamId,
-          personaName: player.personaname || fallback.personaName,
-          avatarUrl: player.avatarfull || fallback.avatarUrl,
-          profileUrl: player.profileurl || fallback.profileUrl
+      if (response.ok) {
+        const payload = (await response.json()) as {
+          response?: { players?: Array<{ personaname?: string; avatarfull?: string; profileurl?: string }> };
         };
+        const player = payload.response?.players?.[0];
+
+        if (player) {
+          return {
+            steamId,
+            personaName: player.personaname || fallback.personaName,
+            avatarUrl: player.avatarfull || fallback.avatarUrl,
+            profileUrl: player.profileurl || fallback.profileUrl
+          };
+        }
       }
     } catch {
-      return fallback;
+      // Fall through to the public XML profile endpoint below.
     }
   }
 
-  return fallback;
+  try {
+    return await fetchSteamProfileViaXml(steamId, fallback);
+  } catch {
+    return fallback;
+  }
 }
 
 export async function getPlayerProfiles() {
@@ -160,6 +201,7 @@ export async function upsertSteamPlayerProfile(profile: SteamPublicProfile) {
   }
 
   const ref = getAdminFirestore().collection("playerProfiles").doc(profile.steamId);
+  const snapshot = await ref.get();
   await ref.set(
     {
       ...profile,
@@ -169,10 +211,10 @@ export async function upsertSteamPlayerProfile(profile: SteamPublicProfile) {
       deaths: FieldValue.increment(0),
       growth: FieldValue.increment(0),
       nest: FieldValue.increment(0),
-      favoriteDinosaur: "Unknown",
+      favoriteDinosaur: snapshot.exists ? snapshot.data()?.favoriteDinosaur ?? "Unknown" : "Unknown",
       lastSeen: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
-      createdAt: FieldValue.serverTimestamp()
+      ...(snapshot.exists ? {} : { createdAt: FieldValue.serverTimestamp() })
     },
     { merge: true }
   );
