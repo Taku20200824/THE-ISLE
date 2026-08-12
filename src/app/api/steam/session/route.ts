@@ -22,12 +22,24 @@ export async function GET() {
 
   let profile = await getPlayerProfile(steamId);
 
-  if (!profile) {
-    try {
-      profile = await upsertSteamPlayerProfile(await fetchSteamPublicProfile(steamId));
-    } catch {
-      profile = null;
-    }
+  try {
+    const publicProfile = await fetchSteamPublicProfile(steamId);
+    profile = (await upsertSteamPlayerProfile(publicProfile)) ?? {
+      ...publicProfile,
+      username: publicProfile.personaName,
+      playtimeMinutes: profile?.playtimeMinutes ?? 0,
+      kills: profile?.kills ?? 0,
+      deaths: profile?.deaths ?? 0,
+      growth: profile?.growth ?? 0,
+      nest: profile?.nest ?? 0,
+      favoriteDinosaur: profile?.favoriteDinosaur ?? "Unknown",
+      rankScore: profile?.rankScore ?? 0,
+      lastSeen: profile?.lastSeen ?? null,
+      createdAt: profile?.createdAt ?? null,
+      updatedAt: profile?.updatedAt ?? null
+    };
+  } catch {
+    profile = profile ?? null;
   }
 
   try {
