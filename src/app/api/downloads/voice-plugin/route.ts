@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 import { NextResponse } from "next/server";
 import { getServerStatusOrInitial } from "@/lib/firebase/server-status";
 
@@ -6,6 +7,9 @@ export const runtime = "nodejs";
 
 const legacyPluginUrl = "https://157-230-40-149.nip.io/downloads/TAKU-Voice-Proximity-v0.1.zip";
 const downloadFilename = "ASIA-JP-MNG-KR-Test-Voice-Proximity-v0.1.zip";
+const renamedFiles = new Map([
+  ["TAKUVoiceSetup.exe", "ASIA-JP-MNG-KR-Test-Voice-Setup.exe"]
+]);
 
 async function fetchPackage(url: string) {
   try {
@@ -21,6 +25,128 @@ async function fetchPackage(url: string) {
   }
 }
 
+function findEndOfCentralDirectory(zip: Buffer) {
+  for (let index = zip.length - 22; index >= 0; index -= 1) {
+    if (zip.readUInt32LE(index) === 0x06054b50) {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function renameZipEntries(zip: Buffer) {
+  const eocdOffset = findEndOfCentralDirectory(zip);
+
+  if (eocdOffset === -1) {
+    return zip;
+  }
+
+  const entryCount = zip.readUInt16LE(eocdOffset + 10);
+  const centralDirectoryOffset = zip.readUInt32LE(eocdOffset + 16);
+  const entries: Array<{
+    centralOffset: number;
+    localOffset: number;
+    name: string;
+    nextName: string;
+    extraLength: number;
+    commentLength: number;
+  }> = [];
+
+  let pointer = centralDirectoryOffset;
+
+  for (let index = 0; index < entryCount; index += 1) {
+    if (zip.readUInt32LE(pointer) !== 0x02014b50) {
+      return zip;
+    }
+
+    const nameLength = zip.readUInt16LE(pointer + 28);
+    const extraLength = zip.readUInt16LE(pointer + 30);
+    const commentLength = zip.readUInt16LE(pointer + 32);
+    const localOffset = zip.readUInt32LE(pointer + 42);
+    const name = zip.subarray(pointer + 46, pointer + 46 + nameLength).toString("utf8");
+
+    entries.push({
+      centralOffset: pointer,
+      localOffset,
+      name,
+      nextName: renamedFiles.get(name) ?? name,
+      extraLength,
+      commentLength
+    });
+
+    pointer += 46 + nameLength + extraLength + commentLength;
+  }
+
+  if (!entries.some((entry) => entry.name !== entry.nextName)) {
+    return zip;
+  }
+
+  const chunks: Buffer[] = [];
+  const newLocalOffsets = new Map<number, number>();
+  const sortedEntries = [...entries].sort((left, right) => left.localOffset - right.localOffset);
+  let sourcePointer = 0;
+  let outputLength = 0;
+
+  for (let index = 0; index < sortedEntries.length; index += 1) {
+    const entry = sortedEntries[index];
+    const nextLocalOffset = sortedEntries[index + 1]?.localOffset ?? centralDirectoryOffset;
+
+    if (entry.localOffset > sourcePointer) {
+      const gap = zip.subarray(sourcePointer, entry.localOffset);
+      chunks.push(gap);
+      outputLength += gap.length;
+    }
+
+    if (zip.readUInt32LE(entry.localOffset) !== 0x04034b50) {
+      return zip;
+    }
+
+    const localNameLength = zip.readUInt16LE(entry.localOffset + 26);
+    const localExtraLength = zip.readUInt16LE(entry.localOffset + 28);
+    const fixedHeader = Buffer.from(zip.subarray(entry.localOffset, entry.localOffset + 30));
+    const nextName = Buffer.from(entry.nextName, "utf8");
+    const localExtraStart = entry.localOffset + 30 + localNameLength;
+    const localBodyStart = localExtraStart + localExtraLength;
+
+    fixedHeader.writeUInt16LE(nextName.length, 26);
+    newLocalOffsets.set(entry.centralOffset, outputLength);
+
+    chunks.push(fixedHeader, nextName, zip.subarray(localExtraStart, localBodyStart), zip.subarray(localBodyStart, nextLocalOffset));
+    outputLength += fixedHeader.length + nextName.length + localExtraLength + (nextLocalOffset - localBodyStart);
+    sourcePointer = nextLocalOffset;
+  }
+
+  if (sourcePointer < centralDirectoryOffset) {
+    const gap = zip.subarray(sourcePointer, centralDirectoryOffset);
+    chunks.push(gap);
+    outputLength += gap.length;
+  }
+
+  const newCentralDirectoryOffset = outputLength;
+
+  for (const entry of entries) {
+    const name = Buffer.from(entry.nextName, "utf8");
+    const fixedHeader = Buffer.from(zip.subarray(entry.centralOffset, entry.centralOffset + 46));
+    const oldNameLength = zip.readUInt16LE(entry.centralOffset + 28);
+    const extraStart = entry.centralOffset + 46 + oldNameLength;
+    const commentStart = extraStart + entry.extraLength;
+    const commentEnd = commentStart + entry.commentLength;
+
+    fixedHeader.writeUInt16LE(name.length, 28);
+    fixedHeader.writeUInt32LE(newLocalOffsets.get(entry.centralOffset) ?? entry.localOffset, 42);
+    chunks.push(fixedHeader, name, zip.subarray(extraStart, commentEnd));
+    outputLength += fixedHeader.length + name.length + entry.extraLength + entry.commentLength;
+  }
+
+  const eocd = Buffer.from(zip.subarray(eocdOffset));
+  eocd.writeUInt32LE(outputLength - newCentralDirectoryOffset, 12);
+  eocd.writeUInt32LE(newCentralDirectoryOffset, 16);
+  chunks.push(eocd);
+
+  return Buffer.concat(chunks);
+}
+
 export async function GET() {
   const status = await getServerStatusOrInitial();
   const sourceUrl = status.voicePluginUrl || legacyPluginUrl;
@@ -30,11 +156,15 @@ export async function GET() {
     return NextResponse.redirect(sourceUrl);
   }
 
-  return new Response(response.body, {
+  const sourceZip = Buffer.from(await response.arrayBuffer());
+  const zip = renameZipEntries(sourceZip);
+
+  return new Response(zip, {
     status: 200,
     headers: {
-      "Content-Type": response.headers.get("content-type") || "application/zip",
+      "Content-Type": "application/zip",
       "Content-Disposition": `attachment; filename="${downloadFilename}"`,
+      "Content-Length": String(zip.byteLength),
       "Cache-Control": "no-store"
     }
   });
