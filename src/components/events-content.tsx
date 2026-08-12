@@ -15,6 +15,11 @@ type EventItem = {
 };
 
 const eventIcons = { CalendarDays, Sparkles, Swords };
+const eventTones = [
+  "from-cyan-300/25 via-sky-300/10 to-white/[.04]",
+  "from-amber-300/25 via-orange-300/10 to-white/[.04]",
+  "from-fuchsia-300/25 via-pink-300/10 to-white/[.04]"
+];
 
 const eventText: Record<string, Partial<Record<Locale, Pick<EventItem, "title" | "type" | "when">>>> = {
   "Weekly Herd Run": {
@@ -58,31 +63,33 @@ export function EventsContent({ events }: { events: EventItem[] }) {
   return (
     <>
       <div className="grid gap-5 md:grid-cols-3">
-        {events.map((rawEvent) => {
+        {events.map((rawEvent, index) => {
           const event = localizeEvent(rawEvent, locale);
           const Icon = typeof rawEvent.icon === "string" ? eventIcons[rawEvent.icon as keyof typeof eventIcons] ?? CalendarDays : rawEvent.icon;
 
           return (
-            <Card key={rawEvent.title} className="min-w-0">
+            <Card key={rawEvent.title} className={`min-w-0 border-white/10 bg-gradient-to-br ${eventTones[index % eventTones.length]} shadow-[0_20px_70px_rgba(0,0,0,.3)]`}>
               <CardHeader>
-                <Icon className="h-7 w-7 text-primary" />
-                <CardTitle className="break-words leading-snug">{event.title}</CardTitle>
+                <span className="mb-2 flex h-11 w-11 items-center justify-center rounded-md border border-primary/25 bg-primary/10 text-primary">
+                  <Icon className="h-6 w-6" />
+                </span>
+                <CardTitle className="break-words leading-snug text-white">{event.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="break-words text-sm text-muted-foreground">{event.type}</div>
-                <div className="mt-2 break-words font-semibold">{event.when}</div>
+                <div className="break-words text-sm text-zinc-400">{event.type}</div>
+                <div className="mt-2 break-words font-semibold text-white">{event.when}</div>
               </CardContent>
             </Card>
           );
         })}
       </div>
-      <Card className="mt-8 overflow-hidden">
-        <CardContent className="grid gap-2 p-5 sm:grid-cols-7">
+      <Card className="mt-8 overflow-hidden border-white/10 bg-black/30 shadow-[0_18px_70px_rgba(0,0,0,.3)]">
+        <CardContent className="grid gap-2 p-4 sm:grid-cols-7">
           {days.map((day, index) => (
-            <div key={day} className="min-h-28 min-w-0 rounded-md border border-white/10 bg-white/[0.03] p-3">
-              <div className="text-sm font-semibold">{day}</div>
-              {index === 2 ? <p className="mt-4 break-words text-xs text-primary">{weekly}</p> : null}
-              {index >= 4 ? <p className="mt-4 break-words text-xs text-secondary">{growth}</p> : null}
+            <div key={day} className="min-h-28 min-w-0 rounded-md border border-white/10 bg-white/[0.04] p-3 transition hover:bg-white/[.07]">
+              <div className="text-sm font-semibold text-white">{day}</div>
+              {index === 2 ? <p className="mt-4 break-words rounded bg-primary/10 px-2 py-1 text-xs font-bold text-primary">{weekly}</p> : null}
+              {index >= 4 ? <p className="mt-4 break-words rounded bg-amber-300/10 px-2 py-1 text-xs font-bold text-amber-300">{growth}</p> : null}
             </div>
           ))}
         </CardContent>
