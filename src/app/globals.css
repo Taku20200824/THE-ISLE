@@ -4,23 +4,23 @@
 
 @layer base {
   :root {
-    --background: 168 22% 96%;
-    --foreground: 162 18% 8%;
+    --background: 162 30% 95%;
+    --foreground: 164 28% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 162 18% 8%;
-    --primary: 166 86% 42%;
-    --primary-foreground: 168 28% 7%;
-    --secondary: 25 94% 55%;
-    --secondary-foreground: 20 20% 8%;
-    --muted: 160 12% 90%;
-    --muted-foreground: 160 8% 36%;
-    --accent: 202 78% 52%;
+    --card-foreground: 164 28% 10%;
+    --primary: 166 76% 34%;
+    --primary-foreground: 165 35% 96%;
+    --secondary: 28 92% 48%;
+    --secondary-foreground: 24 28% 9%;
+    --muted: 158 24% 88%;
+    --muted-foreground: 162 10% 34%;
+    --accent: 201 72% 42%;
     --accent-foreground: 210 20% 98%;
     --destructive: 0 74% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 160 13% 82%;
-    --input: 160 13% 82%;
-    --ring: 166 86% 42%;
+    --border: 160 18% 78%;
+    --input: 160 18% 78%;
+    --ring: 166 76% 34%;
     --radius: 0.5rem;
   }
 
@@ -56,6 +56,14 @@
     @apply bg-background text-foreground antialiased;
     background-color: hsl(var(--background));
     background-image:
+      radial-gradient(circle at 14% 10%, rgba(20, 184, 166, 0.13), transparent 28%),
+      radial-gradient(circle at 86% 18%, rgba(245, 158, 11, 0.10), transparent 26%),
+      radial-gradient(circle at 72% 88%, rgba(56, 189, 248, 0.10), transparent 28%),
+      linear-gradient(180deg, rgba(240, 253, 250, 0.98), rgba(218, 238, 231, 0.94));
+  }
+
+  .dark body {
+    background-image:
       radial-gradient(circle at 14% 10%, rgba(34, 211, 238, 0.14), transparent 26%),
       radial-gradient(circle at 86% 18%, rgba(245, 158, 11, 0.1), transparent 24%),
       radial-gradient(circle at 72% 88%, rgba(220, 38, 38, 0.1), transparent 24%),
@@ -69,11 +77,18 @@
     z-index: 0;
     pointer-events: none;
     background:
-      radial-gradient(38% 38% at 18% 22%, rgba(45, 212, 191, 0.12), transparent 62%),
-      radial-gradient(34% 34% at 84% 30%, rgba(56, 189, 248, 0.10), transparent 62%),
+      radial-gradient(38% 38% at 18% 22%, rgba(20, 184, 166, 0.10), transparent 62%),
+      radial-gradient(34% 34% at 84% 30%, rgba(14, 116, 144, 0.08), transparent 62%),
       radial-gradient(44% 44% at 66% 84%, rgba(245, 158, 11, 0.08), transparent 62%);
     filter: blur(14px);
     animation: aurora 26s ease-in-out infinite alternate;
+  }
+
+  .dark body::before {
+    background:
+      radial-gradient(38% 38% at 18% 22%, rgba(45, 212, 191, 0.12), transparent 62%),
+      radial-gradient(34% 34% at 84% 30%, rgba(56, 189, 248, 0.10), transparent 62%),
+      radial-gradient(44% 44% at 66% 84%, rgba(245, 158, 11, 0.08), transparent 62%);
   }
 
   body > * {
@@ -99,17 +114,25 @@
 
 /* Gradient display text */
 .text-gradient {
-  background-image: linear-gradient(100deg, #ffffff 0%, #5eead4 34%, #22d3ee 62%, #ffffff 100%);
+  background-image: linear-gradient(100deg, #052e2b 0%, #0f766e 34%, #0369a1 62%, #052e2b 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
+.dark .text-gradient {
+  background-image: linear-gradient(100deg, #ffffff 0%, #5eead4 34%, #22d3ee 62%, #ffffff 100%);
+}
+
 .text-gradient-warm {
-  background-image: linear-gradient(100deg, #fde68a 0%, #f59e0b 48%, #fb7185 100%);
+  background-image: linear-gradient(100deg, #7c2d12 0%, #d97706 48%, #be123c 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.dark .text-gradient-warm {
+  background-image: linear-gradient(100deg, #fde68a 0%, #f59e0b 48%, #fb7185 100%);
 }
 
 /* Animated shine sweep for primary buttons */
@@ -203,12 +226,20 @@
 .hud-card {
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(7, 41, 36, .14);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.88), rgba(255,255,255,.58)),
+    rgba(240, 253, 250, .74);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 20px 60px rgba(15, 118, 110, .12);
+  backdrop-filter: blur(18px);
+}
+
+.dark .hud-card {
   border: 1px solid rgba(255,255,255,.12);
   background:
     linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.025)),
     rgba(3, 12, 11, .68);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 24px 80px rgba(0,0,0,.28);
-  backdrop-filter: blur(18px);
 }
 
 .hud-card::after {
@@ -216,8 +247,13 @@
   inset: 0;
   pointer-events: none;
   content: "";
-  background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(6, 78, 59, .06) 1px, transparent 1px);
   background-size: 100% 26px;
+  opacity: .34;
+}
+
+.dark .hud-card::after {
+  background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
   opacity: .22;
 }
 
