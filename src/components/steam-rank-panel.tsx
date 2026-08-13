@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ExternalLink, LogIn, LogOut, Timer, Trophy, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatPlaytimeMinutes } from "@/lib/format-playtime";
+import { formatPlaytime } from "@/lib/format-playtime";
 import type { PlayerProfile } from "@/lib/firebase/player-profiles";
 
 type SteamSession =
@@ -19,6 +19,10 @@ function getDisplayName(profile: PlayerProfile | null, steamId: string) {
   }
 
   return name;
+}
+
+function getPlaytimeSeconds(profile: PlayerProfile | null) {
+  return profile?.playtimeSeconds ?? (profile?.playtimeMinutes ?? 0) * 60;
 }
 
 export function SteamRankPanel() {
@@ -73,7 +77,7 @@ export function SteamRankPanel() {
 
   const profile = session.profile;
   const displayName = getDisplayName(profile, session.steamId);
-  const playtime = formatPlaytimeMinutes(profile?.playtimeMinutes ?? 0);
+  const playtime = formatPlaytime(getPlaytimeSeconds(profile));
 
   return (
     <div className="rounded-lg border border-white/10 bg-gradient-to-br from-emerald-300/20 via-teal-300/8 to-white/[.03] p-5 shadow-[0_20px_70px_rgba(0,0,0,.28)]">
