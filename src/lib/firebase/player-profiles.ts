@@ -1,6 +1,7 @@
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getAdminFirestore, hasFirebaseAdminCredentials } from "@/lib/firebase/admin";
 import { firebaseConfig } from "@/lib/firebase/config";
+import { prisma } from "@/lib/prisma";
 
 export type SteamPublicProfile = {
   steamId: string;
@@ -30,6 +31,12 @@ type FirestoreDocument = {
   fields?: Record<string, unknown>;
 };
 
+type PlaytimeSources = Record<string, number>;
+
+function useVercelPlayerData() {
+  return process.env.PLAYER_DATA_SOURCE === "vercel" && Boolean(process.env.DATABASE_URL);
+}
+
 function parseFirestoreValue(value: unknown): unknown {
   if (!value || typeof value !== "object") return undefined;
 
@@ -48,6 +55,10 @@ function serializeTimestamp(value: unknown) {
   if (value instanceof Date) return value.toISOString();
   if (typeof value === "string") return value;
   return null;
+}
+
+function parseDate(value: string | null) {
+  return value ? new Date(value) : undefined;
 }
 
 function isFallbackPersonaName(value: unknown, steamId: string) {
@@ -105,6 +116,38 @@ async function getCollectionViaRest(collection: string): Promise<PlayerProfile[]
     const data = Object.fromEntries(Object.entries(document.fields ?? {}).map(([key, value]) => [key, parseFirestoreValue(value)]));
     return toProfile(id, data);
   });
+}
+
+async function getFirebasePlayerProfiles() {
+  if (!hasFirebaseAdminCredentials()) {
+    return getCollectionViaRest("playerProfiles");
+  }
+
+  try {
+    const snapshot = await getAdminFirestore().collection("playerProfiles").get();
+    return snapshot.docs.map((doc) => toProfile(doc.id, doc.data()));
+  } catch {
+    return getCollectionViaRest("playerProfiles");
+  }
+}
+
+async function getFirebasePlayerProfile(steamId: string) {
+  if (!hasFirebaseAdminCredentials()) {
+    return (await getFirebasePlayerProfiles()).find((profile) => profile.steamId === steamId) ?? null;
+  }
+
+  const snapshot = await getAdminFirestore().collection("playerProfiles").doc(steamId).get();
+  return snapshot.exists ? toProfile(snapshot.id, snapshot.data() ?? {}) : null;
+}
+
+async function getVercelPlayerProfiles() {
+  const rows = await prisma.playerProfile.findMany();
+  return rows.map((row) => toProfile(row.steamId, row as unknown as Record<string, unknown>));
+}
+
+async function getVercelPlayerProfile(steamId: string) {
+  const row = await prisma.playerProfile.findUnique({ where: { steamId } });
+  return row ? toProfile(row.steamId, row as unknown as Record<string, unknown>) : null;
 }
 
 function createFallbackSteamProfile(steamId: string): SteamPublicProfile {
@@ -191,28 +234,65 @@ export async function fetchSteamPublicProfile(steamId: string): Promise<SteamPub
 }
 
 export async function getPlayerProfiles() {
-  if (!hasFirebaseAdminCredentials()) {
-    return getCollectionViaRest("playerProfiles");
+  if (useVercelPlayerData()) {
+    try {
+      return await getVercelPlayerProfiles();
+    } catch {
+      return getFirebasePlayerProfiles();
+    }
   }
 
-  try {
-    const snapshot = await getAdminFirestore().collection("playerProfiles").get();
-    return snapshot.docs.map((doc) => toProfile(doc.id, doc.data()));
-  } catch {
-    return getCollectionViaRest("playerProfiles");
-  }
+  return getFirebasePlayerProfiles();
 }
 
 export async function getPlayerProfile(steamId: string) {
-  if (!hasFirebaseAdminCredentials()) {
-    return (await getPlayerProfiles()).find((profile) => profile.steamId === steamId) ?? null;
+  if (useVercelPlayerData()) {
+    try {
+      return await getVercelPlayerProfile(steamId);
+    } catch {
+      return getFirebasePlayerProfile(steamId);
+    }
   }
 
-  const snapshot = await getAdminFirestore().collection("playerProfiles").doc(steamId).get();
-  return snapshot.exists ? toProfile(snapshot.id, snapshot.data() ?? {}) : null;
+  return getFirebasePlayerProfile(steamId);
 }
 
-export async function upsertSteamPlayerProfile(profile: SteamPublicProfile) {
+async function upsertVercelPlayerProfile(profile: SteamPublicProfile) {
+  const previous = await getVercelPlayerProfile(profile.steamId);
+  const hasRealPreviousName = previous && !previous.isFallback;
+  const safeProfile = profile.isFallback && hasRealPreviousName
+    ? {
+        steamId: profile.steamId,
+        personaName: previous.personaName,
+        username: previous.username,
+        avatarUrl: previous.avatarUrl,
+        profileUrl: previous.profileUrl
+      }
+    : {
+        steamId: profile.steamId,
+        personaName: profile.personaName,
+        username: profile.personaName,
+        avatarUrl: profile.avatarUrl,
+        profileUrl: profile.profileUrl
+      };
+
+  await prisma.playerProfile.upsert({
+    where: { steamId: profile.steamId },
+    create: {
+      ...safeProfile,
+      favoriteDinosaur: "Unknown",
+      lastSeen: new Date()
+    },
+    update: {
+      ...safeProfile,
+      lastSeen: new Date()
+    }
+  });
+
+  return getVercelPlayerProfile(profile.steamId);
+}
+
+async function upsertFirebasePlayerProfile(profile: SteamPublicProfile) {
   if (!hasFirebaseAdminCredentials()) {
     return null;
   }
@@ -252,10 +332,36 @@ export async function upsertSteamPlayerProfile(profile: SteamPublicProfile) {
     { merge: true }
   );
 
-  return getPlayerProfile(profile.steamId);
+  return getFirebasePlayerProfile(profile.steamId);
+}
+
+export async function upsertSteamPlayerProfile(profile: SteamPublicProfile) {
+  if (useVercelPlayerData()) {
+    try {
+      return await upsertVercelPlayerProfile(profile);
+    } catch {
+      return upsertFirebasePlayerProfile(profile);
+    }
+  }
+
+  return upsertFirebasePlayerProfile(profile);
 }
 
 export async function touchSteamPlayerSession(steamId: string, source = "website") {
+  if (useVercelPlayerData()) {
+    try {
+      await prisma.playerSession.create({ data: { steamId, source } });
+      await prisma.playerProfile.upsert({
+        where: { steamId },
+        create: { steamId, lastSeen: new Date() },
+        update: { lastSeen: new Date() }
+      });
+      return true;
+    } catch {
+      // Fall back to Firebase below.
+    }
+  }
+
   if (!hasFirebaseAdminCredentials()) {
     return null;
   }
@@ -275,7 +381,45 @@ export async function touchSteamPlayerSession(steamId: string, source = "website
   return true;
 }
 
-export async function addSteamPlaytimeSeconds(steamId: string, seconds: number, source = "server") {
+function normalizePlaytimeSources(value: unknown): PlaytimeSources {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>).map(([key, count]) => [key, Number(count) || 0])
+  );
+}
+
+async function addVercelPlaytimeSeconds(steamId: string, seconds: number, source: string) {
+  const safeSeconds = Math.max(0, Math.min(24 * 60 * 60, Math.floor(seconds)));
+  const safeMinutes = safeSeconds / 60;
+  const previous = await prisma.playerProfile.findUnique({
+    where: { steamId },
+    select: { playtimeSources: true }
+  });
+  const playtimeSources = normalizePlaytimeSources(previous?.playtimeSources);
+  playtimeSources[source] = (playtimeSources[source] ?? 0) + safeSeconds;
+
+  await prisma.playerProfile.upsert({
+    where: { steamId },
+    create: {
+      steamId,
+      playtimeMinutes: safeMinutes,
+      playtimeSeconds: safeSeconds,
+      playtimeSources,
+      lastSeen: new Date()
+    },
+    update: {
+      playtimeMinutes: { increment: safeMinutes },
+      playtimeSeconds: { increment: safeSeconds },
+      playtimeSources,
+      lastSeen: new Date()
+    }
+  });
+
+  return getVercelPlayerProfile(steamId);
+}
+
+async function addFirebasePlaytimeSeconds(steamId: string, seconds: number, source: string) {
   if (!hasFirebaseAdminCredentials()) {
     return null;
   }
@@ -295,9 +439,103 @@ export async function addSteamPlaytimeSeconds(steamId: string, seconds: number, 
     { merge: true }
   );
 
-  return getPlayerProfile(steamId);
+  return getFirebasePlayerProfile(steamId);
+}
+
+export async function addSteamPlaytimeSeconds(steamId: string, seconds: number, source = "server") {
+  if (useVercelPlayerData()) {
+    try {
+      return await addVercelPlaytimeSeconds(steamId, seconds, source);
+    } catch {
+      return addFirebasePlaytimeSeconds(steamId, seconds, source);
+    }
+  }
+
+  return addFirebasePlaytimeSeconds(steamId, seconds, source);
 }
 
 export async function addSteamPlaytimeMinutes(steamId: string, minutes: number, source = "server") {
   return addSteamPlaytimeSeconds(steamId, minutes * 60, source);
+}
+
+export async function ensureVercelPlayerDataTables() {
+  await prisma.$executeRawUnsafe(`
+    CREATE TABLE IF NOT EXISTS "PlayerProfile" (
+      "steamId" TEXT PRIMARY KEY,
+      "personaName" TEXT,
+      "username" TEXT,
+      "avatarUrl" TEXT,
+      "profileUrl" TEXT,
+      "playtimeMinutes" DOUBLE PRECISION NOT NULL DEFAULT 0,
+      "playtimeSeconds" INTEGER NOT NULL DEFAULT 0,
+      "kills" INTEGER NOT NULL DEFAULT 0,
+      "deaths" INTEGER NOT NULL DEFAULT 0,
+      "growth" DOUBLE PRECISION NOT NULL DEFAULT 0,
+      "nest" INTEGER NOT NULL DEFAULT 0,
+      "favoriteDinosaur" TEXT NOT NULL DEFAULT 'Unknown',
+      "rankScore" DOUBLE PRECISION NOT NULL DEFAULT 0,
+      "lastSeen" TIMESTAMP(3),
+      "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      "playtimeSources" JSONB
+    )
+  `);
+  await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "PlayerProfile_rankScore_idx" ON "PlayerProfile" ("rankScore")`);
+  await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "PlayerProfile_playtimeSeconds_idx" ON "PlayerProfile" ("playtimeSeconds")`);
+  await prisma.$executeRawUnsafe(`
+    CREATE TABLE IF NOT EXISTS "PlayerSession" (
+      "id" TEXT PRIMARY KEY,
+      "steamId" TEXT NOT NULL,
+      "source" TEXT NOT NULL,
+      "seenAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "PlayerSession_steamId_idx" ON "PlayerSession" ("steamId")`);
+  await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "PlayerSession_seenAt_idx" ON "PlayerSession" ("seenAt")`);
+}
+
+export async function copyFirebaseProfilesToVercelDatabase() {
+  await ensureVercelPlayerDataTables();
+  const profiles = await getFirebasePlayerProfiles();
+
+  for (const profile of profiles) {
+    await prisma.playerProfile.upsert({
+      where: { steamId: profile.steamId },
+      create: {
+        steamId: profile.steamId,
+        personaName: profile.personaName,
+        username: profile.username,
+        avatarUrl: profile.avatarUrl,
+        profileUrl: profile.profileUrl,
+        playtimeMinutes: profile.playtimeMinutes,
+        playtimeSeconds: profile.playtimeSeconds,
+        kills: profile.kills,
+        deaths: profile.deaths,
+        growth: profile.growth,
+        nest: profile.nest,
+        favoriteDinosaur: profile.favoriteDinosaur,
+        rankScore: profile.rankScore,
+        lastSeen: parseDate(profile.lastSeen),
+        createdAt: parseDate(profile.createdAt),
+        updatedAt: parseDate(profile.updatedAt)
+      },
+      update: {
+        personaName: profile.personaName,
+        username: profile.username,
+        avatarUrl: profile.avatarUrl,
+        profileUrl: profile.profileUrl,
+        playtimeMinutes: profile.playtimeMinutes,
+        playtimeSeconds: profile.playtimeSeconds,
+        kills: profile.kills,
+        deaths: profile.deaths,
+        growth: profile.growth,
+        nest: profile.nest,
+        favoriteDinosaur: profile.favoriteDinosaur,
+        rankScore: profile.rankScore,
+        lastSeen: parseDate(profile.lastSeen)
+      }
+    });
+  }
+
+  return profiles.length;
 }
