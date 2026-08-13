@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ExternalLink, LogIn, LogOut, Timer, Trophy, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatPlaytimeMinutes } from "@/lib/format-playtime";
 import type { PlayerProfile } from "@/lib/firebase/player-profiles";
 
 type SteamSession =
@@ -72,7 +73,7 @@ export function SteamRankPanel() {
 
   const profile = session.profile;
   const displayName = getDisplayName(profile, session.steamId);
-  const playtimeHours = Math.round((profile?.playtimeMinutes ?? 0) / 60);
+  const playtime = formatPlaytimeMinutes(profile?.playtimeMinutes ?? 0);
 
   return (
     <div className="rounded-lg border border-white/10 bg-gradient-to-br from-emerald-300/20 via-teal-300/8 to-white/[.03] p-5 shadow-[0_20px_70px_rgba(0,0,0,.28)]">
@@ -90,7 +91,7 @@ export function SteamRankPanel() {
         <div className="grid grid-cols-3 gap-2 sm:min-w-[360px]">
           <div className="rounded-md border border-white/10 bg-black/25 p-3">
             <Timer className="h-4 w-4 text-cyan-300" />
-            <div className="mt-2 text-lg font-black text-white">{playtimeHours}h</div>
+            <div className="mt-2 text-lg font-black text-white">{playtime}</div>
             <div className="text-xs text-zinc-500">Playtime</div>
           </div>
           <a href={profile?.profileUrl || `https://steamcommunity.com/profiles/${session.steamId}`} target="_blank" rel="noreferrer" className="rounded-md border border-white/10 bg-black/25 p-3 transition hover:bg-white/[.06]">
