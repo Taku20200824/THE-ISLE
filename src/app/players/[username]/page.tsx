@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { ExternalLink, MessageCircle, Shield, Skull, Timer, Trophy, UserRound } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
-import { getFirestoreLeaderboard, getFirestorePlayer } from "@/lib/firebase/firestore-data";
+import { getFirestoreLeaderboard, getFirestorePlayer } from "@/lib/firebase/rankings";
 import { formatPlaytime } from "@/lib/format-playtime";
 
 export async function generateStaticParams() {
