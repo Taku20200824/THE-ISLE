@@ -37,7 +37,7 @@ function hasPostgresUrl() {
   return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL || process.env.PRISMA_DATABASE_URL);
 }
 
-function useVercelPlayerData() {
+function shouldUseVercelPlayerData() {
   return process.env.PLAYER_DATA_SOURCE === "vercel" && hasPostgresUrl();
 }
 
@@ -238,7 +238,7 @@ export async function fetchSteamPublicProfile(steamId: string): Promise<SteamPub
 }
 
 export async function getPlayerProfiles() {
-  if (useVercelPlayerData()) {
+  if (shouldUseVercelPlayerData()) {
     try {
       return await getVercelPlayerProfiles();
     } catch {
@@ -250,7 +250,7 @@ export async function getPlayerProfiles() {
 }
 
 export async function getPlayerProfile(steamId: string) {
-  if (useVercelPlayerData()) {
+  if (shouldUseVercelPlayerData()) {
     try {
       return await getVercelPlayerProfile(steamId);
     } catch {
@@ -340,7 +340,7 @@ async function upsertFirebasePlayerProfile(profile: SteamPublicProfile) {
 }
 
 export async function upsertSteamPlayerProfile(profile: SteamPublicProfile) {
-  if (useVercelPlayerData()) {
+  if (shouldUseVercelPlayerData()) {
     try {
       return await upsertVercelPlayerProfile(profile);
     } catch {
@@ -352,7 +352,7 @@ export async function upsertSteamPlayerProfile(profile: SteamPublicProfile) {
 }
 
 export async function touchSteamPlayerSession(steamId: string, source = "website") {
-  if (useVercelPlayerData()) {
+  if (shouldUseVercelPlayerData()) {
     try {
       await prisma.playerSession.create({ data: { steamId, source } });
       await prisma.playerProfile.upsert({
@@ -447,7 +447,7 @@ async function addFirebasePlaytimeSeconds(steamId: string, seconds: number, sour
 }
 
 export async function addSteamPlaytimeSeconds(steamId: string, seconds: number, source = "server") {
-  if (useVercelPlayerData()) {
+  if (shouldUseVercelPlayerData()) {
     try {
       return await addVercelPlaytimeSeconds(steamId, seconds, source);
     } catch {
