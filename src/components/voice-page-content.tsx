@@ -28,54 +28,54 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
       pageDescription: `${serverName}'s Mumble service provides automatic server-side Evrima proximity voice.`,
       connectTitle: `Connect to ${voiceName}`,
       connectBody: "Use the host and port shown here. Keep Mumble open while you play Evrima.",
-      steamTitle: "Automatic Steam verification",
-      steamBody: "Sign in with Steam once. Your SteamID is signed into the Mumble connection, so no game name or !verify command is needed.",
+      steamTitle: "Automatic Steam link",
+      steamBody: "Steam links automatically after you connect. No manual Mumble chat verification, game name, or code is required.",
       steamLogin: "Sign in with Steam",
-      steamReady: "Steam verified",
-      steamConnect: "Connect with verified Steam",
-      steamFailed: "Steam verification failed. Please try again."
+      steamReady: "Steam linked",
+      steamConnect: "Connect with Steam",
+      steamFailed: "Steam link failed. Please try again."
     },
     ja: {
       pageTitle: `${serverName} ボイスチャット`,
       pageDescription: `${serverName} の Mumble サービスで、Evrima のサーバー側近接ボイスチャットを自動提供します。`,
       connectTitle: `${voiceName} に接続`,
       connectBody: "ここに表示されたホストとポートを使用します。Evrima のプレイ中は Mumble を起動したままにしてください。",
-      steamTitle: "Steam 自動認証",
-      steamBody: "Steamで一度ログインすると、SteamIDが署名付きでMumble接続に渡されます。ゲーム名の入力や !verify は不要です。",
+      steamTitle: "Steam 自動リンク",
+      steamBody: "接続後にSteamが自動リンクされます。Mumbleチャットでの手動認証、ゲーム名、コード入力は不要です。",
       steamLogin: "Steamでログイン",
-      steamReady: "Steam認証済み",
-      steamConnect: "認証済みSteamで接続",
-      steamFailed: "Steam認証に失敗しました。もう一度お試しください。"
+      steamReady: "Steamリンク済み",
+      steamConnect: "Steamで接続",
+      steamFailed: "Steamリンクに失敗しました。もう一度お試しください。"
     },
     ko: {
       pageTitle: `${serverName} 음성 채팅`,
       pageDescription: `${serverName} Mumble 서비스가 Evrima 서버 기반 근접 음성 채팅을 자동으로 제공합니다.`,
       connectTitle: `${voiceName} 연결`,
       connectBody: "여기에 표시된 호스트와 포트를 사용하세요. Evrima를 플레이하는 동안 Mumble을 실행해 두세요.",
-      steamTitle: "Steam 자동 인증",
-      steamBody: "Steam에 한 번 로그인하면 서명된 SteamID가 Mumble 연결에 전달됩니다. 게임 이름 입력과 !verify 명령은 필요 없습니다.",
+      steamTitle: "Steam 자동 연결",
+      steamBody: "연결 후 Steam이 자동으로 연결됩니다. Mumble 채팅 수동 인증, 게임 이름, 코드 입력은 필요 없습니다.",
       steamLogin: "Steam으로 로그인",
-      steamReady: "Steam 인증 완료",
-      steamConnect: "인증된 Steam으로 연결",
-      steamFailed: "Steam 인증에 실패했습니다. 다시 시도해 주세요."
+      steamReady: "Steam 연결됨",
+      steamConnect: "Steam으로 연결",
+      steamFailed: "Steam 연결에 실패했습니다. 다시 시도해 주세요."
     },
     mn: {
       pageTitle: `${serverName}-ийн дуут чат`,
       pageDescription: `${serverName}-ийн Mumble үйлчилгээ нь Evrima-д сервер талаас автоматаар ойрын зайн дуут чат ажиллуулна.`,
       connectTitle: `${voiceName}-д холбогдох`,
       connectBody: "Энд байгаа host болон port-ыг ашиглана. Evrima тоглож байхдаа Mumble-ийг нээлттэй байлгана уу.",
-      steamTitle: "Steam автомат баталгаажуулалт",
-      steamBody: "Steam-ээр нэг удаа нэвтэрнэ. SteamID нь гарын үсэгтэйгээр Mumble холболтод ордог тул тоглоомын нэр бичих болон !verify команд хэрэггүй.",
+      steamTitle: "Steam автомат холболт",
+      steamBody: "Холбогдсоны дараа Steam автоматаар link хийгдэнэ. Mumble chat дээр гараар баталгаажуулах, тоглоомын нэр бичих, код оруулах шаардлагагүй.",
       steamLogin: "Steam-ээр нэвтрэх",
-      steamReady: "Steam баталгаажсан",
-      steamConnect: "Баталгаажсан Steam-ээр холбогдох",
-      steamFailed: "Steam баталгаажуулалт амжилтгүй. Дахин оролдоно уу."
+      steamReady: "Steam холбогдсон",
+      steamConnect: "Steam-ээр холбогдох",
+      steamFailed: "Steam холболт амжилтгүй. Дахин оролдоно уу."
     }
   }[locale];
   const steps = [
     { icon: Download, title: t("page.voice.installTitle"), body: t("page.voice.installBody") },
     { icon: Headphones, title: labels.connectTitle, body: labels.connectBody },
-    { icon: Mic2, title: t("page.voice.pluginTitle"), body: labels.steamBody }
+    { icon: Mic2, title: labels.steamTitle, body: labels.steamBody }
   ];
 
   useEffect(() => {
@@ -169,7 +169,7 @@ export function VoicePageContent({ status }: { status: ServerStatusDocument }) {
             ) : null}
             {hasPlugin ? (
               <Button asChild variant="outline" className="w-full">
-                <a href={pluginDownloadUrl} download="ASIA-JP-MNG-KR-Test-Voice-Proximity-v0.1.zip">{t("page.voice.downloadPlugin")}</a>
+                <a href={pluginDownloadUrl}>{t("page.voice.downloadPlugin")}</a>
               </Button>
             ) : null}
           </div>
