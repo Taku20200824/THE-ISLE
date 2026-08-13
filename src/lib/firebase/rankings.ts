@@ -1,4 +1,3 @@
-import { leaderboard as fallbackLeaderboard } from "@/data/site";
 import { getPlayerProfiles } from "@/lib/firebase/player-profiles";
 
 export type RankPlayer = {
@@ -33,29 +32,9 @@ function displayName(username: string, personaName: string, steamId: string, isF
   return name;
 }
 
-function fallbackPlayers(): RankPlayer[] {
-  return fallbackLeaderboard.map((player) => {
-    const playtime = Number(player.playtime ?? 0);
-
-    return {
-      username: player.username,
-      playtime,
-      playtimeSeconds: playtime * 3600,
-      kills: Number(player.kills ?? 0),
-      deaths: Number(player.deaths ?? 0),
-      growth: Number(player.growth ?? 0),
-      nest: Number(player.nest ?? 0),
-      dinosaur: String(player.dinosaur ?? "Unknown"),
-      discord: "",
-      avatar: "",
-      steamId: ""
-    };
-  });
-}
-
-export async function getFirestoreLeaderboard() {
+export async function getFirestoreLeaderboard(): Promise<RankPlayer[]> {
   const profiles = await getPlayerProfiles();
-  const players = profiles.map((profile) => ({
+  const players: RankPlayer[] = profiles.map((profile) => ({
     username: displayName(profile.username, profile.personaName, profile.steamId, profile.isFallback),
     playtime: profile.playtimeSeconds / 3600,
     playtimeSeconds: profile.playtimeSeconds,
@@ -69,9 +48,7 @@ export async function getFirestoreLeaderboard() {
     steamId: profile.steamId
   }));
 
-  const rankPlayers = players.length ? players : fallbackPlayers();
-
-  return rankPlayers
+  return players
     .sort((a, b) => scoreRank(b) - scoreRank(a))
     .slice(0, 25);
 }
