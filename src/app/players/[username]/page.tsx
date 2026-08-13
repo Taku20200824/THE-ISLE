@@ -3,6 +3,7 @@ import { ExternalLink, MessageCircle, Shield, Skull, Timer, Trophy, UserRound } 
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 import { getFirestoreLeaderboard, getFirestorePlayer } from "@/lib/firebase/firestore-data";
+import { formatPlaytime } from "@/lib/format-playtime";
 
 export async function generateStaticParams() {
   const leaderboard = await getFirestoreLeaderboard();
@@ -16,6 +17,10 @@ type PlayerProfilePageProps = {
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+function formatPlaytimeHours(hours: number) {
+  return formatPlaytime(hours * 3600);
+}
+
 export default async function PlayerProfilePage({ params }: PlayerProfilePageProps) {
   const { username } = await params;
   const player = await getFirestorePlayer(decodeURIComponent(username));
@@ -25,7 +30,7 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
   }
 
   const stats = [
-    ["Playtime", `${player.playtime}h`, Timer, "text-cyan-300"],
+    ["Playtime", formatPlaytimeHours(player.playtime), Timer, "text-cyan-300"],
     ["Kills", String(player.kills), Skull, "text-rose-300"],
     ["Deaths", String(player.deaths), Shield, "text-amber-300"],
     ["Growth", `${player.growth}%`, Trophy, "text-emerald-300"],
