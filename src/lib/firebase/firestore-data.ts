@@ -269,23 +269,28 @@ export async function getFirestoreDinosaur(slug: string) {
 export async function getFirestoreLeaderboard() {
   const rows = await getCollection("scores");
   const scorePlayers = rows.length
-    ? rows.map((data) => ({
-        username: String(data.username ?? data.name ?? data.id),
-        playtime: Number(data.playtime ?? data.playtimeHours ?? 0),
-        kills: Number(data.kills ?? 0),
-        deaths: Number(data.deaths ?? 0),
-        growth: Number(data.growth ?? data.growthPercent ?? 0),
-        nest: Number(data.nest ?? data.nestSuccess ?? 0),
-        dinosaur: String(data.dinosaur ?? data.favoriteDinosaur ?? "Unknown"),
-        discord: String(data.discord ?? ""),
-        avatar: String(data.avatar ?? ""),
-        steamId: String(data.steamId ?? "")
-      }))
-    : fallbackLeaderboard.map((player) => ({ ...player, discord: "", avatar: "", steamId: "" }));
+    ? rows.map((data) => {
+        const playtime = Number(data.playtime ?? data.playtimeHours ?? 0);
+        return {
+          username: String(data.username ?? data.name ?? data.id),
+          playtime,
+          playtimeSeconds: Number(data.playtimeSeconds ?? playtime * 3600),
+          kills: Number(data.kills ?? 0),
+          deaths: Number(data.deaths ?? 0),
+          growth: Number(data.growth ?? data.growthPercent ?? 0),
+          nest: Number(data.nest ?? data.nestSuccess ?? 0),
+          dinosaur: String(data.dinosaur ?? data.favoriteDinosaur ?? "Unknown"),
+          discord: String(data.discord ?? ""),
+          avatar: String(data.avatar ?? ""),
+          steamId: String(data.steamId ?? "")
+        };
+      })
+    : fallbackLeaderboard.map((player) => ({ ...player, playtimeSeconds: Number(player.playtime ?? 0) * 3600, discord: "", avatar: "", steamId: "" }));
 
   const steamPlayers = (await getPlayerProfiles()).map((profile) => ({
     username: profile.username || profile.personaName,
-    playtime: profile.playtimeMinutes / 60,
+    playtime: profile.playtimeSeconds / 3600,
+    playtimeSeconds: profile.playtimeSeconds,
     kills: profile.kills,
     deaths: profile.deaths,
     growth: profile.growth,
