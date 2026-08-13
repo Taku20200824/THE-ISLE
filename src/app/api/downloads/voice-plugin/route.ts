@@ -28,12 +28,17 @@ Install
 6. Enable "Exile Voice - Spatial Audio".
 7. Connect to mumble://157.230.40.149:64738
 
-Verify once
+Automatic Steam link
 1. Join ASIA JP,MNG,KR Test and spawn a dinosaur.
-2. In Mumble text chat type: !verify YourExactGameName
-3. The game sends a six-digit code by direct message.
-4. In Mumble text chat type: !verify 123456
-5. After "Spatial voice is linked", proximity voice works automatically.
+2. Sign in with Steam from the Voice page.
+3. Connect to Mumble with the Steam-linked connection button.
+4. Keep Mumble open while you play.
+5. Proximity voice works automatically.
+
+No manual verification
+  No Mumble chat command is required.
+  No game name entry is required.
+  No six-digit code is required.
 
 Voice range
   Full volume until about 8 metres.
