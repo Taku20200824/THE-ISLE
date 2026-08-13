@@ -6,13 +6,12 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 function isAuthorized(request: NextRequest) {
-  const secret = process.env.SERVER_TRACKER_SECRET;
+  const supplied = request.headers.get("authorization");
+  const allowedSecrets = [process.env.SERVER_TRACKER_SECRET, process.env.STEAM_VOICE_SECRET].filter(
+    (secret): secret is string => Boolean(secret)
+  );
 
-  if (!secret) {
-    return false;
-  }
-
-  return request.headers.get("authorization") === `Bearer ${secret}`;
+  return allowedSecrets.some((secret) => supplied === `Bearer ${secret}`);
 }
 
 export async function POST(request: NextRequest) {
