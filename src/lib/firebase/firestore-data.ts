@@ -285,7 +285,7 @@ export async function getFirestoreLeaderboard() {
 
   const steamPlayers = (await getPlayerProfiles()).map((profile) => ({
     username: profile.username || profile.personaName,
-    playtime: Math.round(profile.playtimeMinutes / 60),
+    playtime: profile.playtimeMinutes / 60,
     kills: profile.kills,
     deaths: profile.deaths,
     growth: profile.growth,
@@ -367,7 +367,7 @@ export async function getFirestoreMapMarkers() {
     type: String(data.type ?? "water"),
     name: String(data.name ?? data.id),
     x: Number(data.x ?? 50),
-    y: Number(data.y ?? 50),
+    y: Number(data.y ?? "50"),
     risk: String(data.risk ?? "Medium"),
     note: String(data.note ?? data.description ?? "")
   }));
