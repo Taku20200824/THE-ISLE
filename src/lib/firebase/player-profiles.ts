@@ -38,7 +38,7 @@ function hasPostgresUrl() {
 }
 
 function shouldUseVercelPlayerData() {
-  return process.env.PLAYER_DATA_SOURCE === "vercel" && hasPostgresUrl();
+  return process.env.PLAYER_DATA_SOURCE !== "firebase" && hasPostgresUrl();
 }
 
 function parseFirestoreValue(value: unknown): unknown {
