@@ -29,10 +29,12 @@ export async function GET() {
     if (updatedProfile) {
       profile = updatedProfile;
     } else if (!publicProfile.isFallback || !profile) {
+      const playtimeMinutes = profile?.playtimeMinutes ?? 0;
       profile = {
         ...publicProfile,
         username: publicProfile.isFallback ? "Steam linked" : publicProfile.personaName,
-        playtimeMinutes: profile?.playtimeMinutes ?? 0,
+        playtimeMinutes,
+        playtimeSeconds: profile?.playtimeSeconds ?? playtimeMinutes * 60,
         kills: profile?.kills ?? 0,
         deaths: profile?.deaths ?? 0,
         growth: profile?.growth ?? 0,
