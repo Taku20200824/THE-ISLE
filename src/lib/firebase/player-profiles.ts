@@ -7,6 +7,7 @@ export type SteamPublicProfile = {
   personaName: string;
   avatarUrl: string;
   profileUrl: string;
+  isFallback?: boolean;
 };
 
 export type PlayerProfile = SteamPublicProfile & {
@@ -48,19 +49,27 @@ function serializeTimestamp(value: unknown) {
   return null;
 }
 
+function isFallbackPersonaName(value: unknown, steamId: string) {
+  return String(value ?? "") === `Steam ${steamId.slice(-6)}`;
+}
+
 function toProfile(id: string, data: Record<string, unknown>): PlayerProfile {
+  const steamId = String(data.steamId ?? id);
   const playtimeMinutes = Number(data.playtimeMinutes ?? 0);
   const kills = Number(data.kills ?? 0);
   const deaths = Number(data.deaths ?? 0);
   const growth = Number(data.growth ?? data.growthPercent ?? 0);
   const nest = Number(data.nest ?? data.nestSuccess ?? 0);
+  const personaName = String(data.personaName ?? data.username ?? steamId);
+  const username = String(data.username ?? data.personaName ?? steamId);
 
   return {
-    steamId: String(data.steamId ?? id),
-    personaName: String(data.personaName ?? data.username ?? id),
-    username: String(data.username ?? data.personaName ?? id),
+    steamId,
+    personaName,
+    username,
     avatarUrl: String(data.avatarUrl ?? data.avatar ?? ""),
-    profileUrl: String(data.profileUrl ?? `https://steamcommunity.com/profiles/${id}`),
+    profileUrl: String(data.profileUrl ?? `https://steamcommunity.com/profiles/${steamId}`),
+    isFallback: isFallbackPersonaName(personaName, steamId) || isFallbackPersonaName(username, steamId),
     playtimeMinutes,
     kills,
     deaths,
@@ -100,7 +109,8 @@ function createFallbackSteamProfile(steamId: string): SteamPublicProfile {
     steamId,
     personaName: `Steam ${steamId.slice(-6)}`,
     avatarUrl: `https://api.dicebear.com/9.x/shapes/svg?seed=${steamId}`,
-    profileUrl: `https://steamcommunity.com/profiles/${steamId}`
+    profileUrl: `https://steamcommunity.com/profiles/${steamId}`,
+    isFallback: true
   };
 }
 
@@ -127,11 +137,14 @@ async function fetchSteamProfileViaXml(steamId: string, fallback: SteamPublicPro
   const avatarUrl = decodeXmlValue(xml, "avatarFull");
   const profileUrl = decodeXmlValue(xml, "steamID64") ? `https://steamcommunity.com/profiles/${steamId}` : fallback.profileUrl;
 
+  if (!personaName && !avatarUrl) return fallback;
+
   return {
     steamId,
     personaName: personaName || fallback.personaName,
     avatarUrl: avatarUrl || fallback.avatarUrl,
-    profileUrl
+    profileUrl,
+    isFallback: false
   };
 }
 
@@ -152,12 +165,13 @@ export async function fetchSteamPublicProfile(steamId: string): Promise<SteamPub
         };
         const player = payload.response?.players?.[0];
 
-        if (player) {
+        if (player?.personaname || player?.avatarfull) {
           return {
             steamId,
             personaName: player.personaname || fallback.personaName,
             avatarUrl: player.avatarfull || fallback.avatarUrl,
-            profileUrl: player.profileurl || fallback.profileUrl
+            profileUrl: player.profileurl || fallback.profileUrl,
+            isFallback: false
           };
         }
       }
@@ -202,10 +216,25 @@ export async function upsertSteamPlayerProfile(profile: SteamPublicProfile) {
 
   const ref = getAdminFirestore().collection("playerProfiles").doc(profile.steamId);
   const snapshot = await ref.get();
+  const previous = snapshot.exists ? toProfile(snapshot.id, snapshot.data() ?? {}) : null;
+  const hasRealPreviousName = previous && !previous.isFallback;
+  const safeProfile = profile.isFallback && hasRealPreviousName
+    ? {
+        steamId: profile.steamId,
+        personaName: previous.personaName,
+        username: previous.username,
+        avatarUrl: previous.avatarUrl,
+        profileUrl: previous.profileUrl,
+        isFallback: false
+      }
+    : {
+        ...profile,
+        username: profile.personaName
+      };
+
   await ref.set(
     {
-      ...profile,
-      username: profile.personaName,
+      ...safeProfile,
       playtimeMinutes: FieldValue.increment(0),
       kills: FieldValue.increment(0),
       deaths: FieldValue.increment(0),
