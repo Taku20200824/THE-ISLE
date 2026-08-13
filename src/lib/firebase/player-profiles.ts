@@ -33,8 +33,12 @@ type FirestoreDocument = {
 
 type PlaytimeSources = Record<string, number>;
 
+function hasPostgresUrl() {
+  return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL || process.env.PRISMA_DATABASE_URL);
+}
+
 function useVercelPlayerData() {
-  return process.env.PLAYER_DATA_SOURCE === "vercel" && Boolean(process.env.DATABASE_URL);
+  return process.env.PLAYER_DATA_SOURCE === "vercel" && hasPostgresUrl();
 }
 
 function parseFirestoreValue(value: unknown): unknown {
