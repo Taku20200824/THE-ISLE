@@ -9,6 +9,17 @@ type SteamSession =
   | { authenticated: false }
   | { authenticated: true; steamId: string; mumbleUrl: string | null; profile: PlayerProfile | null };
 
+function getDisplayName(profile: PlayerProfile | null, steamId: string) {
+  const name = profile?.username || profile?.personaName || "";
+  const fallbackName = `Steam ${steamId.slice(-6)}`;
+
+  if (!name || name === steamId || name === fallbackName || profile?.isFallback) {
+    return "Steam linked";
+  }
+
+  return name;
+}
+
 export function SteamRankPanel() {
   const [session, setSession] = useState<SteamSession | null>(null);
 
@@ -60,6 +71,7 @@ export function SteamRankPanel() {
   }
 
   const profile = session.profile;
+  const displayName = getDisplayName(profile, session.steamId);
   const playtimeHours = Math.round((profile?.playtimeMinutes ?? 0) / 60);
 
   return (
@@ -71,7 +83,7 @@ export function SteamRankPanel() {
             <div className="flex items-center gap-2 text-xs font-bold uppercase text-primary">
               <UserRound className="h-4 w-4" /> Steam linked
             </div>
-            <h2 className="mt-1 break-words font-display text-2xl font-black text-white">{profile?.username || session.steamId}</h2>
+            <h2 className="mt-1 break-words font-display text-2xl font-black text-white">{displayName}</h2>
             <p className="mt-1 text-xs text-zinc-500">SteamID {session.steamId}</p>
           </div>
         </div>
