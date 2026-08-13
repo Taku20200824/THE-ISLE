@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
@@ -28,6 +28,20 @@ export function SiteHeader() {
   const { t } = useLanguage();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const navigation = useMemo(() => {
+    const leaderboardIndex = navItems.findIndex((item) => item.href === "/leaderboard");
+    const questsItem = { href: "/quests", label: "Quests" };
+
+    if (leaderboardIndex === -1 || navItems.some((item) => item.href === questsItem.href)) {
+      return navItems;
+    }
+
+    return [
+      ...navItems.slice(0, leaderboardIndex + 1),
+      questsItem,
+      ...navItems.slice(leaderboardIndex + 1)
+    ];
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -51,7 +65,7 @@ export function SiteHeader() {
           <span className="drop-shadow-[0_0_18px_rgba(45,212,191,.35)]">{siteConfig.name}</span>
         </Link>
         <nav className="hidden items-center gap-5 text-sm text-muted-foreground lg:flex">
-          {navItems.map((item) => {
+          {navigation.map((item) => {
             const isActive = pathname === item.href;
             const translationKey = navTranslationKeys[item.href];
             return (
