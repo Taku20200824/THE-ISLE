@@ -75,6 +75,39 @@ model Player {
   updatedAt         DateTime @updatedAt
 }
 
+model PlayerProfile {
+  steamId          String   @id
+  personaName      String?
+  username         String?
+  avatarUrl        String?
+  profileUrl       String?
+  playtimeMinutes  Float    @default(0)
+  playtimeSeconds  Int      @default(0)
+  kills            Int      @default(0)
+  deaths           Int      @default(0)
+  growth           Float    @default(0)
+  nest             Int      @default(0)
+  favoriteDinosaur String   @default("Unknown")
+  rankScore        Float    @default(0)
+  lastSeen         DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  playtimeSources  Json?
+
+  @@index([rankScore])
+  @@index([playtimeSeconds])
+}
+
+model PlayerSession {
+  id        String   @id @default(cuid())
+  steamId   String
+  source    String
+  seenAt    DateTime @default(now())
+
+  @@index([steamId])
+  @@index([seenAt])
+}
+
 model Announcement {
   id        String   @id @default(cuid())
   title     String
