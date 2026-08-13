@@ -13,6 +13,7 @@ export type SteamPublicProfile = {
 export type PlayerProfile = SteamPublicProfile & {
   username: string;
   playtimeMinutes: number;
+  playtimeSeconds: number;
   kills: number;
   deaths: number;
   growth: number;
@@ -56,6 +57,7 @@ function isFallbackPersonaName(value: unknown, steamId: string) {
 function toProfile(id: string, data: Record<string, unknown>): PlayerProfile {
   const steamId = String(data.steamId ?? id);
   const playtimeMinutes = Number(data.playtimeMinutes ?? 0);
+  const playtimeSeconds = Number(data.playtimeSeconds ?? playtimeMinutes * 60);
   const kills = Number(data.kills ?? 0);
   const deaths = Number(data.deaths ?? 0);
   const growth = Number(data.growth ?? data.growthPercent ?? 0);
@@ -71,12 +73,13 @@ function toProfile(id: string, data: Record<string, unknown>): PlayerProfile {
     profileUrl: String(data.profileUrl ?? `https://steamcommunity.com/profiles/${steamId}`),
     isFallback: isFallbackPersonaName(personaName, steamId) || isFallbackPersonaName(username, steamId),
     playtimeMinutes,
+    playtimeSeconds,
     kills,
     deaths,
     growth,
     nest,
     favoriteDinosaur: String(data.favoriteDinosaur ?? data.dinosaur ?? "Unknown"),
-    rankScore: Number(data.rankScore ?? Math.round(playtimeMinutes / 60) * 10 + kills * 25 + nest * 15 + growth - deaths * 5),
+    rankScore: Number(data.rankScore ?? (playtimeSeconds / 3600) * 10 + kills * 25 + nest * 15 + growth - deaths * 5),
     lastSeen: serializeTimestamp(data.lastSeen),
     createdAt: serializeTimestamp(data.createdAt),
     updatedAt: serializeTimestamp(data.updatedAt)
@@ -236,6 +239,7 @@ export async function upsertSteamPlayerProfile(profile: SteamPublicProfile) {
     {
       ...safeProfile,
       playtimeMinutes: FieldValue.increment(0),
+      playtimeSeconds: FieldValue.increment(0),
       kills: FieldValue.increment(0),
       deaths: FieldValue.increment(0),
       growth: FieldValue.increment(0),
@@ -271,23 +275,29 @@ export async function touchSteamPlayerSession(steamId: string, source = "website
   return true;
 }
 
-export async function addSteamPlaytimeMinutes(steamId: string, minutes: number, source = "server") {
+export async function addSteamPlaytimeSeconds(steamId: string, seconds: number, source = "server") {
   if (!hasFirebaseAdminCredentials()) {
     return null;
   }
 
-  const safeMinutes = Math.max(0, Math.min(24 * 60, Math.floor(minutes)));
+  const safeSeconds = Math.max(0, Math.min(24 * 60 * 60, Math.floor(seconds)));
+  const safeMinutes = safeSeconds / 60;
   const ref = getAdminFirestore().collection("playerProfiles").doc(steamId);
   await ref.set(
     {
       steamId,
       playtimeMinutes: FieldValue.increment(safeMinutes),
+      playtimeSeconds: FieldValue.increment(safeSeconds),
       lastSeen: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
-      [`playtimeSources.${source}`]: FieldValue.increment(safeMinutes)
+      [`playtimeSources.${source}`]: FieldValue.increment(safeSeconds)
     },
     { merge: true }
   );
 
   return getPlayerProfile(steamId);
+}
+
+export async function addSteamPlaytimeMinutes(steamId: string, minutes: number, source = "server") {
+  return addSteamPlaytimeSeconds(steamId, minutes * 60, source);
 }
