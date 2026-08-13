@@ -15,13 +15,17 @@ function isAuthorized(request: NextRequest) {
   return allowedSecrets.some((secret) => supplied === `Bearer ${secret}`);
 }
 
+function hasPostgresUrl() {
+  return Boolean(process.env.POSTGRES_URL || process.env.DATABASE_URL || process.env.PRISMA_DATABASE_URL);
+}
+
 export async function POST(request: NextRequest) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!process.env.DATABASE_URL) {
-    return NextResponse.json({ error: "DATABASE_URL is not configured" }, { status: 400 });
+  if (!hasPostgresUrl()) {
+    return NextResponse.json({ error: "POSTGRES_URL is not configured" }, { status: 400 });
   }
 
   const copied = await copyFirebaseProfilesToVercelDatabase();
@@ -39,11 +43,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!process.env.DATABASE_URL) {
-    return NextResponse.json({ ok: false, databaseUrl: false });
+  if (!hasPostgresUrl()) {
+    return NextResponse.json({ ok: false, postgresUrl: false });
   }
 
   await ensureVercelPlayerDataTables();
 
-  return NextResponse.json({ ok: true, databaseUrl: true });
+  return NextResponse.json({ ok: true, postgresUrl: true });
 }
