@@ -4,6 +4,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { SteamRankPanel } from "@/components/steam-rank-panel";
 import { Card, CardContent } from "@/components/ui/card";
 import { getFirestoreLeaderboard } from "@/lib/firebase/firestore-data";
+import { formatPlaytime } from "@/lib/format-playtime";
 import { LocalizedText } from "@/components/localized-text";
 import type { TranslationKey } from "@/lib/i18n";
 
@@ -23,6 +24,10 @@ const podiumTones = [
   "from-cyan-300/25 via-sky-300/12 to-white/[.04]",
   "from-emerald-300/25 via-teal-300/12 to-white/[.04]"
 ];
+
+function formatPlaytimeHours(hours: number) {
+  return formatPlaytime(hours * 3600);
+}
 
 export default async function LeaderboardPage() {
   const leaderboard = await getFirestoreLeaderboard();
@@ -44,7 +49,7 @@ export default async function LeaderboardPage() {
                 {player.username}
               </Link>
               <div className="mt-4 grid grid-cols-3 gap-2 text-xs text-zinc-300">
-                <div className="rounded-md border border-white/10 bg-black/25 p-2"><Timer className="mb-1 h-4 w-4 text-primary" />{player.playtime}h</div>
+                <div className="rounded-md border border-white/10 bg-black/25 p-2"><Timer className="mb-1 h-4 w-4 text-primary" />{formatPlaytimeHours(player.playtime)}</div>
                 <div className="rounded-md border border-white/10 bg-black/25 p-2"><Skull className="mb-1 h-4 w-4 text-rose-300" />{player.kills}</div>
                 <div className="rounded-md border border-white/10 bg-black/25 p-2"><UserRound className="mb-1 h-4 w-4 text-sky-300" />{player.dinosaur}</div>
               </div>
@@ -74,7 +79,7 @@ export default async function LeaderboardPage() {
                   <td className="px-5 py-4">
                     <Link href={`/players/${encodeURIComponent(player.steamId || player.username)}`} className="font-semibold text-white hover:text-primary">{player.username}</Link>
                   </td>
-                  <td className="px-5 py-4 text-zinc-300">{player.playtime}h</td>
+                  <td className="px-5 py-4 text-zinc-300">{formatPlaytimeHours(player.playtime)}</td>
                   <td className="px-5 py-4 text-zinc-300">{player.kills}</td>
                   <td className="px-5 py-4 text-zinc-300">{player.deaths}</td>
                   <td className="px-5 py-4 text-zinc-300">{player.growth}%</td>
