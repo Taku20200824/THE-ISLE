@@ -3,7 +3,7 @@ import { Crown, Skull, Timer, Trophy, UserRound } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { SteamRankPanel } from "@/components/steam-rank-panel";
 import { Card, CardContent } from "@/components/ui/card";
-import { getFirestoreLeaderboard } from "@/lib/firebase/firestore-data";
+import { getFirestoreLeaderboard } from "@/lib/firebase/rankings";
 import { formatPlaytime } from "@/lib/format-playtime";
 import { LocalizedText } from "@/components/localized-text";
 import type { TranslationKey } from "@/lib/i18n";
