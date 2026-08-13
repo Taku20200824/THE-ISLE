@@ -4,7 +4,7 @@ export function formatPlaytime(totalSeconds: number) {
   const minutes = Math.floor((safeSeconds % 3600) / 60);
   const seconds = safeSeconds % 60;
 
-  return [hours, minutes, seconds].map((value) => String(value).padStart(2, "0")).join(":");
+  return [hours, minutes, seconds].map((value) => String(value).padStart(2, "0")).join(".");
 }
 
 export function formatPlaytimeMinutes(totalMinutes: number) {
